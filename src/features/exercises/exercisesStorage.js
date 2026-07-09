@@ -34,6 +34,7 @@ export function getExerciseCatalog() {
   seedExerciseCatalog();
   normalizeStoredExercises();
   syncDefaultExercises();
+  syncDefaultCategories();
   return sortExercises(JSON.parse(localStorage.getItem(EXERCISES_KEY) || "[]"));
 }
 
@@ -115,6 +116,25 @@ function syncDefaultExercises() {
       ...exercise
     }))
   ]);
+}
+
+function syncDefaultCategories() {
+  const categoryByName = new Map(defaultExercises.map((exercise) => [
+    normalizeName(exercise.name),
+    exercise.category
+  ]));
+  const exercises = JSON.parse(localStorage.getItem(EXERCISES_KEY) || "[]");
+  let changed = false;
+
+  const synced = exercises.map((exercise) => {
+    const category = categoryByName.get(normalizeName(exercise.name));
+    if (!category || exercise.category === category) return exercise;
+
+    changed = true;
+    return { ...exercise, category };
+  });
+
+  if (changed) saveExerciseCatalog(synced);
 }
 
 function saveExerciseCatalog(exercises) {
