@@ -57,7 +57,7 @@ function renderExerciseStat(stat) {
           <div class="stat-bars">
             ${stat.points.map((point) => `
               <span class="stat-bar" style="height:${Math.max(12, point.value / max * 118)}px" title="${point.date}: ${point.value} повторов, ${point.weight || 0} кг">
-                <i style="bottom:${Math.max(6, (point.weight || 0) / maxWeight * 118)}px"></i>
+                <i style="height:${Math.max(6, (point.weight || 0) / maxWeight * 118)}px"></i>
               </span>
             `).join("")}
           </div>

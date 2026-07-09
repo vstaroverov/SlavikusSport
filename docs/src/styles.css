@@ -1039,10 +1039,12 @@ p {
 
 .stat-bar i {
   position: absolute;
-  left: -2px;
-  right: -2px;
-  height: 4px;
-  border-radius: 999px;
+  left: 50%;
+  bottom: 0;
+  width: 5px;
+  max-height: 100%;
+  transform: translateX(-50%);
+  border-radius: 999px 999px 0 0;
   background: #ffd447;
   box-shadow: 0 0 14px rgb(255 212 71 / 76%);
 }
