@@ -8,6 +8,7 @@ import { renderWorkoutScreen } from "../screens/WorkoutScreen.js";
 import { renderProgramScreen } from "../screens/ProgramScreen.js";
 import { renderLogScreen } from "../screens/LogScreen.js";
 import { renderStatsScreen } from "../screens/StatsScreen.js";
+import { renderExercisesScreen } from "../screens/ExercisesScreen.js";
 import { renderInfoScreen } from "../screens/InfoScreen.js";
 import { renderProfileScreen } from "../screens/ProfileScreen.js";
 import { seedInitialData } from "../features/program/programStorage.js";
@@ -19,6 +20,7 @@ const screens = {
   program: renderProgramScreen,
   log: renderLogScreen,
   stats: renderStatsScreen,
+  exercises: renderExercisesScreen,
   info: renderInfoScreen,
   profile: renderProfileScreen
 };

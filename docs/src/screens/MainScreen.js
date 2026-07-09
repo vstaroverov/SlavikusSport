@@ -6,11 +6,13 @@ const quickItems = [
   ["workout", "play", "Старт", "таймер и подходы"],
   ["program", "calendar", "План", "тренировки и календарь"],
   ["log", "note", "Лог", "история занятий"],
-  ["stats", "stats", "Стата", "прогресс и советы"]
+  ["stats", "stats", "Стата", "прогресс и советы"],
+  ["exercises", "dumbbell", "Упражнения", "список движений из программы", "wide"]
 ];
 
 export function renderMainScreen() {
   const workout = getWorkout(getPlannedWorkoutId(todayIso(), false));
+
   return `
     <section class="today-panel">
       <div class="today-copy">
@@ -21,8 +23,8 @@ export function renderMainScreen() {
     </section>
 
     <section class="quick-grid">
-      ${quickItems.map(([route, iconName, title, caption]) => `
-        <button data-route="${route}">
+      ${quickItems.map(([route, iconName, title, caption, variant]) => `
+        <button class="${variant === "wide" ? "wide" : ""}" data-route="${route}">
           <strong>${title}</strong>
           <span class="quick-caption">${caption}</span>
           <span class="quick-icon">${icon(iconName)}</span>

@@ -4,6 +4,7 @@ export const routes = [
   { id: "program", label: "Программа" },
   { id: "log", label: "Лог" },
   { id: "stats", label: "Стата" },
+  { id: "exercises", label: "Упражнения" },
   { id: "info", label: "Инфо" },
   { id: "profile", label: "Профиль" }
 ];

@@ -453,6 +453,11 @@ p {
     linear-gradient(135deg, rgba(9, 39, 86, .95), rgba(3, 14, 33, .98));
 }
 
+.quick-grid button.wide {
+  grid-column: 1 / -1;
+  min-height: 96px;
+}
+
 .quick-grid strong {
   display: block;
   font-size: 17px;
@@ -614,6 +619,43 @@ p {
   text-align: right;
   color: var(--soft);
   font-size: 12px;
+}
+
+.exercise-directory {
+  display: grid;
+  gap: 10px;
+}
+
+.exercise-directory-card {
+  display: grid;
+  gap: 10px;
+}
+
+.exercise-directory-card strong,
+.exercise-directory-card span {
+  display: block;
+}
+
+.exercise-directory-card div span {
+  margin-top: 4px;
+  color: var(--soft);
+  font-size: 12px;
+}
+
+.exercise-directory-card p {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.exercise-directory-card p span {
+  padding: 8px;
+  border: 1px solid rgba(77, 145, 255, .18);
+  border-radius: 10px;
+  background: rgba(5, 18, 39, .58);
+  color: var(--soft);
 }
 
 .exercise-editor {
