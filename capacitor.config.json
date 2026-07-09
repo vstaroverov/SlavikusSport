@@ -1,0 +1,8 @@
+{
+  "appId": "ru.slavikus.sport",
+  "appName": "Slavikus Sport",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#020814"
+  }
+}

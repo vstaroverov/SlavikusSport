@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Slavikus Sport</string>
+    <string name="title_activity_main">Slavikus Sport</string>
+    <string name="package_name">ru.slavikus.sport</string>
+    <string name="custom_url_scheme">ru.slavikus.sport</string>
+</resources>

@@ -1,0 +1,9 @@
+node_modules/
+www/
+android/.gradle/
+android/local.properties
+android/**/build/
+apk/*.apk
+ios/App/Pods/
+ios/App/DerivedData/
+ios/App/build/

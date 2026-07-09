@@ -5,6 +5,8 @@ export function renderVkLogin() {
         <img class="auth-logo" src="./src/assets/auth-logo.png" alt="Slavikus Sport" />
         <h1>Slavikus Sport</h1>
         <p>Тренировка дня, быстрый старт, лог и прогресс без лишних экранов.</p>
+        <button class="primary-button" data-action="loginVk">Начать</button>
+        <!--
         <button class="primary-button vk-button" data-action="loginVk">
           <span class="auth-button-icon vk-icon">VK</span>
           <span>Войти через VK ID</span>
@@ -24,6 +26,7 @@ export function renderVkLogin() {
             <span>Почта</span>
           </button>
         </div>
+        -->
       </section>
     </div>
   `;

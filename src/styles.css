@@ -829,6 +829,12 @@ p {
   margin: 12px 0 16px;
 }
 
+.backup-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
 .avatar {
   width: 72px;
   height: 72px;

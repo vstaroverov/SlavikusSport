@@ -29,6 +29,14 @@ export function renderProfileScreen() {
         <p>Удалить все сохраненные тренировки и демо-записи.</p>
         <button class="secondary-button" data-action="clearLog">Очистить лог</button>
       </div>
+      <div class="profile-panel">
+        <h2>Резервная копия</h2>
+        <p>Сохрани тренировки, программу, календарь и профиль в файл или восстанови данные из файла.</p>
+        <div class="backup-actions">
+          <button class="secondary-button" data-action="exportBackup">Скачать копию</button>
+          <button class="secondary-button" data-action="importBackup">Восстановить</button>
+        </div>
+      </div>
     </section>
   `;
 }
