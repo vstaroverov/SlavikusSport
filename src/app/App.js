@@ -11,7 +11,6 @@ import { renderStatsScreen } from "../screens/StatsScreen.js";
 import { renderInfoScreen } from "../screens/InfoScreen.js";
 import { renderProfileScreen } from "../screens/ProfileScreen.js";
 import { seedInitialData } from "../features/program/programStorage.js";
-import { seedDemoLogData } from "../features/log/logStorage.js";
 import { formatSeconds, getActiveSession, getElapsedSeconds } from "../features/workout/workoutTimer.js";
 
 const screens = {
@@ -26,7 +25,6 @@ const screens = {
 
 export function createApp(root) {
   seedInitialData();
-  seedDemoLogData();
 
   const render = () => {
     const user = getCurrentUser();

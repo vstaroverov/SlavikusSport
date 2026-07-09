@@ -1,32 +1,35 @@
-const LOG_KEY = "slavikus:log";
+import { getCurrentUser } from "../profile/profileStorage.js";
+
+const LEGACY_LOG_KEY = "slavikus:log";
+const LOG_KEY_PREFIX = "slavikus:log:";
 
 export function getLogEntries() {
-  return JSON.parse(localStorage.getItem(LOG_KEY) || "[]");
+  return JSON.parse(localStorage.getItem(getLogKey()) || "[]");
 }
 
 export function addLogEntry(entry) {
   const entries = getLogEntries();
   entries.unshift(entry);
-  localStorage.setItem(LOG_KEY, JSON.stringify(entries));
+  localStorage.setItem(getLogKey(), JSON.stringify(entries));
 }
 
 export function updateLogText(id, text) {
   const entries = getLogEntries().map((entry) => entry.id === id ? { ...entry, text } : entry);
-  localStorage.setItem(LOG_KEY, JSON.stringify(entries));
+  localStorage.setItem(getLogKey(), JSON.stringify(entries));
 }
 
 export function updateLogMedia(id, media) {
   const entries = getLogEntries().map((entry) => entry.id === id ? { ...entry, media } : entry);
-  localStorage.setItem(LOG_KEY, JSON.stringify(entries));
+  localStorage.setItem(getLogKey(), JSON.stringify(entries));
 }
 
 export function deleteLogEntry(id) {
   const entries = getLogEntries().filter((entry) => entry.id !== id);
-  localStorage.setItem(LOG_KEY, JSON.stringify(entries));
+  localStorage.setItem(getLogKey(), JSON.stringify(entries));
 }
 
 export function clearLogEntries() {
-  localStorage.setItem(LOG_KEY, JSON.stringify([]));
+  localStorage.setItem(getLogKey(), JSON.stringify([]));
 }
 
 export function getLogEntry(id) {
@@ -34,11 +37,18 @@ export function getLogEntry(id) {
 }
 
 export function seedDemoLogData() {
+  if (localStorage.getItem(LEGACY_LOG_KEY)) return;
+
   const entries = getLogEntries();
   if (entries.some((entry) => String(entry.id).startsWith("demo-log-"))) return;
 
   const demoEntries = buildDemoMonthEntries();
-  localStorage.setItem(LOG_KEY, JSON.stringify([...demoEntries, ...entries]));
+  localStorage.setItem(getLogKey(), JSON.stringify([...demoEntries, ...entries]));
+}
+
+function getLogKey() {
+  const user = getCurrentUser();
+  return `${LOG_KEY_PREFIX}${encodeURIComponent(user?.id || "guest")}`;
 }
 
 function buildDemoMonthEntries() {
