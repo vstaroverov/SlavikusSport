@@ -99,9 +99,9 @@ export function addExercise(workoutId) {
   const catalogExercise = getExerciseCatalog()[0];
   workout.exercises.push({
     name: catalogExercise?.name || "Упражнение",
-    target: "10",
+    target: "",
     weight: "",
-    sets: 3
+    sets: ""
   });
   saveWorkouts(workouts);
 }
@@ -113,7 +113,7 @@ export function updateExercise(workoutId, exerciseIndex, field, value) {
   if (!exercise) return;
 
   if (field === "sets") {
-    exercise.sets = Math.max(1, Number(value) || 1);
+    exercise.sets = value === "" ? "" : Math.max(1, Number(value) || 1);
   } else if (field === "weight") {
     exercise.weight = value.trim();
   } else {

@@ -13,7 +13,7 @@ export function renderExerciseList(exercises, currentIndex = -1) {
 
 function formatExerciseMeta(exercise) {
   return [
-    `${exercise.sets || 1} подх.`,
+    exercise.sets ? `${exercise.sets} подх.` : "",
     exercise.target,
     exercise.weight
   ].filter(Boolean).join(" · ");
