@@ -3,6 +3,7 @@ import { getCurrentUser } from "../profile/profileStorage.js";
 const LEGACY_PLAN_KEY = "slavikus:calendar";
 const PLAN_KEY_PREFIX = "slavikus:calendar:";
 const MIGRATION_KEY_PREFIX = "slavikus:calendar-migrated:";
+const MONTH_KEY_PREFIX = "slavikus:calendar-month:";
 
 export function getPlan() {
   migrateLegacyPlan();
@@ -33,6 +34,23 @@ export function removeWorkoutFromPlan(workoutId) {
   savePlan(plan);
 }
 
+export function getCalendarMonth() {
+  const saved = localStorage.getItem(getMonthKey());
+  if (saved && /^\d{4}-\d{2}$/.test(saved)) {
+    const [year, month] = saved.split("-").map(Number);
+    return new Date(year, month - 1, 1);
+  }
+
+  const today = new Date();
+  return new Date(today.getFullYear(), today.getMonth(), 1);
+}
+
+export function shiftCalendarMonth(direction) {
+  const current = getCalendarMonth();
+  const next = new Date(current.getFullYear(), current.getMonth() + direction, 1);
+  localStorage.setItem(getMonthKey(), monthToKey(next));
+}
+
 function savePlan(plan) {
   localStorage.setItem(getPlanKey(), JSON.stringify(plan));
 }
@@ -45,6 +63,11 @@ function getPlanKey() {
 function getMigrationKey() {
   const user = getCurrentUser();
   return `${MIGRATION_KEY_PREFIX}${encodeURIComponent(user?.id || "guest")}`;
+}
+
+function getMonthKey() {
+  const user = getCurrentUser();
+  return `${MONTH_KEY_PREFIX}${encodeURIComponent(user?.id || "guest")}`;
 }
 
 function migrateLegacyPlan() {
@@ -71,4 +94,10 @@ export function dateToIso(date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function monthToKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
 }

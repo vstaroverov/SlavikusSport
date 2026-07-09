@@ -1,19 +1,21 @@
-import { dateToIso, getPlannedWorkoutId } from "../features/program/calendarPlanner.js";
+import { dateToIso, getCalendarMonth, getPlannedWorkoutId } from "../features/program/calendarPlanner.js";
 
 const weekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
 export function renderCalendar(workouts) {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
+  const visibleMonth = getCalendarMonth();
+  const year = visibleMonth.getFullYear();
+  const month = visibleMonth.getMonth();
   const days = new Date(year, month + 1, 0).getDate();
   const firstDayOffset = getMondayOffset(new Date(year, month, 1));
-  const monthTitle = today.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
+  const monthTitle = visibleMonth.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
 
   return `
     <section class="calendar-card">
       <div class="calendar-head">
+        <button class="calendar-nav-button" data-action="changeCalendarMonth" data-direction="-1" aria-label="Предыдущий месяц">‹</button>
         <strong>${capitalize(monthTitle)}</strong>
+        <button class="calendar-nav-button" data-action="changeCalendarMonth" data-direction="1" aria-label="Следующий месяц">›</button>
       </div>
       <div class="calendar-weekdays">
         ${weekDays.map((day) => `<span>${day}</span>`).join("")}
