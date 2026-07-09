@@ -12,7 +12,7 @@ const defaultExercises = [
 
 export function getExerciseCatalog() {
   seedExerciseCatalog();
-  return JSON.parse(localStorage.getItem(EXERCISES_KEY) || "[]");
+  return sortExercises(JSON.parse(localStorage.getItem(EXERCISES_KEY) || "[]"));
 }
 
 export function addExerciseToCatalog(name) {
@@ -54,5 +54,9 @@ function seedExerciseCatalog() {
 }
 
 function saveExerciseCatalog(exercises) {
-  localStorage.setItem(EXERCISES_KEY, JSON.stringify(exercises));
+  localStorage.setItem(EXERCISES_KEY, JSON.stringify(sortExercises(exercises)));
+}
+
+function sortExercises(exercises) {
+  return [...exercises].sort((a, b) => a.name.localeCompare(b.name, "ru"));
 }
