@@ -671,9 +671,10 @@ p {
 
 .exercise-category-badge {
   min-width: 74px;
-  display: grid;
-  justify-items: center;
-  gap: 2px;
+  display: inline-grid;
+  grid-template-columns: 18px auto;
+  align-items: center;
+  gap: 6px;
   padding: 6px 8px;
   border: 1px solid rgba(77, 145, 255, .22);
   border-radius: 12px;
@@ -702,6 +703,7 @@ p {
 .exercise-category-badge small {
   font-size: 10px;
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 .category-workout {
