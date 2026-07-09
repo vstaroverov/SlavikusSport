@@ -6,7 +6,7 @@ import { getAiRecommendation } from "../features/stats/aiRecommendations.js";
 
 export function renderStatsScreen() {
   const subscription = getSubscriptionState(getCurrentUser());
-  if (subscription.plan !== "Премиум") {
+  if (subscription.daysLeft <= 0) {
     return `
       <section class="premium-lock">
         <h1>Стата</h1>
@@ -30,8 +30,11 @@ export function renderStatsScreen() {
 
 function renderExerciseStat(stat) {
   const values = stat.points.map((point) => point.value);
+  const weights = stat.points.map((point) => point.weight || 0);
   const max = Math.max(...values, 1);
   const mid = Math.round(max / 2);
+  const maxWeight = Math.max(...weights, 1);
+  const midWeight = Math.round(maxWeight / 2);
   const direction = stat.latest > stat.previous ? "рост" : stat.latest < stat.previous ? "просадка" : "ровно";
 
   return `
@@ -39,13 +42,13 @@ function renderExerciseStat(stat) {
       <div class="stat-head">
         <div>
           <strong>${stat.name}</strong>
-          <span>${stat.points.length} записей · ${direction}</span>
+          <span>${stat.points.length} записей · ${direction} · ${stat.latestWeight || 0} кг</span>
         </div>
         <b>${stat.latest}</b>
       </div>
       <div class="stat-chart">
         <div class="stat-y-axis">
-          <small>Кол-во / вес</small>
+          <small>Повторы</small>
           <span>${max}</span>
           <span>${mid}</span>
           <span>0</span>
@@ -53,7 +56,9 @@ function renderExerciseStat(stat) {
         <div class="stat-plot">
           <div class="stat-bars">
             ${stat.points.map((point) => `
-              <span style="height:${Math.max(12, point.value / max * 118)}px" title="${point.date}: ${point.value}"></span>
+              <span class="stat-bar" style="height:${Math.max(12, point.value / max * 118)}px" title="${point.date}: ${point.value} повторов, ${point.weight || 0} кг">
+                <i style="bottom:${Math.max(6, (point.weight || 0) / maxWeight * 118)}px"></i>
+              </span>
             `).join("")}
           </div>
           <div class="stat-dates">
@@ -61,6 +66,12 @@ function renderExerciseStat(stat) {
               <span>${formatDate(point.date)}</span>
             `).join("")}
           </div>
+        </div>
+        <div class="stat-y-axis stat-y-axis-right">
+          <small>Вес</small>
+          <span>${maxWeight}</span>
+          <span>${midWeight}</span>
+          <span>0</span>
         </div>
       </div>
       <p>${getAiRecommendation(stat.name, values.slice().reverse())}</p>

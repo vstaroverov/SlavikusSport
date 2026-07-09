@@ -985,7 +985,7 @@ p {
 
 .stat-chart {
   display: grid;
-  grid-template-columns: 58px 1fr;
+  grid-template-columns: 52px 1fr 42px;
   gap: 8px;
 }
 
@@ -1007,6 +1007,11 @@ p {
   text-align: right;
 }
 
+.stat-y-axis-right span {
+  color: #ffd447;
+  text-align: left;
+}
+
 .stat-plot {
   min-width: 0;
 }
@@ -1022,13 +1027,24 @@ p {
     linear-gradient(to top, rgba(77, 145, 255, .10) 1px, transparent 1px) 0 0 / 100% 50%;
 }
 
-.stat-bars span {
+.stat-bar {
+  position: relative;
   flex: 1;
   min-width: 8px;
   max-width: 28px;
   border-radius: 8px 8px 0 0;
   background: linear-gradient(180deg, #28b4ff, #075cff);
   box-shadow: 0 0 18px rgb(24 114 255 / 48%);
+}
+
+.stat-bar i {
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  height: 4px;
+  border-radius: 999px;
+  background: #ffd447;
+  box-shadow: 0 0 14px rgb(255 212 71 / 76%);
 }
 
 .stat-dates {

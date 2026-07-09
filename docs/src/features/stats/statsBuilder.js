@@ -10,7 +10,7 @@ export function buildExerciseStats(entries) {
           date,
           value: sumNumbers(result.done),
           target: result.target,
-          weight: result.weight || "",
+          weight: parseWeight(result.weight || ""),
           sets: result.sets || result.done?.length || 0
         });
       });
@@ -34,7 +34,8 @@ export function buildExerciseStats(entries) {
     name,
     points,
     latest: points.at(-1)?.value || 0,
-    previous: points.at(-2)?.value || 0
+    previous: points.at(-2)?.value || 0,
+    latestWeight: points.at(-1)?.weight || 0
   }));
 }
 
@@ -48,4 +49,9 @@ function sumNumbers(values = []) {
     const number = Number(String(value).match(/\d+/)?.[0] || 0);
     return sum + number;
   }, 0);
+}
+
+function parseWeight(value) {
+  const numbers = String(value).match(/\d+(?:[.,]\d+)?/g) || [];
+  return numbers.reduce((max, item) => Math.max(max, Number(item.replace(",", ".")) || 0), 0);
 }
