@@ -1,11 +1,11 @@
 import { icon } from "./Icon.js";
 
 const items = [
+  ["main", "home", "Главная"],
   ["workout", "play", "Тренировка"],
   ["program", "plus", "Программа"],
   ["log", "list", "Лог"],
-  ["stats", "stats", "Стата"],
-  ["main", "home", "Главная"]
+  ["stats", "stats", "Стата"]
 ];
 
 export function renderBottomNav(active) {
