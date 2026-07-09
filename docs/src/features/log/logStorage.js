@@ -18,6 +18,11 @@ export function updateLogText(id, text) {
   localStorage.setItem(getLogKey(), JSON.stringify(entries));
 }
 
+export function updateLogDetails(id, details) {
+  const entries = getLogEntries().map((entry) => entry.id === id ? { ...entry, ...details } : entry);
+  localStorage.setItem(getLogKey(), JSON.stringify(entries));
+}
+
 export function updateLogMedia(id, media) {
   const entries = getLogEntries().map((entry) => entry.id === id ? { ...entry, media } : entry);
   localStorage.setItem(getLogKey(), JSON.stringify(entries));

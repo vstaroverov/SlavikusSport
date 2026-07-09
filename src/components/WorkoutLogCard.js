@@ -8,7 +8,8 @@ export function renderWorkoutLogCard(entry) {
       <div class="log-card-head">
         <div>
           <strong>${entry.title}</strong>
-          <span>${entry.finishedAt}</span>
+          <span data-log-date-label="${entry.id}">${entry.finishedAt}</span>
+          <input class="log-date-input" type="datetime-local" value="${toDateTimeLocalValue(entry.finishedAt)}" data-log-date="${entry.id}" hidden />
         </div>
         <details>
           <summary>⋯</summary>
@@ -29,4 +30,20 @@ function renderMedia(media) {
     return `<video src="${media.data}" controls muted playsinline></video>`;
   }
   return `<img src="${media.data}" alt="Медиа тренировки" />`;
+}
+
+function toDateTimeLocalValue(value) {
+  const date = parseRuDate(value) || new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+function parseRuDate(value) {
+  const match = String(value).match(/(\d{2})\.(\d{2})\.(\d{4}),?\s+(\d{2}):(\d{2})/);
+  if (!match) return null;
+  return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]), Number(match[4]), Number(match[5]));
 }

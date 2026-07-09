@@ -1031,6 +1031,17 @@ p {
   font-size: 12px;
 }
 
+.log-date-input {
+  width: 100%;
+  min-height: 38px;
+  margin-top: 6px;
+  padding: 0 10px;
+  border: 1px solid rgba(77, 145, 255, .22);
+  border-radius: 10px;
+  background: rgba(1, 8, 20, .74);
+  color: var(--ink);
+}
+
 .log-card details {
   position: relative;
 }
