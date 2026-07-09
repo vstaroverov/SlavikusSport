@@ -46,10 +46,21 @@ function renderCategory(categoryId) {
 
   return `
     <span class="exercise-category-badge category-${categoryId || "base"}">
-      <b>${category.mark}</b>
+      <b class="category-icon">${getCategoryIcon(categoryId)}</b>
       <small>${category.label}</small>
     </span>
   `;
+}
+
+function getCategoryIcon(categoryId) {
+  const icons = {
+    workout: `<svg viewBox="0 0 24 24"><path d="M5 13h14M7 9v8M17 9v8M3 11v4M21 11v4"/></svg>`,
+    crossfit: `<svg viewBox="0 0 24 24"><path d="M7 4h10l-2 7h4l-8 9 2-7H8z"/></svg>`,
+    strength: `<svg viewBox="0 0 24 24"><path d="M6 6v12M18 6v12M3 9v6M21 9v6M6 12h12"/></svg>`,
+    base: `<svg viewBox="0 0 24 24"><path d="M4 19h16M7 19V9l5-4 5 4v10M10 19v-6h4v6"/></svg>`
+  };
+
+  return icons[categoryId] || icons.base;
 }
 
 function escapeHtml(value) {
