@@ -631,6 +631,10 @@ p {
   gap: 10px;
 }
 
+.compact-exercise-card {
+  padding: 14px 16px;
+}
+
 .exercise-directory-card strong,
 .exercise-directory-card span {
   display: block;
@@ -656,6 +660,27 @@ p {
   border-radius: 10px;
   background: rgba(5, 18, 39, .58);
   color: var(--soft);
+}
+
+.exercise-catalog-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.exercise-catalog-actions button {
+  min-height: 40px;
+  border-radius: 10px;
+  background: rgba(9, 29, 61, .92);
+  color: var(--ink);
+  border: 1px solid rgba(77, 145, 255, .20);
+  font-weight: 800;
+}
+
+.exercise-catalog-actions .danger {
+  background: rgba(255, 89, 107, .12);
+  color: #ff8f9b;
+  border-color: rgba(255, 89, 107, .28);
 }
 
 .exercise-editor {

@@ -1,69 +1,37 @@
-import { getWorkouts } from "../features/program/programStorage.js";
+import { getExerciseCatalog, isExerciseCatalogEditMode } from "../features/exercises/exercisesStorage.js";
 
 export function renderExercisesScreen() {
-  const exercises = collectExercises();
+  const exercises = getExerciseCatalog();
+  const editMode = isExerciseCatalogEditMode();
 
   return `
     <section class="stack">
-      <h1>Упражнения</h1>
+      <div class="section-head">
+        <h1>Упражнения</h1>
+        <div class="section-actions">
+          <button class="round-add" data-action="addCatalogExercise" aria-label="Добавить упражнение">+</button>
+          <button class="round-tool ${editMode ? "active" : ""}" data-action="toggleExerciseCatalogEdit" aria-label="Изменить упражнения">⚙</button>
+        </div>
+      </div>
       ${exercises.length ? `
         <div class="exercise-directory">
           ${exercises.map((exercise) => `
-            <article class="plain-panel exercise-directory-card">
-              <div>
-                <strong>${escapeHtml(exercise.name)}</strong>
-                <span>${escapeHtml(exercise.workouts.join(", "))}</span>
-              </div>
-              <p>
-                <span>Повторы: ${escapeHtml(exercise.target || "+")}</span>
-                <span>Подходы: ${exercise.sets || 1}</span>
-                <span>Вес: ${escapeHtml(exercise.weight || "0")} кг</span>
-              </p>
+            <article class="plain-panel exercise-directory-card compact-exercise-card">
+              <strong>${escapeHtml(exercise.name)}</strong>
+              ${editMode ? `
+                <div class="exercise-catalog-actions">
+                  <button data-action="renameCatalogExercise" data-exercise-id="${exercise.id}" data-exercise-name="${escapeAttr(exercise.name)}">Изменить</button>
+                  <button class="danger" data-action="deleteCatalogExercise" data-exercise-id="${exercise.id}">Удалить</button>
+                </div>
+              ` : ""}
             </article>
           `).join("")}
         </div>
       ` : `
-        <div class="empty-state">Добавь упражнения в программе, и они появятся здесь.</div>
+        <div class="empty-state">Добавь первое упражнение через кнопку плюс.</div>
       `}
     </section>
   `;
-}
-
-function collectExercises() {
-  const map = new Map();
-
-  getWorkouts().forEach((workout, workoutIndex) => {
-    const workoutTitle = formatWorkoutTitle(workout, workoutIndex);
-
-    workout.exercises.forEach((exercise) => {
-      const name = String(exercise.name || "Упражнение").trim();
-      const key = name.toLowerCase();
-      const current = map.get(key);
-
-      if (current) {
-        if (!current.workouts.includes(workoutTitle)) current.workouts.push(workoutTitle);
-        return;
-      }
-
-      map.set(key, {
-        name,
-        target: exercise.target || "+",
-        sets: exercise.sets || 1,
-        weight: exercise.weight || "",
-        workouts: [workoutTitle]
-      });
-    });
-  });
-
-  return [...map.values()].sort((a, b) => a.name.localeCompare(b.name, "ru"));
-}
-
-function formatWorkoutTitle(workout, index) {
-  return `Т${index + 1}. ${stripWorkoutPrefix(workout.title)}`;
-}
-
-function stripWorkoutPrefix(title) {
-  return String(title).replace(/^Т\d+\.\s*/i, "").replace(/^Ğ¢\d+\.\s*/i, "");
 }
 
 function escapeHtml(value) {
@@ -71,4 +39,8 @@ function escapeHtml(value) {
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;");
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replaceAll('"', "&quot;");
 }
