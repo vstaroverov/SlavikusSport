@@ -1,4 +1,8 @@
-import { getExerciseCatalog, isExerciseCatalogEditMode } from "../features/exercises/exercisesStorage.js";
+import {
+  exerciseCategories,
+  getExerciseCatalog,
+  isExerciseCatalogEditMode
+} from "../features/exercises/exercisesStorage.js";
 
 export function renderExercisesScreen() {
   const exercises = getExerciseCatalog();
@@ -17,10 +21,13 @@ export function renderExercisesScreen() {
         <div class="exercise-directory">
           ${exercises.map((exercise) => `
             <article class="plain-panel exercise-directory-card compact-exercise-card">
-              <strong>${escapeHtml(exercise.name)}</strong>
+              <div class="exercise-catalog-head">
+                <strong>${escapeHtml(exercise.name)}</strong>
+                ${renderCategory(exercise.category)}
+              </div>
               ${editMode ? `
                 <div class="exercise-catalog-actions">
-                  <button data-action="renameCatalogExercise" data-exercise-id="${exercise.id}" data-exercise-name="${escapeAttr(exercise.name)}">Изменить</button>
+                  <button data-action="renameCatalogExercise" data-exercise-id="${exercise.id}" data-exercise-name="${escapeAttr(exercise.name)}" data-exercise-category="${exercise.category || "base"}">Изменить</button>
                   <button class="danger" data-action="deleteCatalogExercise" data-exercise-id="${exercise.id}">Удалить</button>
                 </div>
               ` : ""}
@@ -31,6 +38,17 @@ export function renderExercisesScreen() {
         <div class="empty-state">Добавь первое упражнение через кнопку плюс.</div>
       `}
     </section>
+  `;
+}
+
+function renderCategory(categoryId) {
+  const category = exerciseCategories[categoryId] || exerciseCategories.base;
+
+  return `
+    <span class="exercise-category-badge category-${categoryId || "base"}">
+      <b>${category.mark}</b>
+      <small>${category.label}</small>
+    </span>
   `;
 }
 

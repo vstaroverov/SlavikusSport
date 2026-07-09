@@ -1,46 +1,57 @@
 const EXERCISES_KEY = "slavikus:exercise-catalog";
 const EDIT_KEY = "slavikus:exercise-catalog-edit";
 
+export const exerciseCategories = {
+  workout: { label: "Воркаут", mark: "WK" },
+  crossfit: { label: "Кроссфит", mark: "CF" },
+  strength: { label: "Силовая", mark: "СЛ" },
+  base: { label: "База", mark: "БЗ" }
+};
+
 const defaultExercises = [
-  "Гантели на бицепс",
-  "Гиперэкстензия",
-  "Вис",
-  "Подтягивания",
-  "Отжимания",
-  "Разгиб ног сидя",
-  "Подъем на бицепс бедра",
-  "Подъем на носки",
-  "Подъем штанги на бицепс",
-  "Приседы",
-  "Присед на станке",
-  "Присед со штангой",
-  "Разминка",
-  "Становая тяга",
-  "Становая тяга со шрагами",
-  "Толкание платформы лежа",
-  "Штанга на грудь",
-  "Заминка",
-  "Бег"
+  { name: "Бег", category: "workout" },
+  { name: "Вис", category: "workout" },
+  { name: "Гантели на бицепс", category: "strength" },
+  { name: "Гиперэкстензия", category: "base" },
+  { name: "Заминка", category: "base" },
+  { name: "Отжимания", category: "workout" },
+  { name: "Подтягивания", category: "workout" },
+  { name: "Подъем на бицепс бедра", category: "strength" },
+  { name: "Подъем на носки", category: "strength" },
+  { name: "Подъем штанги на бицепс", category: "strength" },
+  { name: "Присед на станке", category: "strength" },
+  { name: "Присед со штангой", category: "base" },
+  { name: "Приседы", category: "workout" },
+  { name: "Разгиб ног сидя", category: "strength" },
+  { name: "Разминка", category: "base" },
+  { name: "Становая тяга", category: "base" },
+  { name: "Становая тяга со шрагами", category: "strength" },
+  { name: "Толкание платформы лежа", category: "strength" },
+  { name: "Штанга на грудь", category: "crossfit" }
 ];
 
 export function getExerciseCatalog() {
   seedExerciseCatalog();
+  normalizeStoredExercises();
   syncDefaultExercises();
   return sortExercises(JSON.parse(localStorage.getItem(EXERCISES_KEY) || "[]"));
 }
 
-export function addExerciseToCatalog(name) {
+export function addExerciseToCatalog(name, category = "base") {
   const exercises = getExerciseCatalog();
   exercises.push({
     id: crypto.randomUUID(),
-    name
+    name,
+    category: normalizeCategory(category)
   });
   saveExerciseCatalog(exercises);
 }
 
-export function renameExerciseInCatalog(id, name) {
+export function updateExerciseInCatalog(id, name, category = "base") {
   const exercises = getExerciseCatalog().map((exercise) => (
-    exercise.id === id ? { ...exercise, name } : exercise
+    exercise.id === id
+      ? { ...exercise, name, category: normalizeCategory(category) }
+      : exercise
   ));
   saveExerciseCatalog(exercises);
 }
@@ -61,24 +72,47 @@ export function toggleExerciseCatalogEditMode() {
 function seedExerciseCatalog() {
   if (localStorage.getItem(EXERCISES_KEY)) return;
 
-  saveExerciseCatalog(defaultExercises.map((name, index) => ({
+  saveExerciseCatalog(defaultExercises.map((exercise, index) => ({
     id: `base-exercise-${index + 1}`,
-    name
+    ...exercise
   })));
+}
+
+function normalizeStoredExercises() {
+  const raw = JSON.parse(localStorage.getItem(EXERCISES_KEY) || "[]");
+  const normalized = raw.map((exercise, index) => {
+    if (typeof exercise === "string") {
+      return {
+        id: `migrated-exercise-${index + 1}`,
+        name: exercise,
+        category: "base"
+      };
+    }
+
+    return {
+      id: exercise.id || `migrated-exercise-${index + 1}`,
+      name: exercise.name || "Упражнение",
+      category: normalizeCategory(exercise.category)
+    };
+  });
+
+  if (JSON.stringify(raw) !== JSON.stringify(normalized)) {
+    saveExerciseCatalog(normalized);
+  }
 }
 
 function syncDefaultExercises() {
   const exercises = JSON.parse(localStorage.getItem(EXERCISES_KEY) || "[]");
   const existingNames = new Set(exercises.map((exercise) => normalizeName(exercise.name)));
-  const missing = defaultExercises.filter((name) => !existingNames.has(normalizeName(name)));
+  const missing = defaultExercises.filter((exercise) => !existingNames.has(normalizeName(exercise.name)));
 
   if (!missing.length) return;
 
   saveExerciseCatalog([
     ...exercises,
-    ...missing.map((name) => ({
+    ...missing.map((exercise) => ({
       id: `base-exercise-${crypto.randomUUID()}`,
-      name
+      ...exercise
     }))
   ]);
 }
@@ -93,4 +127,8 @@ function sortExercises(exercises) {
 
 function normalizeName(name) {
   return String(name).trim().toLowerCase();
+}
+
+function normalizeCategory(category) {
+  return exerciseCategories[category] ? category : "base";
 }

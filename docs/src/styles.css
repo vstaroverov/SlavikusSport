@@ -635,6 +635,13 @@ p {
   padding: 14px 16px;
 }
 
+.exercise-catalog-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
 .exercise-directory-card strong,
 .exercise-directory-card span {
   display: block;
@@ -660,6 +667,49 @@ p {
   border-radius: 10px;
   background: rgba(5, 18, 39, .58);
   color: var(--soft);
+}
+
+.exercise-category-badge {
+  min-width: 74px;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border: 1px solid rgba(77, 145, 255, .22);
+  border-radius: 12px;
+  background: rgba(5, 18, 39, .74);
+  color: var(--soft);
+}
+
+.exercise-category-badge b {
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.exercise-category-badge small {
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.category-workout {
+  border-color: rgba(39, 196, 255, .34);
+  box-shadow: inset 0 0 18px rgb(39 196 255 / 10%);
+}
+
+.category-crossfit {
+  border-color: rgba(255, 212, 71, .34);
+  box-shadow: inset 0 0 18px rgb(255 212 71 / 10%);
+}
+
+.category-strength {
+  border-color: rgba(255, 89, 107, .34);
+  box-shadow: inset 0 0 18px rgb(255 89 107 / 10%);
+}
+
+.category-base {
+  border-color: rgba(108, 255, 184, .30);
+  box-shadow: inset 0 0 18px rgb(108 255 184 / 9%);
 }
 
 .exercise-catalog-actions {
