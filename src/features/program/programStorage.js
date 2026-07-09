@@ -1,50 +1,85 @@
 import { getExerciseCatalog } from "../exercises/exercisesStorage.js";
 
 const WORKOUTS_KEY = "slavikus:workouts";
+const WORKOUTS_VERSION_KEY = "slavikus:workouts-version";
+const WORKOUTS_VERSION = "2026-07-default-program-2";
 
 const starterWorkouts = [
   {
-    id: "workout-a",
-    title: "Тренировка 1",
+    id: "workout-full-body",
+    title: "Фулл бади",
     shortName: "Т1",
     exercises: [
-      { name: "Разминка", target: "+", weight: "", sets: 1 },
-      { name: "Подтягивания", target: "12 x 3", weight: "", sets: 3 },
-      { name: "Отжимания", target: "20 x 3", weight: "", sets: 3 },
-      { name: "Гиперэкстензия", target: "25 x 3", weight: "", sets: 3 },
-      { name: "Заминка", target: "+", weight: "", sets: 1 },
-      { name: "Вис", target: "29 сек", weight: "", sets: 1 }
+      exercise("Разминка", "1", "0", 1),
+      exercise("Подтягивания", "15", "0", 1),
+      exercise("Отжимания", "20", "0", 1),
+      exercise("Брусья", "20", "0", 1),
+      exercise("Гиперэкстензия", "25", "0", 1),
+      exercise("Присед", "25", "0", 1),
+      exercise("Штанга на грудь", "15", "50", 3),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Штанга на бицепс", "15", "25", 3),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Гантели на бицепс", "14", "14", 3),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Становая со шрагами", "15", "60", 3),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Заминка", "1", "0", 1),
+      exercise("Вис", "1", "29 секунд", 1)
     ]
   },
   {
-    id: "workout-b",
-    title: "Тренировка 2",
+    id: "workout-leg-day",
+    title: "День ног",
     shortName: "Т2",
     exercises: [
-      { name: "Разминка", target: "+", weight: "", sets: 1 },
-      { name: "Подъем штанги на бицепс", target: "12 x 3", weight: "12", sets: 3 },
-      { name: "Гантели на бицепс", target: "12 x 3", weight: "20", sets: 3 },
-      { name: "Приседы", target: "20 x 4", weight: "", sets: 4 },
-      { name: "Заминка", target: "+", weight: "", sets: 1 }
+      exercise("Разминка", "1", "0", 1),
+      exercise("Подтягивания", "15", "0", 1),
+      exercise("Отжимания", "25", "0", 1),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Брусья", "20", "0", 1),
+      exercise("Гиперэкстензия", "25", "0", 1),
+      exercise("Приседы", "25", "0", 1),
+      exercise("Разгиб ног сидя", "20", "61", 3),
+      exercise("Подъем на бицепс бедра", "15", "45", 3),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Толкание платформы лежа", "15", "200", 3),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Присед в станке", "15", "65", 3),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Присед со штангой", "15", "40", 3),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Подъем на носки", "15", "65", 3),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Заминка", "1", "0", 1),
+      exercise("Вис", "1", "29 секунд", 1)
     ]
   },
   {
-    id: "workout-c",
-    title: "Тренировка 3",
+    id: "workout-pool",
+    title: "Бассейн",
     shortName: "Т3",
     exercises: [
-      { name: "Разминка", target: "+", weight: "", sets: 1 },
-      { name: "Становая тяга со шрагами", target: "11 x 3", weight: "55", sets: 3 },
-      { name: "Гиперэкстензия", target: "25 x 3", weight: "", sets: 3 },
-      { name: "Вис", target: "29 сек", weight: "", sets: 1 },
-      { name: "Заминка", target: "+", weight: "", sets: 1 }
+      exercise("Заплыв", "1", "45 минут", 1)
+    ]
+  },
+  {
+    id: "workout-run",
+    title: "Пробежка",
+    shortName: "Т4",
+    exercises: [
+      exercise("Бег", "1", "45 минут", 1)
     ]
   }
 ];
 
 export function seedInitialData() {
-  if (!localStorage.getItem(WORKOUTS_KEY)) {
+  if (
+    !localStorage.getItem(WORKOUTS_KEY)
+    || localStorage.getItem(WORKOUTS_VERSION_KEY) !== WORKOUTS_VERSION
+  ) {
     localStorage.setItem(WORKOUTS_KEY, JSON.stringify(starterWorkouts));
+    localStorage.setItem(WORKOUTS_VERSION_KEY, WORKOUTS_VERSION);
   }
 }
 
@@ -109,15 +144,15 @@ export function addExercise(workoutId) {
 export function updateExercise(workoutId, exerciseIndex, field, value) {
   const workouts = getWorkouts();
   const workout = workouts.find((item) => item.id === workoutId);
-  const exercise = workout?.exercises[exerciseIndex];
-  if (!exercise) return;
+  const exerciseItem = workout?.exercises[exerciseIndex];
+  if (!exerciseItem) return;
 
   if (field === "sets") {
-    exercise.sets = value === "" ? "" : Math.max(1, Number(value) || 1);
+    exerciseItem.sets = value === "" ? "" : Math.max(1, Number(value) || 1);
   } else if (field === "weight") {
-    exercise.weight = value.trim();
+    exerciseItem.weight = value.trim();
   } else {
-    exercise[field] = value.trim() || (field === "name" ? "Упражнение" : "+");
+    exerciseItem[field] = value.trim() || (field === "name" ? "Упражнение" : "");
   }
 
   saveWorkouts(workouts);
@@ -143,9 +178,13 @@ export function moveExercise(workoutId, exerciseIndex, direction) {
     return;
   }
 
-  const [exercise] = workout.exercises.splice(exerciseIndex, 1);
-  workout.exercises.splice(nextIndex, 0, exercise);
+  const [exerciseItem] = workout.exercises.splice(exerciseIndex, 1);
+  workout.exercises.splice(nextIndex, 0, exerciseItem);
   saveWorkouts(workouts);
+}
+
+function exercise(name, target, weight, sets) {
+  return { name, target, weight, sets };
 }
 
 function stripWorkoutPrefix(title) {

@@ -10,23 +10,29 @@ export const exerciseCategories = {
 
 const defaultExercises = [
   { name: "Бег", category: "workout" },
+  { name: "Брусья", category: "workout" },
   { name: "Вис", category: "workout" },
   { name: "Гантели на бицепс", category: "strength" },
   { name: "Гиперэкстензия", category: "base" },
+  { name: "Заплыв", category: "workout" },
   { name: "Заминка", category: "base" },
   { name: "Отжимания", category: "workout" },
   { name: "Подтягивания", category: "workout" },
   { name: "Подъем на бицепс бедра", category: "strength" },
   { name: "Подъем на носки", category: "strength" },
   { name: "Подъем штанги на бицепс", category: "strength" },
-  { name: "Присед на станке", category: "strength" },
+  { name: "Пресс", category: "workout" },
+  { name: "Присед", category: "workout" },
+  { name: "Присед в станке", category: "strength" },
   { name: "Присед со штангой", category: "base" },
   { name: "Приседы", category: "workout" },
   { name: "Разгиб ног сидя", category: "strength" },
   { name: "Разминка", category: "base" },
+  { name: "Становая со шрагами", category: "strength" },
   { name: "Становая тяга", category: "base" },
   { name: "Становая тяга со шрагами", category: "strength" },
   { name: "Толкание платформы лежа", category: "strength" },
+  { name: "Штанга на бицепс", category: "strength" },
   { name: "Штанга на грудь", category: "crossfit" }
 ];
 
