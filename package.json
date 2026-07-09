@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "node scripts/build-web.js",
+    "build:pages": "node scripts/build-web.js docs",
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",
     "android:apk": "npm run android:sync && node scripts/build-android.js",

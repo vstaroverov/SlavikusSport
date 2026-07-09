@@ -3,7 +3,8 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const projectRoot = dirname(dirname(fileURLToPath(import.meta.url)));
-const outputDir = join(projectRoot, "www");
+const outputDirName = process.argv[2] || "www";
+const outputDir = join(projectRoot, outputDirName);
 
 rmSync(outputDir, { recursive: true, force: true });
 mkdirSync(outputDir, { recursive: true });
