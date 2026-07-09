@@ -4,7 +4,8 @@ const items = [
   ["workout", "play", "Тренировка"],
   ["program", "plus", "Программа"],
   ["log", "list", "Лог"],
-  ["stats", "stats", "Стата"]
+  ["stats", "stats", "Стата"],
+  ["main", "home", "Главная"]
 ];
 
 export function renderBottomNav(active) {

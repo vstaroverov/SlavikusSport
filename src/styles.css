@@ -1069,7 +1069,7 @@ p {
   width: min(460px, calc(100% - 22px));
   transform: translateX(-50%);
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 2px;
   padding: 9px 10px calc(9px + env(safe-area-inset-bottom));
   border: 1px solid rgba(77, 145, 255, .20);
@@ -1088,7 +1088,7 @@ p {
   border-radius: 14px;
   background: transparent;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
 }
 
