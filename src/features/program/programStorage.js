@@ -1,44 +1,43 @@
+import { getExerciseCatalog } from "../exercises/exercisesStorage.js";
+
 const WORKOUTS_KEY = "slavikus:workouts";
 
 const starterWorkouts = [
   {
     id: "workout-a",
     title: "Тренировка 1",
-    shortName: "T1",
+    shortName: "Т1",
     exercises: [
-      { name: "Разминка", target: "+", sets: 1 },
-      { name: "Подтягивания", target: "12 x 3", sets: 3 },
-      { name: "Пресс", target: "20 x 3", sets: 3 },
-      { name: "Отжимания", target: "20 x 3", sets: 3 },
-      { name: "Брусья", target: "20 x 3", sets: 3 },
-      { name: "Гиперэкстензия", target: "25 x 3", sets: 3 },
-      { name: "Штанга", target: "40кг x 13, 40кг x 12, 50кг x 7", sets: 3 },
-      { name: "Заминка", target: "+", sets: 1 },
-      { name: "Вис", target: "29 сек", sets: 1 }
+      { name: "Разминка", target: "+", weight: "", sets: 1 },
+      { name: "Подтягивания", target: "12 x 3", weight: "", sets: 3 },
+      { name: "Отжимания", target: "20 x 3", weight: "", sets: 3 },
+      { name: "Гиперэкстензия", target: "25 x 3", weight: "", sets: 3 },
+      { name: "Заминка", target: "+", weight: "", sets: 1 },
+      { name: "Вис", target: "29 сек", weight: "", sets: 1 }
     ]
   },
   {
     id: "workout-b",
     title: "Тренировка 2",
-    shortName: "T2",
+    shortName: "Т2",
     exercises: [
-      { name: "Разминка", target: "+", sets: 1 },
-      { name: "Подъем на бицепс", target: "12кг x 12 x 3", sets: 3 },
-      { name: "Гантели на бицепс", target: "20кг x 12 x 3", sets: 3 },
-      { name: "Пресс", target: "20 x 4", sets: 4 },
-      { name: "Заминка", target: "+", sets: 1 }
+      { name: "Разминка", target: "+", weight: "", sets: 1 },
+      { name: "Подъем штанги на бицепс", target: "12 x 3", weight: "12", sets: 3 },
+      { name: "Гантели на бицепс", target: "12 x 3", weight: "20", sets: 3 },
+      { name: "Приседы", target: "20 x 4", weight: "", sets: 4 },
+      { name: "Заминка", target: "+", weight: "", sets: 1 }
     ]
   },
   {
     id: "workout-c",
     title: "Тренировка 3",
-    shortName: "T3",
+    shortName: "Т3",
     exercises: [
-      { name: "Разминка", target: "+", sets: 1 },
-      { name: "Становая со шрагами", target: "55кг x 11 x 3", sets: 3 },
-      { name: "Гиперэкстензия", target: "25 x 3", sets: 3 },
-      { name: "Вис", target: "29 сек", sets: 1 },
-      { name: "Заминка", target: "+", sets: 1 }
+      { name: "Разминка", target: "+", weight: "", sets: 1 },
+      { name: "Становая тяга со шрагами", target: "11 x 3", weight: "55", sets: 3 },
+      { name: "Гиперэкстензия", target: "25 x 3", weight: "", sets: 3 },
+      { name: "Вис", target: "29 сек", weight: "", sets: 1 },
+      { name: "Заминка", target: "+", weight: "", sets: 1 }
     ]
   }
 ];
@@ -97,8 +96,9 @@ export function addExercise(workoutId) {
   const workout = workouts.find((item) => item.id === workoutId);
   if (!workout) return;
 
+  const catalogExercise = getExerciseCatalog()[0];
   workout.exercises.push({
-    name: "Новое упражнение",
+    name: catalogExercise?.name || "Упражнение",
     target: "10",
     weight: "",
     sets: 3
@@ -149,5 +149,5 @@ export function moveExercise(workoutId, exerciseIndex, direction) {
 }
 
 function stripWorkoutPrefix(title) {
-  return String(title).trim().replace(/^Т\d+\.\s*/i, "");
+  return String(title).trim().replace(/^Т\d+\.\s*/i, "").replace(/^Ğ¢\d+\.\s*/i, "");
 }

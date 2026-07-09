@@ -32,7 +32,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -41,7 +42,8 @@ button {
   cursor: pointer;
 }
 
-input {
+input,
+select {
   color: var(--ink);
 }
 
@@ -780,6 +782,7 @@ p {
 }
 
 .exercise-edit-row input,
+.exercise-edit-row select,
 .current-card input,
 .profile-panel input {
   width: 100%;

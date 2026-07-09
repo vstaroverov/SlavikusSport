@@ -1,5 +1,6 @@
 import { renderCalendar } from "../components/Calendar.js";
 import { renderExerciseList } from "../components/ExerciseList.js";
+import { getExerciseCatalog } from "../features/exercises/exercisesStorage.js";
 import { getWorkouts } from "../features/program/programStorage.js";
 import { getActiveWorkoutEditorId, isProgramEditMode } from "../features/program/programEditorState.js";
 
@@ -7,6 +8,7 @@ export function renderProgramScreen() {
   const workouts = getWorkouts();
   const editMode = isProgramEditMode();
   const activeWorkoutId = getActiveWorkoutEditorId();
+  const exerciseCatalog = getExerciseCatalog();
 
   return `
     <section class="stack">
@@ -21,7 +23,7 @@ export function renderProgramScreen() {
         <details class="workout-editor" ${isWorkoutOpen(workout.id, editMode, activeWorkoutId) ? "open" : ""}>
           <summary>${escapeHtml(formatWorkoutTitle(workout, index))}<span>${workout.exercises.length} упр.</span></summary>
           ${editMode ? renderWorkoutControls(workout, index, workouts.length) : ""}
-          ${editMode ? renderExerciseEditor(workout) : renderExerciseList(workout.exercises)}
+          ${editMode ? renderExerciseEditor(workout, exerciseCatalog) : renderExerciseList(workout.exercises)}
         </details>
       `).join("")}
       <h2>Календарь</h2>
@@ -46,14 +48,14 @@ function renderWorkoutControls(workout, index, total) {
   `;
 }
 
-function renderExerciseEditor(workout) {
+function renderExerciseEditor(workout, exerciseCatalog) {
   return `
     <div class="exercise-editor">
       ${workout.exercises.map((exercise, index) => `
         <div class="exercise-edit-row">
           <label>
             <span>Название</span>
-            <input value="${escapeAttr(exercise.name)}" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="name" />
+            ${renderExerciseSelect(exercise, exerciseCatalog, workout.id, index)}
           </label>
           <div class="exercise-edit-metrics">
             <label>
@@ -78,6 +80,23 @@ function renderExerciseEditor(workout) {
       `).join("")}
       <button class="secondary-button compact" data-action="addExercise" data-workout-id="${workout.id}">Добавить упражнение</button>
     </div>
+  `;
+}
+
+function renderExerciseSelect(exercise, exerciseCatalog, workoutId, index) {
+  const options = [...exerciseCatalog];
+  const hasCurrent = options.some((item) => item.name === exercise.name);
+
+  if (exercise.name && !hasCurrent) {
+    options.unshift({ id: "current", name: exercise.name });
+  }
+
+  return `
+    <select data-change="updateExercise" data-workout-id="${workoutId}" data-exercise-index="${index}" data-field="name">
+      ${options.map((item) => `
+        <option value="${escapeAttr(item.name)}" ${item.name === exercise.name ? "selected" : ""}>${escapeHtml(item.name)}</option>
+      `).join("")}
+    </select>
   `;
 }
 
