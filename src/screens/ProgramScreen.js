@@ -7,6 +7,7 @@ export function renderProgramScreen() {
   const workouts = getWorkouts();
   const editMode = isProgramEditMode();
   const activeWorkoutId = getActiveWorkoutEditorId();
+
   return `
     <section class="stack">
       <div class="section-head">
@@ -60,7 +61,7 @@ function renderExerciseEditor(workout) {
               <input value="${escapeAttr(exercise.target)}" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="target" />
             </label>
             <label>
-              <span>Вес</span>
+              <span>Вес (кг)</span>
               <input value="${escapeAttr(exercise.weight || "")}" placeholder="40 кг" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="weight" />
             </label>
             <label>
@@ -85,7 +86,7 @@ function formatWorkoutTitle(workout, index) {
 }
 
 function stripWorkoutPrefix(title) {
-  return String(title).replace(/^Т\d+\.\s*/i, "");
+  return String(title).replace(/^Т\d+\.\s*/i, "").replace(/^Ğ¢\d+\.\s*/i, "");
 }
 
 function escapeHtml(value) {
