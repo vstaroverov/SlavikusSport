@@ -997,6 +997,45 @@ p {
   font-weight: 800;
 }
 
+.current-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.current-card-head > div:first-child {
+  min-width: 0;
+}
+
+.current-workload {
+  min-width: 108px;
+  max-width: 42%;
+  padding: 10px 12px;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 8px;
+  background: rgb(255 255 255 / 6%);
+  text-align: right;
+}
+
+.current-workload strong,
+.current-workload small {
+  display: block;
+  white-space: nowrap;
+}
+
+.current-workload strong {
+  margin-top: 3px;
+  font-size: 18px;
+}
+
+.current-workload small {
+  margin-top: 2px;
+  color: var(--soft);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .current-card input,
 .profile-panel input {
   margin: 4px 0 12px;
