@@ -1,5 +1,6 @@
-import { clearCurrentUser } from "../features/profile/profileStorage.js";
+import { clearCurrentUser, getCurrentUser } from "../features/profile/profileStorage.js";
 import { showConfirmDialog } from "../components/ConfirmDialog.js";
+import { resetWorkoutData } from "../features/storage/appMigration.js";
 
 export default async function logout() {
   const confirmed = await showConfirmDialog({
@@ -12,6 +13,8 @@ export default async function logout() {
 
   if (!confirmed) return;
 
+  const user = getCurrentUser();
+  resetWorkoutData(user?.id);
   clearCurrentUser();
   window.location.hash = "";
   window.dispatchEvent(new CustomEvent("app:changed"));
