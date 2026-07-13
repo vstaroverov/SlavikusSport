@@ -59,7 +59,7 @@ export function formatSetsInput(result) {
   const normalized = normalizeResult(result);
   return normalized.done.map((value, index) => {
     const weight = normalized.weights[index] || "";
-    if (weight) return `${weight}x${value}`;
+    if (weight) return `${weight}х${value}`;
     return value;
   }).join(", ");
 }

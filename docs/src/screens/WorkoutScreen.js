@@ -58,5 +58,16 @@ export function renderWorkoutScreen() {
 }
 
 function formatCurrentExercise(exercise) {
-  return [exercise.weight, exercise.target].filter(Boolean).join(" · ");
+  const weight = normalizeWeight(exercise.weight);
+  const repeats = String(exercise.target || "").trim();
+  if (weight && repeats) return `${weight}х${repeats}`;
+  return repeats || String(exercise.weight || "").trim();
+}
+
+function normalizeWeight(value) {
+  const text = String(value || "");
+  if (/\d+\s*(с|сек|секунд|мин|минут|ч|час)/i.test(text)) return "";
+  const number = text.match(/\d+(?:[.,]\d+)?/)?.[0] || "";
+  const normalized = Number(number.replace(",", "."));
+  return normalized > 0 ? String(normalized) : "";
 }
