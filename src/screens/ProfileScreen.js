@@ -28,8 +28,19 @@ export function renderProfileScreen() {
           <button class="secondary-button" data-action="importBackup">Восстановить</button>
         </div>
       </div>
+
+      <div class="profile-panel app-version-panel">
+        <p>Версия: ${escapeHtml(getPlatformName())} - 0.016.1 от 13.07.2026</p>
+        <p>Разработчик: V-STAR-GROUP.DIGITAL</p>
+      </div>
     </section>
   `;
+}
+
+function getPlatformName() {
+  const platform = window.Capacitor?.getPlatform?.();
+  if (platform === "android") return "Android";
+  return "Web";
 }
 
 function escapeHtml(value) {
