@@ -1,22 +1,9 @@
-import { getCurrentUser } from "../features/profile/profileStorage.js";
-import { getSubscriptionState } from "../features/profile/premiumSubscription.js";
 import { getLogEntries } from "../features/log/logStorage.js";
 import { buildExerciseStats } from "../features/stats/statsBuilder.js";
 import { getAiRecommendation } from "../features/stats/aiRecommendations.js";
 import { getExerciseCatalog } from "../features/exercises/exercisesStorage.js";
 
 export function renderStatsScreen() {
-  const subscription = getSubscriptionState(getCurrentUser());
-  if (subscription.daysLeft <= 0) {
-    return `
-      <section class="premium-lock">
-        <h1>Стата</h1>
-        <p>Графики по упражнениям и ИИ-рекомендации доступны в Premium.</p>
-        <button class="primary-button" data-route="profile">Подключить Premium</button>
-      </section>
-    `;
-  }
-
   const stats = buildExerciseStats(getLogEntries(), getExerciseCatalog());
 
   return `
