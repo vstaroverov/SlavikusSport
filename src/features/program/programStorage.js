@@ -2,7 +2,7 @@ import { getExerciseCatalog } from "../exercises/exercisesStorage.js";
 
 const WORKOUTS_KEY = "slavikus:workouts";
 const WORKOUTS_VERSION_KEY = "slavikus:workouts-version";
-const WORKOUTS_VERSION = "2026-07-default-program-2";
+const WORKOUTS_VERSION = "2026-07-default-program-3";
 
 const starterWorkouts = [
   {
@@ -40,16 +40,29 @@ const starterWorkouts = [
       exercise("Брусья", "20", "0", 1),
       exercise("Гиперэкстензия", "25", "0", 1),
       exercise("Приседы", "25", "0", 1),
-      exercise("Разгиб ног сидя", "20", "61", 3),
-      exercise("Подъем на бицепс бедра", "15", "45", 3),
+      exercise("Разгиб ног сидя", "20", "61", 1),
+      exercise("Подъем на бицепс бедра", "15", "45", 1),
       exercise("Пресс", "25", "0", 1),
-      exercise("Толкание платформы лежа", "15", "200", 3),
+      exercise("Разгиб ног сидя", "20", "61", 1),
+      exercise("Подъем на бицепс бедра", "15", "45", 1),
       exercise("Пресс", "25", "0", 1),
-      exercise("Присед в станке", "15", "65", 3),
+      exercise("Разгиб ног сидя", "20", "61", 1),
+      exercise("Подъем на бицепс бедра", "15", "45", 1),
       exercise("Пресс", "25", "0", 1),
-      exercise("Присед со штангой", "15", "40", 3),
+      exercise("Толкание платформы лежа", "15", "200", 1),
+      exercise("Присед в станке", "15", "65", 1),
+      exercise("Присед со штангой", "15", "40", 1),
+      exercise("Подъем на носки", "15", "65", 1),
       exercise("Пресс", "25", "0", 1),
-      exercise("Подъем на носки", "15", "65", 3),
+      exercise("Толкание платформы лежа", "15", "200", 1),
+      exercise("Присед в станке", "15", "65", 1),
+      exercise("Присед со штангой", "15", "40", 1),
+      exercise("Подъем на носки", "15", "65", 1),
+      exercise("Пресс", "25", "0", 1),
+      exercise("Толкание платформы лежа", "15", "200", 1),
+      exercise("Присед в станке", "15", "65", 1),
+      exercise("Присед со штангой", "15", "40", 1),
+      exercise("Подъем на носки", "15", "65", 1),
       exercise("Пресс", "25", "0", 1),
       exercise("Заминка", "1", "0", 1),
       exercise("Вис", "1", "29 секунд", 1)
