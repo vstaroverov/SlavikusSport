@@ -6,7 +6,7 @@ const LOG_MIGRATION_KEY_PREFIX = "slavikus:log-migrated:";
 
 export function getLogEntries() {
   migrateLegacyLogEntries();
-  return readEntries(getLogKey());
+  return sortEntriesByDateDesc(readEntries(getLogKey()));
 }
 
 export function addLogEntry(entry) {
@@ -85,6 +85,29 @@ function readEntries(key) {
   } catch {
     return [];
   }
+}
+
+function sortEntriesByDateDesc(entries) {
+  return [...entries].sort((a, b) => (
+    parseEntryDate(b.finishedAt) - parseEntryDate(a.finishedAt)
+  ));
+}
+
+function parseEntryDate(value) {
+  const match = String(value || "").match(/(\d{2})\.(\d{2})\.(\d{4}),?\s+(\d{2}):(\d{2})(?::(\d{2}))?/);
+  if (match) {
+    return new Date(
+      Number(match[3]),
+      Number(match[2]) - 1,
+      Number(match[1]),
+      Number(match[4]),
+      Number(match[5]),
+      Number(match[6] || 0)
+    ).getTime();
+  }
+
+  const timestamp = new Date(value || "").getTime();
+  return Number.isNaN(timestamp) ? 0 : timestamp;
 }
 
 function buildDemoMonthEntries() {
