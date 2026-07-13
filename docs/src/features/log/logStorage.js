@@ -2,8 +2,10 @@ import { getCurrentUser } from "../profile/profileStorage.js";
 
 const LEGACY_LOG_KEY = "slavikus:log";
 const LOG_KEY_PREFIX = "slavikus:log:";
+const LOG_MIGRATION_KEY_PREFIX = "slavikus:log-migrated:";
 
 export function getLogEntries() {
+  migrateLegacyLogEntries();
   return readEntries(getLogKey());
 }
 
@@ -54,6 +56,26 @@ export function seedDemoLogData() {
 function getLogKey() {
   const user = getCurrentUser();
   return `${LOG_KEY_PREFIX}${encodeURIComponent(user?.id || "guest")}`;
+}
+
+function getMigrationKey() {
+  const user = getCurrentUser();
+  return `${LOG_MIGRATION_KEY_PREFIX}${encodeURIComponent(user?.id || "guest")}`;
+}
+
+function migrateLegacyLogEntries() {
+  if (localStorage.getItem(getMigrationKey())) return;
+
+  const legacyEntries = readEntries(LEGACY_LOG_KEY);
+  if (legacyEntries.length) {
+    const entriesById = new Map();
+    [...legacyEntries, ...readEntries(getLogKey())].forEach((entry) => {
+      entriesById.set(entry.id || `${entry.finishedAt}-${entry.title}`, entry);
+    });
+    localStorage.setItem(getLogKey(), JSON.stringify([...entriesById.values()]));
+  }
+
+  localStorage.setItem(getMigrationKey(), "true");
 }
 
 function readEntries(key) {

@@ -10,12 +10,13 @@ export async function initializePersistentStorage() {
   const db = await openDatabase();
   const indexedEntries = await readAllEntries(db);
   const localKeys = getLocalDataKeys();
+  const localKeySet = new Set(localKeys);
 
-  if (localKeys.length === 0 && indexedEntries.length > 0) {
-    indexedEntries.forEach(([key, value]) => localStorage.setItem(key, value));
-  } else {
-    await Promise.all(localKeys.map((key) => writeEntry(db, key, localStorage.getItem(key) || "")));
-  }
+  indexedEntries.forEach(([key, value]) => {
+    if (!localKeySet.has(key)) localStorage.setItem(key, value);
+  });
+
+  await Promise.all(getLocalDataKeys().map((key) => writeEntry(db, key, localStorage.getItem(key) || "")));
 
   patchLocalStorage(db);
 }
