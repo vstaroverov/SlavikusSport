@@ -542,6 +542,27 @@ p {
   padding: 14px;
 }
 
+.workout-editor.editable {
+  position: relative;
+  border-color: rgba(255, 212, 71, .48);
+  background:
+    radial-gradient(circle at 100% 0, rgba(255, 212, 71, .14), transparent 34%),
+    linear-gradient(135deg, rgba(8, 35, 75, .92), rgba(3, 13, 31, .96)),
+    var(--panel);
+  box-shadow: 0 0 24px rgb(255 212 71 / 12%), 0 18px 42px rgb(0 0 0 / 24%);
+}
+
+.workout-editor.editable::after {
+  content: "✎";
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  color: #ffd447;
+  font-size: 13px;
+  font-weight: 900;
+  pointer-events: none;
+}
+
 .workout-editor summary {
   display: flex;
   justify-content: space-between;
@@ -552,10 +573,38 @@ p {
   font-weight: 800;
 }
 
+.workout-editor.editable summary {
+  padding-right: 20px;
+}
+
+.workout-editor.editable summary > span:last-child {
+  padding: 5px 8px;
+  border: 1px solid rgba(255, 212, 71, .34);
+  border-radius: 999px;
+  color: #ffd447;
+  background: rgba(255, 212, 71, .10);
+  font-size: 11px;
+}
+
+.workout-title {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .workout-editor summary span,
 .muted {
   color: var(--soft);
   font-size: 13px;
+}
+
+.edit-mode-hint {
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 212, 71, .32);
+  border-radius: 12px;
+  color: #ffe08a;
+  background: rgba(255, 212, 71, .08);
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .workout-controls {
@@ -1088,6 +1137,55 @@ p {
   line-height: 1.45;
 }
 
+.log-exercise-editor {
+  display: grid;
+  gap: 10px;
+  padding: 0 14px 16px;
+}
+
+.log-exercise-editor[hidden] {
+  display: none;
+}
+
+.log-exercise-list {
+  display: grid;
+  gap: 8px;
+}
+
+.log-exercise-row {
+  display: grid;
+  grid-template-columns: minmax(116px, 1fr) 56px 64px 56px 72px;
+  gap: 8px;
+  align-items: center;
+}
+
+.log-exercise-row-head {
+  color: var(--soft);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.log-exercise-row select,
+.log-exercise-row input {
+  min-width: 0;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 1px solid rgba(77, 145, 255, .22);
+  border-radius: 10px;
+  background: rgba(1, 8, 20, .74);
+  color: var(--ink);
+}
+
+.log-exercise-row button {
+  min-width: 0;
+  min-height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 89, 107, .12);
+  color: #ff8f9b;
+  border: 1px solid rgba(255, 89, 107, .28);
+  font-weight: 800;
+}
+
 .log-card .muted {
   padding: 0 14px;
 }
@@ -1126,9 +1224,19 @@ p {
   gap: 12px;
 }
 
+.stat-head > div {
+  min-width: 0;
+}
+
 .stat-head strong,
 .stat-head span {
   display: block;
+}
+
+.stat-head strong,
+.stat-dynamics span,
+.exercise-stat-card p {
+  overflow-wrap: anywhere;
 }
 
 .stat-head span {
@@ -1143,44 +1251,74 @@ p {
 }
 
 .stat-chart {
+  --stat-chart-height: 120px;
+  margin-top: 18px;
   display: grid;
   grid-template-columns: 52px 1fr 42px;
   gap: 8px;
 }
 
 .stat-y-axis {
-  height: 154px;
-  display: grid;
-  grid-template-rows: auto 1fr 1fr 1fr;
-  align-items: end;
+  position: relative;
+  height: var(--stat-chart-height);
   color: var(--soft);
   font-size: 11px;
 }
 
 .stat-y-axis small {
-  align-self: start;
+  position: absolute;
+  top: -18px;
   line-height: 1.15;
 }
 
 .stat-y-axis span {
+  position: absolute;
+  right: 0;
+  transform: translateY(50%);
   text-align: right;
 }
 
+.stat-y-axis .axis-max {
+  top: 0;
+  transform: translateY(-50%);
+}
+
+.stat-y-axis .axis-mid {
+  top: 50%;
+}
+
+.stat-y-axis .axis-zero {
+  bottom: 0;
+}
+
 .stat-y-axis-right span {
+  left: 0;
+  right: auto;
   color: #ffd447;
   text-align: left;
 }
 
-.stat-plot {
+.stat-plot,
+.stat-plot-scroll {
   min-width: 0;
 }
 
+.stat-plot-scroll {
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.stat-series {
+  min-width: max(100%, calc(var(--points) * 35px));
+}
+
 .stat-bars {
-  height: 132px;
-  display: flex;
+  height: var(--stat-chart-height);
+  display: grid;
+  grid-template-columns: repeat(var(--points), minmax(24px, 1fr));
   align-items: end;
   gap: 7px;
-  padding-top: 8px;
+  border-top: 1px solid rgba(77, 145, 255, .18);
   border-bottom: 1px solid rgba(77, 145, 255, .18);
   background:
     linear-gradient(to top, rgba(77, 145, 255, .10) 1px, transparent 1px) 0 0 / 100% 50%;
@@ -1188,9 +1326,10 @@ p {
 
 .stat-bar {
   position: relative;
-  flex: 1;
-  min-width: 8px;
-  max-width: 28px;
+  width: 100%;
+  min-width: 24px;
+  max-width: 30px;
+  justify-self: center;
   border-radius: 8px 8px 0 0;
   background: linear-gradient(180deg, #28b4ff, #075cff);
   box-shadow: 0 0 18px rgb(24 114 255 / 48%);
@@ -1209,17 +1348,53 @@ p {
 }
 
 .stat-dates {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(var(--points), minmax(24px, 1fr));
   gap: 7px;
-  overflow-x: auto;
   color: var(--soft);
   font-size: 11px;
   padding-top: 6px;
 }
 
 .stat-dates span {
-  min-width: 22px;
   text-align: center;
+}
+
+.stat-dynamics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid rgba(77, 145, 255, .16);
+  border-radius: 12px;
+  background: rgba(5, 18, 39, .58);
+}
+
+.stat-dynamics strong,
+.stat-dynamics span {
+  display: block;
+}
+
+.stat-dynamics strong {
+  color: #86b8ff;
+  font-size: 13px;
+}
+
+.stat-dynamics span {
+  color: var(--soft);
+  font-size: 12px;
+}
+
+.stat-dynamics.positive strong {
+  color: #6cffb8;
+}
+
+.stat-dynamics.negative strong {
+  color: #ff8f9b;
+}
+
+.stat-dynamics.neutral strong {
+  color: #ffd447;
 }
 
 .bottom-nav {
@@ -1279,6 +1454,184 @@ p {
 .bottom-nav button.active {
   color: #2586ff;
   text-shadow: 0 0 18px rgb(37 134 255 / 65%);
+}
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 4, 11, .72);
+  backdrop-filter: blur(14px);
+}
+
+.confirm-dialog {
+  width: min(380px, 100%);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 26px 20px 20px;
+  border: 1px solid rgba(77, 145, 255, .30);
+  border-radius: 20px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0, rgba(37, 134, 255, .26), transparent 44%),
+    linear-gradient(135deg, rgba(8, 35, 75, .98), rgba(3, 13, 31, .98));
+  box-shadow: 0 30px 90px rgb(0 0 0 / 58%), inset 0 1px 0 rgba(255, 255, 255, .10);
+}
+
+.confirm-mark {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 30px;
+  font-weight: 900;
+  background: linear-gradient(180deg, #1775ff, #0757f6);
+  box-shadow: 0 0 32px rgb(23 102 255 / 48%);
+}
+
+.confirm-mark.danger {
+  background: linear-gradient(180deg, #ff7a88, #ff3d55);
+  box-shadow: 0 0 32px rgb(255 89 107 / 42%);
+}
+
+.confirm-dialog h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.confirm-dialog p {
+  margin: 0;
+  color: var(--soft);
+}
+
+.log-add-dialog label {
+  width: 100%;
+  display: grid;
+  gap: 6px;
+  text-align: left;
+}
+
+.log-add-dialog label span {
+  color: var(--soft);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.log-add-dialog input,
+.log-add-dialog select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid rgba(77, 145, 255, .24);
+  border-radius: 10px;
+  background: rgba(1, 8, 20, .82);
+  color: var(--ink);
+}
+
+.premium-checkout-dialog label {
+  width: 100%;
+  display: grid;
+  gap: 6px;
+  text-align: left;
+}
+
+.premium-checkout-dialog label span,
+.premium-checkout-dialog small {
+  color: var(--soft);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.premium-checkout-dialog small.success {
+  color: #6cffb8;
+}
+
+.premium-checkout-dialog input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid rgba(77, 145, 255, .24);
+  border-radius: 10px;
+  background: rgba(1, 8, 20, .82);
+  color: var(--ink);
+}
+
+.premium-price {
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+}
+
+.premium-price strong {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.premium-price span {
+  color: var(--soft);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.confirm-actions {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.confirm-actions.single {
+  grid-template-columns: 1fr;
+}
+
+.calendar-choice-list {
+  width: 100%;
+  display: grid;
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.calendar-choice-list button {
+  min-height: 46px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  text-align: left;
+}
+
+.calendar-choice-list button:first-child {
+  display: block;
+  text-align: center;
+}
+
+.calendar-choice-list strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.calendar-choice-list span {
+  color: #86b8ff;
+  font-weight: 900;
+}
+
+.confirm-actions .primary-button,
+.confirm-actions .secondary-button {
+  min-height: 46px;
+}
+
+.danger-confirm {
+  background: linear-gradient(180deg, #ff6a7b, #e7364d);
+  box-shadow: 0 16px 34px rgb(255 89 107 / 24%), inset 0 1px 0 rgba(255, 255, 255, .24);
 }
 
 @media (min-width: 760px) {

@@ -1,4 +1,5 @@
 import { addLogEntry } from "../log/logStorage.js";
+import { formatLogText } from "../log/logExercises.js";
 import { clearActiveSession, formatSeconds, getElapsedSeconds } from "./workoutTimer.js";
 
 export function finishWorkout(session) {
@@ -7,13 +8,11 @@ export function finishWorkout(session) {
     name: result.name,
     target: result.target,
     weight: result.weight,
+    weights: fillMissedSets(result).map(() => normalizeWeight(result.weight)),
     sets: result.sets,
     done: fillMissedSets(result)
   }));
-  const text = results.map((result) => {
-    const weight = result.weight ? ` (${result.weight})` : "";
-    return `${result.name}${weight}: ${result.done.join(" / ")}`;
-  }).join("\n");
+  const text = formatLogText(results);
 
   addLogEntry({
     id: session.id,
@@ -25,6 +24,11 @@ export function finishWorkout(session) {
   });
 
   clearActiveSession();
+}
+
+function normalizeWeight(value) {
+  const number = String(value || "").match(/\d+(?:[.,]\d+)?/)?.[0] || "";
+  return number.replace(",", ".");
 }
 
 function fillMissedSets(result) {

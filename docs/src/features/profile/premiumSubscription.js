@@ -1,34 +1,33 @@
 import { getCurrentUser, setCurrentUser } from "./profileStorage.js";
 
-const PREMIUM_DAYS = 30;
+export const PREMIUM_DAYS = 30;
+export const PREMIUM_PRICE_RUB = 650;
+export const PREMIUM_PROMO_CODE = "KolinMagTor";
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-// Future premium purchase flow:
-// 1. User buys Premium for 30 days for a configured price.
-// 2. Payment provider confirms successful payment.
-// 3. App stores premiumUntil = purchase date + 30 days.
-// 4. Every day the remaining counter decreases by one day.
-// 5. When premiumUntil expires, subscription status becomes ordinary again.
-
 export function getSubscriptionState(user = getCurrentUser()) {
-  if (!user) return { plan: "Обычная", daysLeft: 0, premiumUntil: null };
+  if (!user) return { plan: "Обычная", daysLeft: 0, premiumUntil: null, price: PREMIUM_PRICE_RUB };
 
   const premiumUntil = user.premiumUntil || null;
   const daysLeft = getPremiumDaysLeft(premiumUntil);
 
   if (user.plan === "Премиум" && daysLeft <= 0) {
     setCurrentUser({ ...user, plan: "Обычная", premiumUntil: null });
-    return { plan: "Обычная", daysLeft: 0, premiumUntil: null };
+    return { plan: "Обычная", daysLeft: 0, premiumUntil: null, price: PREMIUM_PRICE_RUB };
   }
 
   return {
     plan: daysLeft > 0 ? "Премиум" : "Обычная",
     daysLeft,
-    premiumUntil
+    premiumUntil,
+    price: user.premiumPrice ?? PREMIUM_PRICE_RUB,
+    promoCode: user.premiumPromoCode || "",
+    paymentStatus: user.premiumPaymentStatus || null
   };
 }
 
-export function activatePremium() {
+export function activatePremium({ price = PREMIUM_PRICE_RUB, promoCode = "", paymentStatus = "paid" } = {}) {
   const user = getCurrentUser();
   if (!user) return;
 
@@ -36,8 +35,17 @@ export function activatePremium() {
   setCurrentUser({
     ...user,
     plan: "Премиум",
-    premiumUntil
+    premiumUntil,
+    premiumActivatedAt: new Date().toISOString(),
+    premiumPrice: price,
+    premiumPromoCode: promoCode,
+    premiumPaymentStatus: paymentStatus,
+    premiumPeriod: "month"
   });
+}
+
+export function isFreePromoCode(value) {
+  return String(value || "").trim().toLowerCase() === PREMIUM_PROMO_CODE.toLowerCase();
 }
 
 export function getPremiumDaysLeft(premiumUntil) {

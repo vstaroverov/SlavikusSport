@@ -4,7 +4,7 @@ const LEGACY_LOG_KEY = "slavikus:log";
 const LOG_KEY_PREFIX = "slavikus:log:";
 
 export function getLogEntries() {
-  return JSON.parse(localStorage.getItem(getLogKey()) || "[]");
+  return readEntries(getLogKey());
 }
 
 export function addLogEntry(entry) {
@@ -54,6 +54,15 @@ export function seedDemoLogData() {
 function getLogKey() {
   const user = getCurrentUser();
   return `${LOG_KEY_PREFIX}${encodeURIComponent(user?.id || "guest")}`;
+}
+
+function readEntries(key) {
+  try {
+    const entries = JSON.parse(localStorage.getItem(key) || "[]");
+    return Array.isArray(entries) ? entries : [];
+  } catch {
+    return [];
+  }
 }
 
 function buildDemoMonthEntries() {

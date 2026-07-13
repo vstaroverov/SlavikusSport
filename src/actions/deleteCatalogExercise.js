@@ -1,7 +1,12 @@
 import { deleteExerciseFromCatalog } from "../features/exercises/exercisesStorage.js";
+import { showConfirmDialog } from "../components/ConfirmDialog.js";
 
-export default function deleteCatalogExercise(button) {
-  const confirmed = confirm("Удалить упражнение из списка?");
+export default async function deleteCatalogExercise(button) {
+  const confirmed = await showConfirmDialog({
+    title: "Удалить из справочника?",
+    message: "Упражнение исчезнет из списка доступных упражнений.",
+    confirmText: "Удалить"
+  });
   if (!confirmed) return;
 
   deleteExerciseFromCatalog(button.dataset.exerciseId);

@@ -19,9 +19,13 @@ export function renderProgramScreen() {
           <button class="round-tool ${editMode ? "active" : ""}" data-action="toggleProgramEdit" aria-label="Изменить тренировки">⚙</button>
         </div>
       </div>
+      ${editMode ? `<div class="edit-mode-hint">Режим редактирования: выбери тренировку, измени упражнения или порядок.</div>` : ""}
       ${workouts.map((workout, index) => `
-        <details class="workout-editor" ${isWorkoutOpen(workout.id, editMode, activeWorkoutId) ? "open" : ""}>
-          <summary>${escapeHtml(formatWorkoutTitle(workout, index))}<span>${workout.exercises.length} упр.</span></summary>
+        <details class="workout-editor ${editMode ? "editable" : ""}" ${isWorkoutOpen(workout.id, editMode, activeWorkoutId) ? "open" : ""}>
+          <summary>
+            <span class="workout-title">${escapeHtml(formatWorkoutTitle(workout, index))}</span>
+            <span>${editMode ? "Редактировать" : `${workout.exercises.length} упр.`}</span>
+          </summary>
           ${editMode ? renderWorkoutControls(workout, index, workouts.length) : ""}
           ${editMode ? renderExerciseEditor(workout, exerciseCatalog) : renderExerciseList(workout.exercises)}
         </details>

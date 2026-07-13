@@ -1,8 +1,13 @@
 import { setActiveWorkoutEditorId } from "../features/program/programEditorState.js";
 import { deleteExercise } from "../features/program/programStorage.js";
+import { showConfirmDialog } from "../components/ConfirmDialog.js";
 
-export default function deleteExerciseAction(button) {
-  const confirmed = confirm("Удалить упражнение из тренировки?");
+export default async function deleteExerciseAction(button) {
+  const confirmed = await showConfirmDialog({
+    title: "Удалить упражнение?",
+    message: "Упражнение будет удалено из этой тренировки.",
+    confirmText: "Удалить"
+  });
   if (!confirmed) return;
 
   setActiveWorkoutEditorId(button.dataset.workoutId);
