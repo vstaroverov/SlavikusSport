@@ -2,89 +2,9 @@ import { getExerciseCatalog } from "../exercises/exercisesStorage.js";
 
 const WORKOUTS_KEY = "slavikus:workouts";
 const WORKOUTS_VERSION_KEY = "slavikus:workouts-version";
-const WORKOUTS_VERSION = "2026-07-default-program-3";
+const WORKOUTS_VERSION = "2026-07-empty-program-1";
 
-const starterWorkouts = [
-  {
-    id: "workout-full-body",
-    title: "Фулл бади",
-    shortName: "Т1",
-    exercises: [
-      exercise("Разминка", "1", "0", 1),
-      exercise("Подтягивания", "15", "0", 1),
-      exercise("Отжимания", "20", "0", 1),
-      exercise("Брусья", "20", "0", 1),
-      exercise("Гиперэкстензия", "25", "0", 1),
-      exercise("Присед", "25", "0", 1),
-      exercise("Штанга на грудь", "15", "50", 3),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Штанга на бицепс", "15", "25", 3),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Гантели на бицепс", "14", "14", 3),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Становая со шрагами", "15", "60", 3),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Заминка", "1", "0", 1),
-      exercise("Вис", "1", "29 секунд", 1)
-    ]
-  },
-  {
-    id: "workout-leg-day",
-    title: "День ног",
-    shortName: "Т2",
-    exercises: [
-      exercise("Разминка", "1", "0", 1),
-      exercise("Подтягивания", "15", "0", 1),
-      exercise("Отжимания", "25", "0", 1),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Брусья", "20", "0", 1),
-      exercise("Гиперэкстензия", "25", "0", 1),
-      exercise("Приседы", "25", "0", 1),
-      exercise("Разгиб ног сидя", "20", "61", 1),
-      exercise("Подъем на бицепс бедра", "15", "45", 1),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Разгиб ног сидя", "20", "61", 1),
-      exercise("Подъем на бицепс бедра", "15", "45", 1),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Разгиб ног сидя", "20", "61", 1),
-      exercise("Подъем на бицепс бедра", "15", "45", 1),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Толкание платформы лежа", "15", "200", 1),
-      exercise("Присед в станке", "15", "65", 1),
-      exercise("Присед со штангой", "15", "40", 1),
-      exercise("Подъем на носки", "15", "65", 1),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Толкание платформы лежа", "15", "200", 1),
-      exercise("Присед в станке", "15", "65", 1),
-      exercise("Присед со штангой", "15", "40", 1),
-      exercise("Подъем на носки", "15", "65", 1),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Толкание платформы лежа", "15", "200", 1),
-      exercise("Присед в станке", "15", "65", 1),
-      exercise("Присед со штангой", "15", "40", 1),
-      exercise("Подъем на носки", "15", "65", 1),
-      exercise("Пресс", "25", "0", 1),
-      exercise("Заминка", "1", "0", 1),
-      exercise("Вис", "1", "29 секунд", 1)
-    ]
-  },
-  {
-    id: "workout-pool",
-    title: "Бассейн",
-    shortName: "Т3",
-    exercises: [
-      exercise("Заплыв", "1", "45 минут", 1)
-    ]
-  },
-  {
-    id: "workout-run",
-    title: "Пробежка",
-    shortName: "Т4",
-    exercises: [
-      exercise("Бег", "1", "45 минут", 1)
-    ]
-  }
-];
+const starterWorkouts = [];
 
 export function seedInitialData() {
   if (
@@ -194,10 +114,6 @@ export function moveExercise(workoutId, exerciseIndex, direction) {
   const [exerciseItem] = workout.exercises.splice(exerciseIndex, 1);
   workout.exercises.splice(nextIndex, 0, exerciseItem);
   saveWorkouts(workouts);
-}
-
-function exercise(name, target, weight, sets) {
-  return { name, target, weight, sets };
 }
 
 function stripWorkoutPrefix(title) {

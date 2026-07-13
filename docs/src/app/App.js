@@ -13,6 +13,7 @@ import { renderInfoScreen } from "../screens/InfoScreen.js";
 import { renderProfileScreen } from "../screens/ProfileScreen.js";
 import { seedInitialData } from "../features/program/programStorage.js";
 import { formatSeconds, getActiveSession, getElapsedSeconds } from "../features/workout/workoutTimer.js";
+import { applyAppMigration } from "../features/storage/appMigration.js";
 
 const screens = {
   main: renderMainScreen,
@@ -29,7 +30,7 @@ export function createApp(root) {
   seedInitialData();
 
   const render = () => {
-    const user = getCurrentUser();
+    const user = applyAppMigration(getCurrentUser());
     if (!user) {
       root.innerHTML = renderVkLogin();
       bindGlobalActions(root);
