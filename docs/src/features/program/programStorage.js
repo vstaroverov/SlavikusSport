@@ -7,13 +7,11 @@ const WORKOUTS_VERSION = "2026-07-empty-program-1";
 const starterWorkouts = [];
 
 export function seedInitialData() {
-  if (
-    !localStorage.getItem(WORKOUTS_KEY)
-    || localStorage.getItem(WORKOUTS_VERSION_KEY) !== WORKOUTS_VERSION
-  ) {
+  if (!localStorage.getItem(WORKOUTS_KEY)) {
     localStorage.setItem(WORKOUTS_KEY, JSON.stringify(starterWorkouts));
-    localStorage.setItem(WORKOUTS_VERSION_KEY, WORKOUTS_VERSION);
   }
+
+  localStorage.setItem(WORKOUTS_VERSION_KEY, WORKOUTS_VERSION);
 }
 
 export function getWorkouts() {
