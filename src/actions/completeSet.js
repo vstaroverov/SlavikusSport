@@ -1,8 +1,9 @@
 import { addSetResult, isWorkoutComplete } from "../features/workout/workoutRunner.js";
 import { getActiveSession, saveActiveSession } from "../features/workout/workoutTimer.js";
 import { finishWorkout } from "../features/workout/workoutStorage.js";
+import { promptWorkoutBackup } from "../features/storage/backupFiles.js";
 
-export default function completeSet(button) {
+export default async function completeSet(button) {
   const session = getActiveSession();
   if (!session) return;
 
@@ -13,6 +14,7 @@ export default function completeSet(button) {
     finishWorkout(session);
     window.location.hash = "#/log";
     window.dispatchEvent(new CustomEvent("app:changed"));
+    await promptWorkoutBackup();
     return;
   }
 

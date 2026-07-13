@@ -18,7 +18,7 @@ export function showConfirmDialog({
         <h2 id="confirm-title">${escapeHtml(title)}</h2>
         <p>${escapeHtml(message)}</p>
         <div class="confirm-actions">
-          <button class="secondary-button" data-confirm-cancel>${escapeHtml(cancelText)}</button>
+          ${cancelText ? `<button class="secondary-button" data-confirm-cancel>${escapeHtml(cancelText)}</button>` : ""}
           <button class="primary-button ${danger ? "danger-confirm" : ""}" data-confirm-ok>${escapeHtml(confirmText)}</button>
         </div>
       </section>
@@ -38,7 +38,7 @@ export function showConfirmDialog({
     overlay.addEventListener("click", (event) => {
       if (event.target === overlay) close(false);
     });
-    overlay.querySelector("[data-confirm-cancel]").addEventListener("click", () => close(false));
+    overlay.querySelector("[data-confirm-cancel]")?.addEventListener("click", () => close(false));
     overlay.querySelector("[data-confirm-ok]").addEventListener("click", () => close(true));
     document.addEventListener("keydown", onKeyDown);
     document.body.append(overlay);

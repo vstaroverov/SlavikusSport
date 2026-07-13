@@ -1,6 +1,19 @@
 import { importBackup } from "../features/storage/persistentStorage.js";
+import { showConfirmDialog } from "../components/ConfirmDialog.js";
 
 export default function importBackupAction() {
+  showConfirmDialog({
+    title: "Восстановить копию",
+    message: "Выбери JSON-файл из папки Файлы > На iPhone > SlavikusSportData, если она есть.",
+    confirmText: "Выбрать файл",
+    cancelText: "Отмена",
+    danger: false
+  }).then((confirmed) => {
+    if (confirmed) openBackupFilePicker();
+  });
+}
+
+function openBackupFilePicker() {
   const input = document.createElement("input");
   input.type = "file";
   input.accept = "application/json";
@@ -13,9 +26,21 @@ export default function importBackupAction() {
       const backup = JSON.parse(await file.text());
       await importBackup(backup);
       window.dispatchEvent(new Event("app:changed"));
-      alert("Резервная копия восстановлена");
+      await showConfirmDialog({
+        title: "Готово",
+        message: "Файл с параметрами загружен.",
+        confirmText: "ОК",
+        cancelText: "",
+        danger: false
+      });
     } catch (error) {
-      alert(error.message || "Не удалось восстановить резервную копию");
+      await showConfirmDialog({
+        title: "Ошибка",
+        message: error.message || "Не удалось восстановить резервную копию.",
+        confirmText: "ОК",
+        cancelText: "",
+        danger: true
+      });
     }
   });
 
