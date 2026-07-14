@@ -17,7 +17,7 @@ export function showConfirmDialog({
         <div class="confirm-mark ${danger ? "danger" : ""}">!</div>
         <h2 id="confirm-title">${escapeHtml(title)}</h2>
         <p>${escapeHtml(message)}</p>
-        <div class="confirm-actions">
+        <div class="confirm-actions ${cancelText ? "" : "single"}">
           ${cancelText ? `<button class="secondary-button" data-confirm-cancel>${escapeHtml(cancelText)}</button>` : ""}
           <button class="primary-button ${danger ? "danger-confirm" : ""}" data-confirm-ok>${escapeHtml(confirmText)}</button>
         </div>

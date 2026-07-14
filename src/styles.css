@@ -39,7 +39,8 @@ body {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -49,7 +50,8 @@ button {
 }
 
 input,
-select {
+select,
+textarea {
   color: var(--ink);
 }
 
@@ -1573,6 +1575,7 @@ p {
 .confirm-dialog p {
   margin: 0;
   color: var(--soft);
+  white-space: pre-line;
 }
 
 .log-add-dialog label {
@@ -1589,7 +1592,8 @@ p {
 }
 
 .log-add-dialog input,
-.log-add-dialog select {
+.log-add-dialog select,
+.log-add-dialog textarea {
   width: 100%;
   min-height: 44px;
   padding: 0 12px;
@@ -1597,6 +1601,12 @@ p {
   border-radius: 10px;
   background: rgba(1, 8, 20, .82);
   color: var(--ink);
+}
+
+.log-add-dialog textarea {
+  min-height: 160px;
+  padding: 12px;
+  resize: vertical;
 }
 
 .premium-checkout-dialog label {

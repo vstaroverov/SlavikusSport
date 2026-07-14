@@ -8,7 +8,13 @@ export default async function deleteWorkoutAction(button) {
   if (!workout) return;
 
   if (workouts.length <= 1) {
-    alert("Нельзя удалить последнюю тренировку.");
+    await showConfirmDialog({
+      title: "Не удалено",
+      message: "Нельзя удалить последнюю тренировку.",
+      confirmText: "ОК",
+      cancelText: "",
+      danger: false
+    });
     return;
   }
 

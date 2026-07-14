@@ -1,3 +1,11 @@
+import { showConfirmDialog } from "../components/ConfirmDialog.js";
+
 export function loginEmail() {
-  alert("Вход по почте добавим следующим способом авторизации.");
+  showConfirmDialog({
+    title: "Скоро",
+    message: "Вход по почте добавим следующим способом авторизации.",
+    confirmText: "ОК",
+    cancelText: "",
+    danger: false
+  });
 }

@@ -1,6 +1,7 @@
 import { getWorkouts, saveWorkouts } from "../features/program/programStorage.js";
+import { showInputDialog } from "../components/InputDialog.js";
 
-export default function editWorkout(button) {
+export default async function editWorkout(button) {
   const workouts = getWorkouts();
   const workout = workouts.find((item) => item.id === button.dataset.workoutId);
   if (!workout) return;
@@ -8,7 +9,13 @@ export default function editWorkout(button) {
   const current = workout.exercises
     .map((exercise) => `${exercise.name} | ${exercise.target} | ${exercise.sets}`)
     .join("\n");
-  const value = prompt("Каждое упражнение с новой строки: название | цель | подходы", current);
+  const value = await showInputDialog({
+    title: "Упражнения",
+    label: "Каждое упражнение с новой строки: название | цель | подходы",
+    value: current,
+    confirmText: "Сохранить",
+    multiline: true
+  });
   if (!value) return;
 
   workout.exercises = value

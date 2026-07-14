@@ -1,3 +1,5 @@
+import { showConfirmDialog } from "../../components/ConfirmDialog.js";
+
 export async function shareWorkout(entry) {
   const text = `${entry.title}\n${entry.finishedAt}\nВремя: ${entry.duration}\n\n${entry.text}`;
 
@@ -7,5 +9,11 @@ export async function shareWorkout(entry) {
   }
 
   await navigator.clipboard.writeText(text);
-  alert("Тренировка скопирована. Можно вставить в VK, MAX или Telegram.");
+  await showConfirmDialog({
+    title: "Скопировано",
+    message: "Тренировка скопирована. Можно вставить в VK, MAX или Telegram.",
+    confirmText: "ОК",
+    cancelText: "",
+    danger: false
+  });
 }

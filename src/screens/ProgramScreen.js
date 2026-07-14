@@ -20,7 +20,7 @@ export function renderProgramScreen() {
         </div>
       </div>
       ${editMode ? `<div class="edit-mode-hint">Режим редактирования: выбери тренировку, измени упражнения или порядок.</div>` : ""}
-      ${workouts.map((workout, index) => `
+      ${workouts.length ? workouts.map((workout, index) => `
         <details class="workout-editor ${editMode ? "editable" : ""}" ${isWorkoutOpen(workout.id, editMode, activeWorkoutId) ? "open" : ""}>
           <summary>
             <span class="workout-title">${escapeHtml(formatWorkoutTitle(workout, index))}</span>
@@ -29,7 +29,13 @@ export function renderProgramScreen() {
           ${editMode ? renderWorkoutControls(workout, index, workouts.length) : ""}
           ${editMode ? renderExerciseEditor(workout, exerciseCatalog) : renderExerciseList(workout.exercises)}
         </details>
-      `).join("")}
+      `).join("") : `
+        <div class="empty-state">
+          <strong>Программ пока нет</strong>
+          <p>Создай тренировку кнопкой плюс. Упражнения уже есть в справочнике.</p>
+          <button class="primary-button" data-action="addWorkout">Создать тренировку</button>
+        </div>
+      `}
       <h2>Календарь</h2>
       ${renderCalendar(workouts)}
     </section>

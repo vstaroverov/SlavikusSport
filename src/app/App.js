@@ -72,9 +72,13 @@ function bindGlobalActions(root) {
   });
 
   root.querySelectorAll("[data-change]").forEach((element) => {
-    element.addEventListener("change", async () => {
+    const runChange = async () => {
       const module = await import(`../actions/${element.dataset.change}.js`);
       module.default(element);
+    };
+    element.addEventListener("change", runChange);
+    element.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") runChange();
     });
   });
 }

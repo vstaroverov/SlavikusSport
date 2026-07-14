@@ -9,7 +9,7 @@ export function renderProfileScreen() {
       <h1>Профиль</h1>
       <div class="profile-panel">
         <div class="avatar">${escapeHtml(getAvatarLetter(user.name))}</div>
-        <label>Логин<input value="${escapeAttr(user.name || "")}" maxlength="25" placeholder="Введите логин" data-profile-login /></label>
+        <label>Логин<input value="${escapeAttr(user.name || "")}" maxlength="25" placeholder="Введите логин" data-profile-login data-change="saveProfileLogin" /></label>
         <button class="secondary-button" data-action="saveProfileLogin">Сохранить логин</button>
         <button class="secondary-button" data-action="logout">Выйти</button>
       </div>
@@ -25,6 +25,7 @@ export function renderProfileScreen() {
         <p class="backup-date">Последняя копия: ${escapeHtml(getLastBackupLabel())}</p>
         <div class="backup-actions">
           <button class="secondary-button" data-action="exportBackup">Скачать копию</button>
+          <button class="secondary-button" data-action="checkBackup">Проверить копию</button>
           <button class="secondary-button" data-action="importBackup">Восстановить</button>
         </div>
       </div>
@@ -32,6 +33,7 @@ export function renderProfileScreen() {
       <div class="profile-panel app-version-panel">
         <p>Версия: ${escapeHtml(getPlatformName())} - 0.016.2 от 13.07.2026</p>
         <p>Разработчик: V-STAR-GROUP.DIGITAL</p>
+        <button class="secondary-button" data-action="checkUpdate">Проверить обновление</button>
       </div>
     </section>
   `;

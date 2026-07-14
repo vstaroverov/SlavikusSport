@@ -2,11 +2,20 @@ import { getPlannedWorkoutId, todayIso } from "../features/program/calendarPlann
 import { getWorkout } from "../features/program/programStorage.js";
 import { createWorkoutSession } from "../features/workout/workoutRunner.js";
 import { saveActiveSession } from "../features/workout/workoutTimer.js";
+import { showConfirmDialog } from "../components/ConfirmDialog.js";
 
-export default function startWorkout() {
+export default async function startWorkout() {
   const workout = getWorkout(getPlannedWorkoutId(todayIso(), false));
   if (!workout) {
-    alert("Сегодня день отдыха. Назначь тренировку в календаре, чтобы начать.");
+    await showConfirmDialog({
+      title: "Тренировка не назначена",
+      message: "Создай программу или выбери тренировку в календаре.",
+      confirmText: "Открыть программу",
+      cancelText: "Позже",
+      danger: false
+    }).then((confirmed) => {
+      if (confirmed) window.location.hash = "#/program";
+    });
     return;
   }
 

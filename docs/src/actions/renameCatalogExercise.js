@@ -1,13 +1,20 @@
 import { exerciseCategories, updateExerciseInCatalog } from "../features/exercises/exercisesStorage.js";
+import { showChoiceDialog, showInputDialog } from "../components/InputDialog.js";
 
-export default function renameCatalogExercise(button) {
+export default async function renameCatalogExercise(button) {
   const id = button.dataset.exerciseId;
   const currentName = button.dataset.exerciseName || "";
   const currentCategory = button.dataset.exerciseCategory || "base";
-  const name = prompt("Новое название упражнения", currentName);
+  const name = await showInputDialog({
+    title: "Упражнение",
+    label: "Новое название",
+    value: currentName,
+    placeholder: "Название упражнения",
+    confirmText: "Далее"
+  });
   if (!name?.trim()) return;
 
-  const category = chooseCategory("Категория упражнения", currentCategory);
+  const category = await chooseCategory("Категория упражнения", currentCategory);
   if (!category) return;
 
   updateExerciseInCatalog(id, name.trim(), category);
@@ -16,11 +23,13 @@ export default function renameCatalogExercise(button) {
 
 function chooseCategory(title, currentCategory) {
   const entries = Object.entries(exerciseCategories);
-  const currentIndex = Math.max(1, entries.findIndex(([id]) => id === currentCategory) + 1);
-  const message = `${title}\n${entries.map(([, category], index) => `${index + 1}. ${category.label}`).join("\n")}`;
-  const value = prompt(message, String(currentIndex));
-  if (value === null) return null;
-
-  const index = Number(value) - 1;
-  return entries[index]?.[0] || "base";
+  return showChoiceDialog({
+    title,
+    message: "Выбери раздел справочника.",
+    choices: entries.map(([id, category]) => ({
+      value: id,
+      label: category.label,
+      caption: id === currentCategory ? "текущая" : ""
+    }))
+  });
 }

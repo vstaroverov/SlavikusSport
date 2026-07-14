@@ -13,7 +13,13 @@ export default async function deleteExerciseAction(button) {
   setActiveWorkoutEditorId(button.dataset.workoutId);
   const deleted = deleteExercise(button.dataset.workoutId, Number(button.dataset.exerciseIndex));
   if (!deleted) {
-    alert("Нельзя удалить последнее упражнение.");
+    await showConfirmDialog({
+      title: "Не удалено",
+      message: "Нельзя удалить последнее упражнение в тренировке.",
+      confirmText: "ОК",
+      cancelText: "",
+      danger: false
+    });
     return;
   }
 

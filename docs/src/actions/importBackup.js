@@ -1,5 +1,6 @@
 import { importBackup } from "../features/storage/persistentStorage.js";
 import { showConfirmDialog } from "../components/ConfirmDialog.js";
+import { getBackupSummaryText } from "../features/storage/backupFiles.js";
 
 export default function importBackupAction() {
   showConfirmDialog({
@@ -24,11 +25,12 @@ function openBackupFilePicker() {
 
     try {
       const backup = JSON.parse(await file.text());
+      const summary = getBackupSummaryText(backup);
       await importBackup(backup);
       window.dispatchEvent(new Event("app:changed"));
       await showConfirmDialog({
         title: "Готово",
-        message: "Файл с параметрами загружен.",
+        message: `Файл с параметрами загружен.\n\n${summary}`,
         confirmText: "ОК",
         cancelText: "",
         danger: false

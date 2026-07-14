@@ -19,8 +19,9 @@ export function renderWorkoutScreen() {
       <section class="stack">
         <div class="current-card">
           <span>Сегодня</span>
-          <h1>День отдыха</h1>
-          <p>На эту дату тренировка не назначена в календаре.</p>
+          <h1>Тренировка не назначена</h1>
+          <p>Создай программу или выбери тренировку в календаре.</p>
+          <button class="primary-button" data-route="program">Открыть программу</button>
         </div>
       </section>
     `;

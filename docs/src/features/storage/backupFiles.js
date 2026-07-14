@@ -45,6 +45,42 @@ export async function promptWorkoutBackup() {
   }
 }
 
+export function getBackupSummaryText(backup) {
+  if (!backup?.data || typeof backup.data !== "object") {
+    throw new Error("Некорректный файл резервной копии.");
+  }
+
+  const data = backup.data;
+  const calendarKey = Object.keys(data).find((key) => /^slavikus:calendar:/.test(key));
+  const exportedAt = backup.exportedAt ? new Date(backup.exportedAt).toLocaleString("ru-RU") : "не указана";
+
+  return [
+    `Дата копии: ${exportedAt}`,
+    `Лог: ${countJsonArray(findFirstValue(data, /^slavikus:log:/))} записей`,
+    `Программа: ${countJsonArray(data["slavikus:workouts"])} тренировок`,
+    `Упражнения: ${countJsonArray(data["slavikus:exercise-catalog"])}`,
+    `Календарь: ${Object.keys(parseJson(data[calendarKey] || "{}") || {}).length} дат`
+  ].join("\n");
+}
+
 function formatFileDate(date) {
   return date.toISOString().replace(/[:.]/g, "-");
+}
+
+function findFirstValue(data, pattern) {
+  const key = Object.keys(data).find((item) => pattern.test(item));
+  return key ? data[key] : "";
+}
+
+function countJsonArray(value) {
+  const parsed = parseJson(value);
+  return Array.isArray(parsed) ? parsed.length : 0;
+}
+
+function parseJson(value) {
+  try {
+    return JSON.parse(value || "null");
+  } catch {
+    return null;
+  }
 }
