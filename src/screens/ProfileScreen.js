@@ -33,7 +33,7 @@ export function renderProfileScreen() {
       </div>
 
       <div class="profile-panel app-version-panel">
-        <p>Версия: ${escapeHtml(getPlatformName())} - 0.017.1 от 14.07.</p>
+        <p>Версия: ${escapeHtml(getPlatformName())} - 0.017.2 от 14.07.</p>
         <p>Разработчик: V-STAR-GROUP.DIGITAL</p>
         <button class="secondary-button" data-action="checkUpdate">Проверить обновление</button>
       </div>

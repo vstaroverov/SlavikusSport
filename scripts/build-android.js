@@ -41,7 +41,7 @@ execFileSync(
 
 const sourceApk = join(androidDir, "app", "build", "outputs", "apk", "debug", "app-debug.apk");
 const apkDir = join(projectRoot, "apk");
-const targetApk = join(apkDir, "Slavikus-Sport-0.017.1.apk");
+const targetApk = join(apkDir, "Slavikus-Sport-0.017.2.apk");
 
 mkdirSync(apkDir, { recursive: true });
 cpSync(sourceApk, targetApk);
