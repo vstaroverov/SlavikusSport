@@ -621,7 +621,7 @@ p {
 
 .workout-controls {
   display: grid;
-  grid-template-columns: 1fr 44px 44px 92px;
+  grid-template-columns: 1fr 42px 42px 72px 82px;
   gap: 8px;
   margin-top: 12px;
 }
@@ -1048,6 +1048,40 @@ p {
   font-weight: 800;
 }
 
+.set-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.set-quick-actions button {
+  min-height: 40px;
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.rest-timer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(77, 145, 255, .22);
+  border-radius: 10px;
+  background: rgba(5, 18, 39, .72);
+}
+
+.rest-timer span {
+  color: var(--soft);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.rest-timer strong {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
 .current-card input,
 .profile-panel input {
   margin: 4px 0 12px;
@@ -1063,6 +1097,28 @@ p {
 .backup-date {
   color: #dce8ff;
   font-weight: 800;
+}
+
+.backup-status {
+  display: inline-flex;
+  width: fit-content;
+  margin: 0 0 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.backup-status.fresh {
+  color: #79ffbd;
+  background: rgba(64, 255, 166, .10);
+  border: 1px solid rgba(64, 255, 166, .22);
+}
+
+.backup-status.stale {
+  color: #ffe08a;
+  background: rgba(255, 212, 71, .10);
+  border: 1px solid rgba(255, 212, 71, .24);
 }
 
 .app-version-panel p {

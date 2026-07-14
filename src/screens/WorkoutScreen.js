@@ -2,7 +2,7 @@ import { renderExerciseList } from "../components/ExerciseList.js";
 import { getPlannedWorkoutId, todayIso } from "../features/program/calendarPlanner.js";
 import { getWorkout } from "../features/program/programStorage.js";
 import { createWorkoutSession, isWorkoutComplete } from "../features/workout/workoutRunner.js";
-import { getActiveSession, formatSeconds, getElapsedSeconds } from "../features/workout/workoutTimer.js";
+import { getActiveSession, formatSeconds, getElapsedSeconds, getRestRemainingSeconds } from "../features/workout/workoutTimer.js";
 import { getLogEntries } from "../features/log/logStorage.js";
 import { getLogResults } from "../features/log/logExercises.js";
 
@@ -30,6 +30,7 @@ export function renderWorkoutScreen() {
   const current = active.results[active.currentExercise];
   const complete = isWorkoutComplete(active);
   const workload = complete ? null : getExerciseWorkloadInfo(current.name);
+  const restRemaining = getRestRemainingSeconds(active);
 
   return `
     <section class="workout-top">
@@ -62,7 +63,18 @@ export function renderWorkoutScreen() {
               </div>
             ` : ""}
           </div>
-          <input inputmode="text" placeholder="${formatCurrentExercise(current)}" data-set-value />
+          <input inputmode="text" value="${escapeAttr(workload?.latest || "")}" placeholder="${formatCurrentExercise(current)}" data-set-value />
+          <div class="set-quick-actions">
+            <button class="secondary-button" data-action="adjustSetValue" data-mode="repeats" data-step="1">+1 повтор</button>
+            <button class="secondary-button" data-action="adjustSetValue" data-mode="weight" data-step="2.5">+2.5 кг</button>
+            <button class="secondary-button" data-action="adjustSetValue" data-mode="weight" data-step="-2.5">-2.5 кг</button>
+          </div>
+          ${restRemaining ? `
+            <div class="rest-timer">
+              <span>Отдых</span>
+              <strong data-rest-timer>${formatSeconds(restRemaining)}</strong>
+            </div>
+          ` : ""}
           <button class="primary-button" data-action="completeSet">Выполнено</button>
         `}
       </div>

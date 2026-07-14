@@ -9,6 +9,8 @@ export default async function completeSet(button) {
 
   const input = button.closest(".current-card").querySelector("[data-set-value]");
   addSetResult(session, input.value.trim());
+  session.restStartedAt = Date.now();
+  session.restDuration = Number(session.restDuration || 90);
 
   if (isWorkoutComplete(session)) {
     finishWorkout(session);

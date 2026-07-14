@@ -16,6 +16,7 @@ export function renderProgramScreen() {
         <h1>Программа</h1>
         <div class="section-actions">
           <button class="round-add" data-action="addWorkout" aria-label="Добавить тренировку">+</button>
+          <button class="round-tool" data-action="addWorkoutTemplate" aria-label="Шаблоны тренировок">▦</button>
           <button class="round-tool ${editMode ? "active" : ""}" data-action="toggleProgramEdit" aria-label="Изменить тренировки">⚙</button>
         </div>
       </div>
@@ -53,6 +54,7 @@ function renderWorkoutControls(workout, index, total) {
       <button data-action="renameWorkout" data-workout-id="${workout.id}">Имя</button>
       <button data-action="moveWorkoutUp" data-workout-id="${workout.id}" ${index === 0 ? "disabled" : ""}>↑</button>
       <button data-action="moveWorkoutDown" data-workout-id="${workout.id}" ${index === total - 1 ? "disabled" : ""}>↓</button>
+      <button data-action="copyWorkout" data-workout-id="${workout.id}">Копия</button>
       <button class="danger" data-action="deleteWorkout" data-workout-id="${workout.id}">Удалить</button>
     </div>
   `;

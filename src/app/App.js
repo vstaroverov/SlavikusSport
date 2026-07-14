@@ -12,7 +12,7 @@ import { renderExercisesScreen } from "../screens/ExercisesScreen.js";
 import { renderInfoScreen } from "../screens/InfoScreen.js";
 import { renderProfileScreen } from "../screens/ProfileScreen.js";
 import { seedInitialData } from "../features/program/programStorage.js";
-import { formatSeconds, getActiveSession, getElapsedSeconds } from "../features/workout/workoutTimer.js";
+import { formatSeconds, getActiveSession, getElapsedSeconds, getRestRemainingSeconds } from "../features/workout/workoutTimer.js";
 import { applyAppMigration } from "../features/storage/appMigration.js";
 
 const screens = {
@@ -53,8 +53,10 @@ export function createApp(root) {
   window.addEventListener("app:changed", render);
   window.setInterval(() => {
     const timer = root.querySelector("[data-timer]");
+    const restTimer = root.querySelector("[data-rest-timer]");
     const session = getActiveSession();
     if (timer && session) timer.textContent = formatSeconds(getElapsedSeconds(session));
+    if (restTimer && session) restTimer.textContent = formatSeconds(getRestRemainingSeconds(session));
   }, 1000);
   render();
 }

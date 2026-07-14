@@ -2,6 +2,7 @@ import { showConfirmDialog } from "../../components/ConfirmDialog.js";
 import { exportBackup } from "./persistentStorage.js";
 
 const LAST_BACKUP_KEY = "slavikus:last-backup-at";
+const FRESH_BACKUP_HOURS = 24;
 
 export async function downloadBackupFile() {
   const backup = await exportBackup();
@@ -29,6 +30,36 @@ export function getLastBackupLabel() {
   if (Number.isNaN(date.getTime())) return "Еще не создавалась";
 
   return date.toLocaleString("ru-RU");
+}
+
+export function getBackupFreshness() {
+  const value = localStorage.getItem(LAST_BACKUP_KEY);
+  const date = value ? new Date(value) : null;
+
+  if (!date || Number.isNaN(date.getTime())) {
+    return {
+      isFresh: false,
+      label: "Копии нет",
+      warning: "Резервная копия еще не создавалась."
+    };
+  }
+
+  const ageMs = Date.now() - date.getTime();
+  const ageHours = Math.max(0, Math.floor(ageMs / 36e5));
+
+  if (ageHours < FRESH_BACKUP_HOURS) {
+    return {
+      isFresh: true,
+      label: "Копия свежая",
+      warning: `Последняя копия была ${formatAge(ageHours)} назад.`
+    };
+  }
+
+  return {
+    isFresh: false,
+    label: "Копия устарела",
+    warning: `Последняя копия была ${formatAge(ageHours)} назад. Лучше скачать свежий JSON.`
+  };
 }
 
 export async function promptWorkoutBackup() {
@@ -65,6 +96,14 @@ export function getBackupSummaryText(backup) {
 
 function formatFileDate(date) {
   return date.toISOString().replace(/[:.]/g, "-");
+}
+
+function formatAge(hours) {
+  if (hours < 1) return "меньше часа";
+  if (hours < 24) return `${hours} ч`;
+
+  const days = Math.floor(hours / 24);
+  return `${days} дн`;
 }
 
 function findFirstValue(data, pattern) {

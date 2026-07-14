@@ -1,8 +1,9 @@
 import { getCurrentUser } from "../features/profile/profileStorage.js";
-import { getLastBackupLabel } from "../features/storage/backupFiles.js";
+import { getBackupFreshness, getLastBackupLabel } from "../features/storage/backupFiles.js";
 
 export function renderProfileScreen() {
   const user = getCurrentUser();
+  const backup = getBackupFreshness();
 
   return `
     <section class="stack">
@@ -23,6 +24,7 @@ export function renderProfileScreen() {
         <h2>Резервная копия</h2>
         <p>Сохрани тренировки, программу, календарь и профиль в файл или восстанови данные из файла.</p>
         <p class="backup-date">Последняя копия: ${escapeHtml(getLastBackupLabel())}</p>
+        <p class="backup-status ${backup.isFresh ? "fresh" : "stale"}">${escapeHtml(backup.label)}</p>
         <div class="backup-actions">
           <button class="secondary-button" data-action="exportBackup">Скачать копию</button>
           <button class="secondary-button" data-action="checkBackup">Проверить копию</button>

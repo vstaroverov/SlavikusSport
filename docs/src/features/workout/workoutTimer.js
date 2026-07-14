@@ -24,3 +24,10 @@ export function getElapsedSeconds(session) {
   const running = session.running ? Math.floor((Date.now() - session.startedAt) / 1000) : 0;
   return session.elapsed + running;
 }
+
+export function getRestRemainingSeconds(session) {
+  if (!session?.restStartedAt || !session?.restDuration) return 0;
+
+  const passed = Math.floor((Date.now() - session.restStartedAt) / 1000);
+  return Math.max(0, Number(session.restDuration) - passed);
+}
