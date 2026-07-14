@@ -27,9 +27,9 @@ export function renderWorkoutScreen() {
     `;
   }
 
-  const current = active.results[active.currentExercise];
   const complete = isWorkoutComplete(active);
-  const workload = complete ? null : getExerciseWorkloadInfo(current.name);
+  const current = complete ? null : active.results[active.currentExercise];
+  const workload = current ? getExerciseWorkloadInfo(current.name) : null;
   const restRemaining = getRestRemainingSeconds(active);
 
   return `
@@ -44,6 +44,7 @@ export function renderWorkoutScreen() {
       <h1>${active.title}</h1>
       ${renderExerciseList(active.results, active.currentExercise)}
 
+      ${active.running ? `
       <div class="current-card">
         ${complete ? `
           <strong>Все упражнения закрыты</strong>
@@ -78,6 +79,7 @@ export function renderWorkoutScreen() {
           <button class="primary-button" data-action="completeSet">Выполнено</button>
         `}
       </div>
+      ` : ""}
 
       <button class="secondary-button finish-early-button" data-action="finishWorkout">Завершить досрочно</button>
     </section>
