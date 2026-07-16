@@ -39,9 +39,13 @@ execFileSync(
   { cwd: androidDir, env, stdio: "inherit" },
 );
 
-const sourceApk = join(androidDir, "app", "build", "outputs", "apk", "release", "app-release-unsigned.apk");
+const signedReleaseApk = join(androidDir, "app", "build", "outputs", "apk", "release", "app-release.apk");
+const unsignedReleaseApk = join(androidDir, "app", "build", "outputs", "apk", "release", "app-release-unsigned.apk");
+const sourceApk = existsSync(signedReleaseApk) ? signedReleaseApk : unsignedReleaseApk;
 const apkDir = join(projectRoot, "apk");
-const targetApk = join(apkDir, "Slavikus-Sport-1.000.0-release-unsigned.apk");
+const targetApk = join(apkDir, existsSync(signedReleaseApk)
+  ? "Slavikus-Sport-1.000.0-release.apk"
+  : "Slavikus-Sport-1.000.0-release-unsigned.apk");
 
 mkdirSync(apkDir, { recursive: true });
 cpSync(sourceApk, targetApk);
