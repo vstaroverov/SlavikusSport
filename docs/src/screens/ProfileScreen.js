@@ -33,7 +33,7 @@ export function renderProfileScreen() {
       </div>
 
       <div class="profile-panel app-version-panel">
-        <p>Версия: ${escapeHtml(getPlatformName())} - 0.017.2 от 14.07.</p>
+        <p>Версия: ${escapeHtml(getPlatformName())} - ${escapeHtml(getAppVersion())}</p>
         <p>Разработчик: V-STAR-GROUP.DIGITAL</p>
         <button class="secondary-button" data-action="checkUpdate">Проверить обновление</button>
       </div>
@@ -45,6 +45,12 @@ function getPlatformName() {
   const platform = window.Capacitor?.getPlatform?.();
   if (platform === "android") return "Android";
   return "Web";
+}
+
+function getAppVersion() {
+  const platform = window.Capacitor?.getPlatform?.();
+  if (platform === "android") return "1.000.0 от 16.07.";
+  return "0.017.2 от 14.07.";
 }
 
 function getAvatarLetter(value) {

@@ -34,14 +34,14 @@ execFileSync(
     "-classpath",
     wrapperClasspath,
     "org.gradle.wrapper.GradleWrapperMain",
-    "assembleDebug",
+        "assembleRelease",
   ],
   { cwd: androidDir, env, stdio: "inherit" },
 );
 
-const sourceApk = join(androidDir, "app", "build", "outputs", "apk", "debug", "app-debug.apk");
+const sourceApk = join(androidDir, "app", "build", "outputs", "apk", "release", "app-release-unsigned.apk");
 const apkDir = join(projectRoot, "apk");
-const targetApk = join(apkDir, "Slavikus-Sport-0.017.2.apk");
+const targetApk = join(apkDir, "Slavikus-Sport-1.000.0-release-unsigned.apk");
 
 mkdirSync(apkDir, { recursive: true });
 cpSync(sourceApk, targetApk);
