@@ -9,7 +9,8 @@ import { getLogResults } from "../features/log/logExercises.js";
 export function renderWorkoutScreen() {
   const workout = getWorkout(getPlannedWorkoutId(todayIso(), false));
   const session = getActiveSession();
-  const active = session || (workout ? { ...createWorkoutSession(workout), running: false } : null);
+  const visibleSession = isSessionForWorkout(session, workout) ? session : null;
+  const active = visibleSession || (workout ? { ...createWorkoutSession(workout), running: false } : null);
 
   if (!active) {
     return `
@@ -34,10 +35,10 @@ export function renderWorkoutScreen() {
 
   return `
     <section class="workout-top">
-      <button class="start-button ${active.running ? "running" : ""}" data-action="${session ? "toggleWorkout" : "startWorkout"}">
+      <button class="start-button ${active.running ? "running" : ""}" data-action="${visibleSession ? "toggleWorkout" : "startWorkout"}">
         ${active.running ? "Пауза" : "Старт"}
       </button>
-      <div class="timer" data-timer>${formatSeconds(getElapsedSeconds(active))}</div>
+      <div class="timer" ${visibleSession ? "data-timer" : ""}>${formatSeconds(getElapsedSeconds(active))}</div>
     </section>
 
     <section class="stack workout-stack">
@@ -84,6 +85,23 @@ export function renderWorkoutScreen() {
       <button class="secondary-button finish-early-button" data-action="finishWorkout">Завершить досрочно</button>
     </section>
   `;
+}
+
+function isSessionForWorkout(session, workout) {
+  if (!session || !workout) return false;
+  if (session.workoutId !== workout.id) return false;
+
+  const sessionExercises = Array.isArray(session.results) ? session.results : [];
+  const workoutExercises = Array.isArray(workout.exercises) ? workout.exercises : [];
+
+  if (sessionExercises.length !== workoutExercises.length) return false;
+
+  return sessionExercises.every((exercise, index) => (
+    exercise.name === workoutExercises[index]?.name
+    && String(exercise.target || "") === String(workoutExercises[index]?.target || "")
+    && String(exercise.weight || "") === String(workoutExercises[index]?.weight || "")
+    && Number(exercise.sets || 0) === Number(workoutExercises[index]?.sets || 0)
+  ));
 }
 
 function formatCurrentExercise(exercise) {
