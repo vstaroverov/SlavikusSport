@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -42,10 +42,18 @@ execFileSync(
 const signedReleaseApk = join(androidDir, "app", "build", "outputs", "apk", "release", "app-release.apk");
 const unsignedReleaseApk = join(androidDir, "app", "build", "outputs", "apk", "release", "app-release-unsigned.apk");
 const sourceApk = existsSync(signedReleaseApk) ? signedReleaseApk : unsignedReleaseApk;
+const metadataPath = join(androidDir, "app", "build", "outputs", "apk", "release", "output-metadata.json");
+const metadata = JSON.parse(readFileSync(metadataPath, "utf8"));
+const versionName = metadata.elements?.[0]?.versionName;
+
+if (!versionName) {
+  throw new Error("Could not read Android versionName from output metadata.");
+}
+
 const apkDir = join(projectRoot, "apk");
 const targetApk = join(apkDir, existsSync(signedReleaseApk)
-  ? "Slavikus-Sport-1.000.0-release.apk"
-  : "Slavikus-Sport-1.000.0-release-unsigned.apk");
+  ? `Slavikus-Sport-${versionName}-release.apk`
+  : `Slavikus-Sport-${versionName}-release-unsigned.apk`);
 
 mkdirSync(apkDir, { recursive: true });
 cpSync(sourceApk, targetApk);
