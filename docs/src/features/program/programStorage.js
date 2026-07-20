@@ -114,6 +114,21 @@ export function moveExercise(workoutId, exerciseIndex, direction) {
   saveWorkouts(workouts);
 }
 
+export function moveExerciseToPosition(workoutId, exerciseIndex, position) {
+  const workouts = getWorkouts();
+  const workout = workouts.find((item) => item.id === workoutId);
+  if (!workout) return;
+
+  const nextIndex = Math.max(0, Math.min(Number(position) - 1, workout.exercises.length - 1));
+  if (exerciseIndex < 0 || exerciseIndex >= workout.exercises.length || nextIndex === exerciseIndex) {
+    return;
+  }
+
+  const [exerciseItem] = workout.exercises.splice(exerciseIndex, 1);
+  workout.exercises.splice(nextIndex, 0, exerciseItem);
+  saveWorkouts(workouts);
+}
+
 function stripWorkoutPrefix(title) {
   return String(title).trim().replace(/^Т\d+\.\s*/i, "").replace(/^Ğ¢\d+\.\s*/i, "");
 }

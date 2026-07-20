@@ -812,22 +812,53 @@ p {
 
 .exercise-editor {
   display: grid;
-  gap: 10px;
+  gap: 7px;
   margin-top: 12px;
+}
+
+.exercise-editor-title,
+.exercise-editor-header {
+  display: grid;
+  grid-template-columns: 30px minmax(110px, 1fr) 56px 52px 56px 88px;
+  gap: 6px;
+  align-items: center;
+}
+
+.exercise-editor-title {
+  grid-template-columns: 1fr auto;
+  padding: 2px 2px 4px;
+}
+
+.exercise-editor-title strong {
+  font-size: 15px;
+}
+
+.exercise-editor-title span,
+.exercise-editor-header span {
+  color: var(--soft);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.exercise-editor-header {
+  padding: 0 6px;
 }
 
 .exercise-edit-row {
   display: grid;
-  gap: 8px;
-  padding: 10px;
+  grid-template-columns: 30px minmax(110px, 1fr) 56px 52px 56px 88px;
+  gap: 6px;
+  align-items: center;
+  padding: 6px;
   border: 1px solid rgba(77, 145, 255, .18);
-  border-radius: 14px;
+  border-radius: 10px;
   background: rgba(5, 18, 39, .78);
 }
 
 .exercise-edit-row label {
   display: grid;
-  gap: 4px;
+  gap: 3px;
+  min-width: 0;
 }
 
 .exercise-edit-metrics {
@@ -837,6 +868,7 @@ p {
 }
 
 .exercise-edit-row label span {
+  display: none;
   color: var(--soft);
   font-size: 12px;
   font-weight: 800;
@@ -855,10 +887,74 @@ p {
   color: var(--ink);
 }
 
+.exercise-edit-row input,
+.exercise-edit-row select {
+  min-height: 36px;
+  padding: 0 8px;
+  border-radius: 8px;
+}
+
+.exercise-edit-row select {
+  padding-right: 4px;
+}
+
+.exercise-position-button {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  color: #06162f;
+  background: #ffd447;
+  font-weight: 900;
+}
+
 .exercise-edit-actions {
   display: grid;
-  grid-template-columns: 44px 44px 1fr;
-  gap: 8px;
+  grid-template-columns: 26px 26px 28px;
+  gap: 5px;
+  justify-content: end;
+}
+
+.exercise-edit-actions button {
+  min-height: 30px;
+  border-radius: 8px;
+}
+
+.exercise-editor > .compact {
+  min-height: 40px;
+  margin-top: 4px;
+}
+
+@media (max-width: 430px) {
+  .exercise-editor-title,
+  .exercise-editor-header,
+  .exercise-edit-row {
+    grid-template-columns: 28px minmax(92px, 1fr) 46px 42px 46px 76px;
+    gap: 5px;
+  }
+
+  .exercise-edit-row {
+    padding: 5px;
+  }
+
+  .exercise-edit-row input,
+  .exercise-edit-row select {
+    min-height: 34px;
+    padding: 0 6px;
+    font-size: 12px;
+  }
+
+  .exercise-edit-actions {
+    grid-template-columns: 22px 22px 26px;
+    gap: 3px;
+  }
+
+  .exercise-edit-actions button,
+  .exercise-position-button {
+    min-height: 28px;
+    height: 28px;
+    border-radius: 7px;
+    font-size: 12px;
+  }
 }
 
 .calendar-card {

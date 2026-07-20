@@ -62,35 +62,47 @@ function renderWorkoutControls(workout, index, total) {
 
 function renderExerciseEditor(workout, exerciseCatalog) {
   return `
-    <div class="exercise-editor">
+    <div class="exercise-editor" data-workout-editor="${workout.id}">
+      <div class="exercise-editor-title">
+        <strong>Упражнения</strong>
+        <span>${workout.exercises.length} в тренировке</span>
+      </div>
+      <div class="exercise-editor-header" aria-hidden="true">
+        <span>№</span>
+        <span>Упражнение</span>
+        <span>Повторы</span>
+        <span>Вес</span>
+        <span>Подходы</span>
+        <span></span>
+      </div>
       ${workout.exercises.map((exercise, index) => `
         <div class="exercise-edit-row">
+          <button class="exercise-position-button" data-action="moveExerciseToPosition" data-workout-id="${workout.id}" data-exercise-index="${index}" data-exercise-total="${workout.exercises.length}" aria-label="Переставить упражнение ${index + 1}">${index + 1}</button>
           <label>
-            <span>Название</span>
+            <span>Упражнение</span>
             ${renderExerciseSelect(exercise, exerciseCatalog, workout.id, index)}
           </label>
-          <div class="exercise-edit-metrics">
-            <label>
-              <span>Повторы / цель</span>
-              <input value="${escapeAttr(exercise.target)}" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="target" />
-            </label>
-            <label>
-              <span>Вес (кг)</span>
-              <input value="${escapeAttr(exercise.weight || "")}" placeholder="40 кг" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="weight" />
-            </label>
-            <label>
-              <span>Подходы</span>
-              <input type="number" min="1" step="1" value="${exercise.sets}" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="sets" />
-            </label>
-          </div>
+          <label>
+            <span>Повторы</span>
+            <input value="${escapeAttr(exercise.target)}" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="target" />
+          </label>
+          <label>
+            <span>Вес</span>
+            <input value="${escapeAttr(exercise.weight || "")}" placeholder="40" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="weight" />
+          </label>
+          <label>
+            <span>Подходы</span>
+            <input type="number" min="1" step="1" value="${exercise.sets}" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="sets" />
+          </label>
           <div class="exercise-edit-actions">
             <button data-action="moveExerciseUp" data-workout-id="${workout.id}" data-exercise-index="${index}" ${index === 0 ? "disabled" : ""}>↑</button>
             <button data-action="moveExerciseDown" data-workout-id="${workout.id}" data-exercise-index="${index}" ${index === workout.exercises.length - 1 ? "disabled" : ""}>↓</button>
-            <button class="danger" data-action="deleteExercise" data-workout-id="${workout.id}" data-exercise-index="${index}">Удалить</button>
+            <button class="danger" data-action="deleteExercise" data-workout-id="${workout.id}" data-exercise-index="${index}">×</button>
           </div>
         </div>
       `).join("")}
       <button class="secondary-button compact" data-action="addExercise" data-workout-id="${workout.id}">Добавить упражнение</button>
+      <button class="primary-button compact" data-action="saveWorkoutEditor" data-workout-id="${workout.id}">Сохранить</button>
     </div>
   `;
 }

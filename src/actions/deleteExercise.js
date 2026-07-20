@@ -1,6 +1,7 @@
 import { setActiveWorkoutEditorId } from "../features/program/programEditorState.js";
 import { deleteExercise } from "../features/program/programStorage.js";
 import { showConfirmDialog } from "../components/ConfirmDialog.js";
+import { dispatchAppChangedKeepingScroll } from "./preserveScroll.js";
 
 export default async function deleteExerciseAction(button) {
   const confirmed = await showConfirmDialog({
@@ -23,5 +24,5 @@ export default async function deleteExerciseAction(button) {
     return;
   }
 
-  window.dispatchEvent(new CustomEvent("app:changed"));
+  dispatchAppChangedKeepingScroll(button);
 }
