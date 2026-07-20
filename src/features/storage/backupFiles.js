@@ -80,25 +80,30 @@ async function shareNativeAndroidBackup(fileName, backupText) {
 
   if (!filesystem?.writeFile || !share?.share) return false;
 
+  let result;
   try {
-    const result = await filesystem.writeFile({
+    result = await filesystem.writeFile({
       path: fileName,
       data: backupText,
       directory: "CACHE",
       encoding: "utf8"
     });
+  } catch {
+    return false;
+  }
 
+  try {
     await share.share({
       title: "Резервная копия Slavikus Sport",
       text: "Сохрани JSON-файл резервной копии.",
       files: [result.uri],
       dialogTitle: "Сохранить резервную копию"
     });
-    return true;
-  } catch (error) {
-    if (error?.message?.toLowerCase?.().includes("cancel")) return false;
-    return false;
+  } catch {
+    // Android share targets may report cancellation even after the file was saved.
   }
+
+  return true;
 }
 
 function isAndroidApp() {
