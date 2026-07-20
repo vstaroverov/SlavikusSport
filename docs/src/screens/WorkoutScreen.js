@@ -32,11 +32,12 @@ export function renderWorkoutScreen() {
   const current = complete ? null : active.results[active.currentExercise];
   const workload = current ? getExerciseWorkloadInfo(current.name) : null;
   const restRemaining = getRestRemainingSeconds(active);
+  const startButtonText = !visibleSession ? "Старт" : (active.running ? "Пауза" : "Продолжить");
 
   return `
     <section class="workout-top">
       <button class="start-button ${active.running ? "running" : ""}" data-action="${visibleSession ? "toggleWorkout" : "startWorkout"}">
-        ${active.running ? "Пауза" : "Старт"}
+        ${startButtonText}
       </button>
       <div class="timer" ${visibleSession ? "data-timer" : ""}>${formatSeconds(getElapsedSeconds(active))}</div>
     </section>
@@ -83,7 +84,7 @@ export function renderWorkoutScreen() {
 
       ${renderExerciseList(active.results, active.currentExercise)}
 
-      ${active.running ? `
+      ${visibleSession ? `
       <button class="secondary-button finish-early-button" data-action="finishWorkout">Завершить досрочно</button>
       ` : ""}
     </section>
