@@ -63,6 +63,8 @@ export function getBackupFreshness() {
 }
 
 export async function promptWorkoutBackup() {
+  if (window.Capacitor?.getPlatform?.() === "android") return;
+
   const confirmed = await showConfirmDialog({
     title: "Обновить резервную копию?",
     message: "Скачай JSON-файл и сохрани его в Файлы > На iPhone > SlavikusSportData. Браузер не может сам обновить файл без твоего выбора.",

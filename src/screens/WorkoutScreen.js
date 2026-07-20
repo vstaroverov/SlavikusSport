@@ -43,7 +43,6 @@ export function renderWorkoutScreen() {
 
     <section class="stack workout-stack">
       <h1>${active.title}</h1>
-      ${renderExerciseList(active.results, active.currentExercise)}
 
       ${active.running ? `
       <div class="current-card">
@@ -81,6 +80,8 @@ export function renderWorkoutScreen() {
         `}
       </div>
       ` : ""}
+
+      ${renderExerciseList(active.results, active.currentExercise)}
 
       <button class="secondary-button finish-early-button" data-action="finishWorkout">Завершить досрочно</button>
     </section>

@@ -49,7 +49,7 @@ function getPlatformName() {
 
 function getAppVersion() {
   const platform = window.Capacitor?.getPlatform?.();
-  if (platform === "android") return "1.000.0 от 16.07.";
+  if (platform === "android") return "1.001.0 от 20.07.";
   return "0.017.2 от 14.07.";
 }
 
