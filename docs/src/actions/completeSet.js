@@ -2,6 +2,7 @@ import { addSetResult, isWorkoutComplete } from "../features/workout/workoutRunn
 import { getActiveSession, saveActiveSession } from "../features/workout/workoutTimer.js";
 import { finishWorkout } from "../features/workout/workoutStorage.js";
 import { promptWorkoutBackup } from "../features/storage/backupFiles.js";
+import { dispatchAppChangedKeepingScroll } from "./preserveScroll.js";
 
 export default async function completeSet(button) {
   const session = getActiveSession();
@@ -21,5 +22,5 @@ export default async function completeSet(button) {
   }
 
   saveActiveSession(session);
-  window.dispatchEvent(new CustomEvent("app:changed"));
+  dispatchAppChangedKeepingScroll(button);
 }
