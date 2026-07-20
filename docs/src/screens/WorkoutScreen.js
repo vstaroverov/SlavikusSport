@@ -83,7 +83,9 @@ export function renderWorkoutScreen() {
 
       ${renderExerciseList(active.results, active.currentExercise)}
 
+      ${active.running ? `
       <button class="secondary-button finish-early-button" data-action="finishWorkout">Завершить досрочно</button>
+      ` : ""}
     </section>
   `;
 }
