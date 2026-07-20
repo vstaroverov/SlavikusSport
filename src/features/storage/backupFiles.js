@@ -7,19 +7,102 @@ const FRESH_BACKUP_HOURS = 24;
 export async function downloadBackupFile() {
   const backup = await exportBackup();
   const now = new Date();
-  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+  const fileName = `slavikus-sport-backup-${formatFileDate(now)}.json`;
+  const backupText = JSON.stringify(backup, null, 2);
+  const blob = new Blob([backupText], { type: "application/json" });
+
+  if (isAndroidApp()) {
+    const shared = await shareAndroidBackup(fileName, backupText, blob);
+    if (!shared) return false;
+  } else {
+    downloadBlob(fileName, blob);
+  }
+
+  localStorage.setItem(LAST_BACKUP_KEY, now.toISOString());
+  window.dispatchEvent(new CustomEvent("app:changed"));
+  return true;
+}
+
+function downloadBlob(fileName, blob) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
 
   link.href = url;
-  link.download = `slavikus-sport-backup-${formatFileDate(now)}.json`;
+  link.download = fileName;
   document.body.append(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+}
 
-  localStorage.setItem(LAST_BACKUP_KEY, now.toISOString());
-  window.dispatchEvent(new CustomEvent("app:changed"));
+async function shareAndroidBackup(fileName, backupText, blob) {
+  const nativeShared = await shareNativeAndroidBackup(fileName, backupText);
+  if (nativeShared) return true;
+
+  const file = new File([blob], fileName, { type: "application/json" });
+  const data = {
+    title: "Резервная копия Slavikus Sport",
+    text: "Сохрани JSON-файл резервной копии.",
+    files: [file]
+  };
+
+  if (!navigator.share || (navigator.canShare && !navigator.canShare({ files: [file] }))) {
+    await showConfirmDialog({
+      title: "Не удалось сохранить файл",
+      message: "Android WebView не дал открыть сохранение файла. Попробуй сделать резервную копию в веб-версии.",
+      confirmText: "ОК",
+      cancelText: "",
+      danger: false
+    });
+    return false;
+  }
+
+  try {
+    await navigator.share(data);
+    return true;
+  } catch (error) {
+    if (error?.name === "AbortError") return false;
+    await showConfirmDialog({
+      title: "Не удалось сохранить файл",
+      message: "Системное сохранение файла не завершилось. Попробуй еще раз.",
+      confirmText: "ОК",
+      cancelText: "",
+      danger: false
+    });
+    return false;
+  }
+}
+
+async function shareNativeAndroidBackup(fileName, backupText) {
+  const plugins = window.Capacitor?.Plugins || {};
+  const filesystem = plugins.Filesystem;
+  const share = plugins.Share;
+
+  if (!filesystem?.writeFile || !share?.share) return false;
+
+  try {
+    const result = await filesystem.writeFile({
+      path: fileName,
+      data: backupText,
+      directory: "CACHE",
+      encoding: "utf8"
+    });
+
+    await share.share({
+      title: "Резервная копия Slavikus Sport",
+      text: "Сохрани JSON-файл резервной копии.",
+      files: [result.uri],
+      dialogTitle: "Сохранить резервную копию"
+    });
+    return true;
+  } catch (error) {
+    if (error?.message?.toLowerCase?.().includes("cancel")) return false;
+    return false;
+  }
+}
+
+function isAndroidApp() {
+  return window.Capacitor?.getPlatform?.() === "android";
 }
 
 export function getLastBackupLabel() {
