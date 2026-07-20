@@ -50,7 +50,7 @@ function getPlatformName() {
 function getAppVersion() {
   const platform = window.Capacitor?.getPlatform?.();
   if (platform === "android") return "1.001.0 от 20.07.";
-  return "0.017.2 от 14.07.";
+  return "1.001.0 от 20.07.";
 }
 
 function getAvatarLetter(value) {
