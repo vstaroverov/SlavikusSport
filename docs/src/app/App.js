@@ -62,25 +62,35 @@ export function createApp(root) {
 }
 
 function bindGlobalActions(root) {
-  root.querySelectorAll("[data-route]").forEach((element) => {
-    element.addEventListener("click", () => navigate(element.dataset.route));
+  if (root.dataset.boundGlobalActions) return;
+  root.dataset.boundGlobalActions = "true";
+
+  root.addEventListener("click", async (event) => {
+    const routeElement = event.target.closest("[data-route]");
+    if (routeElement && root.contains(routeElement)) {
+      navigate(routeElement.dataset.route);
+      return;
+    }
+
+    const actionElement = event.target.closest("[data-action]");
+    if (!actionElement || !root.contains(actionElement)) return;
+
+    const module = await import(`../actions/${actionElement.dataset.action}.js`);
+    module.default(actionElement);
   });
 
-  root.querySelectorAll("[data-action]").forEach((element) => {
-    element.addEventListener("click", async () => {
-      const module = await import(`../actions/${element.dataset.action}.js`);
-      module.default(element);
-    });
+  root.addEventListener("change", (event) => {
+    runChangeAction(root, event.target);
   });
 
-  root.querySelectorAll("[data-change]").forEach((element) => {
-    const runChange = async () => {
-      const module = await import(`../actions/${element.dataset.change}.js`);
-      module.default(element);
-    };
-    element.addEventListener("change", runChange);
-    element.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") runChange();
-    });
+  root.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") runChangeAction(root, event.target);
   });
+}
+
+async function runChangeAction(root, element) {
+  if (!element?.dataset?.change || !root.contains(element)) return;
+
+  const module = await import(`../actions/${element.dataset.change}.js`);
+  module.default(element);
 }

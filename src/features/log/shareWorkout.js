@@ -1,7 +1,8 @@
 import { showConfirmDialog } from "../../components/ConfirmDialog.js";
 
 export async function shareWorkout(entry) {
-  const text = `${entry.title}\n${entry.finishedAt}\nВремя: ${entry.duration}\n\n${entry.text}`;
+  const footer = "Трекинг создан в приложении SlavikusSport\n#спорт #тренировка #SlavikusSport";
+  const text = `${entry.title}\n${entry.finishedAt}\nВремя: ${entry.duration}\n\n${entry.text}\n\n${footer}`;
 
   if (navigator.share) {
     await navigator.share({ title: entry.title, text });

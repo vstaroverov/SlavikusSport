@@ -17,6 +17,7 @@ export default function editLog(button) {
 
     updateLogDetails(id, { results, text: nextText, finishedAt });
     text.textContent = nextText;
+    text.hidden = false;
     editor.hidden = true;
     dateInput.hidden = true;
     dateLabel.hidden = false;
@@ -26,6 +27,7 @@ export default function editLog(button) {
   }
 
   editor.hidden = false;
+  text.hidden = true;
   dateInput.hidden = false;
   dateLabel.hidden = true;
   button.textContent = "Сохранить";
