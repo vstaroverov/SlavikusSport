@@ -36,7 +36,7 @@ export function renderWorkoutScreen() {
 
   return `
     <section class="workout-top">
-      <button class="start-button ${active.running ? "running" : ""}" data-action="${visibleSession ? "toggleWorkout" : "startWorkout"}">
+      <button class="start-button ${active.running ? "running" : ""} ${visibleSession && !active.running ? "paused" : ""}" data-action="${visibleSession ? "toggleWorkout" : "startWorkout"}">
         ${startButtonText}
       </button>
       <div class="timer" ${visibleSession ? "data-timer" : ""}>${formatSeconds(getElapsedSeconds(active))}</div>
@@ -78,6 +78,7 @@ export function renderWorkoutScreen() {
             </div>
           ` : ""}
           <button class="primary-button" data-action="completeSet">Выполнено</button>
+          <button class="secondary-button skip-set-button" data-action="skipSet">Пропустить</button>
         `}
       </div>
       ` : ""}

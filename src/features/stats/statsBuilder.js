@@ -52,7 +52,7 @@ export function buildExerciseStats(entries, catalog = []) {
 
   return [...map.values()]
     .map((item) => buildExerciseSummary(item.name, [...item.points.values()]))
-    .sort((a, b) => b.lastTimestamp - a.lastTimestamp || a.name.localeCompare(b.name, "ru"));
+    .sort((a, b) => a.name.localeCompare(b.name, "ru"));
 }
 
 function addPoint(map, name, point) {

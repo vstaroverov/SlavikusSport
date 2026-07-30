@@ -10,6 +10,12 @@ export function formatLogText(results) {
   return results.map(formatResultLine).join("\n");
 }
 
+export function formatLogTextWithRecords(entry, entries) {
+  const results = getLogResults(entry);
+  const previousBest = buildPreviousBestMap(entry, entries);
+  return results.map((result) => formatResultLineWithRecords(result, previousBest)).join("\n");
+}
+
 export function parseSetText(value) {
   const text = String(value || "").trim();
   if (!text) return { done: [], weights: [] };
@@ -110,6 +116,64 @@ export function formatResultLine(result) {
   return [normalized.name, sets].filter(Boolean).join(" ");
 }
 
+function formatResultLineWithRecords(result, previousBest) {
+  const normalized = normalizeResult(result);
+  const best = previousBest.get(normalizeName(normalized.name)) || { repeats: 0, weight: 0 };
+  let hasRecord = false;
+  const sets = normalized.done.map((value, index) => {
+    const weightText = normalized.weights[index] || "";
+    const repeatsText = String(value || "").trim();
+    const repeats = parseNumber(repeatsText);
+    const weight = parseNumber(weightText);
+
+    if (weight > 0) {
+      if (weight > best.weight) hasRecord = true;
+      return `${weightText}х${repeatsText}`;
+    }
+
+    if (repeats > best.repeats) hasRecord = true;
+    return repeatsText;
+  }).filter(Boolean).join(", ");
+
+  const line = [normalized.name, sets].filter(Boolean).join(" ");
+  return hasRecord ? `${line} ★` : line;
+}
+
+function buildPreviousBestMap(entry, entries = []) {
+  const currentIndex = entries.findIndex((candidate) => candidate.id === entry.id);
+  const currentTime = parseRuDate(entry.finishedAt)?.getTime() || 0;
+  const bestMap = new Map();
+
+  entries.forEach((candidate, index) => {
+    if (candidate.id === entry.id) return;
+
+    const candidateTime = parseRuDate(candidate.finishedAt)?.getTime() || 0;
+    const isPrevious = currentTime && candidateTime
+      ? candidateTime < currentTime
+      : index > currentIndex;
+    if (!isPrevious) return;
+
+    getLogResults(candidate).forEach((result) => {
+      const normalized = normalizeResult(result);
+      const key = normalizeName(normalized.name);
+      const best = bestMap.get(key) || { repeats: 0, weight: 0 };
+
+      normalized.done.forEach((value, approachIndex) => {
+        best.repeats = Math.max(best.repeats, parseNumber(value));
+        best.weight = Math.max(best.weight, parseNumber(normalized.weights[approachIndex] || normalized.weight));
+      });
+
+      bestMap.set(key, best);
+    });
+  });
+
+  return bestMap;
+}
+
+function normalizeName(value) {
+  return String(value || "").replace(/\s+/g, " ").trim().toLocaleLowerCase("ru-RU");
+}
+
 function parseLogText(text) {
   return String(text).split("\n").map((line) => {
     const trimmed = line.trim();
@@ -138,4 +202,15 @@ function findFirstValueIndex(value) {
 
 function parseWeight(value) {
   return String(value).match(/\d+(?:[.,]\d+)?/)?.[0]?.replace(",", ".") || "";
+}
+
+function parseNumber(value) {
+  const number = String(value || "").match(/\d+(?:[.,]\d+)?/)?.[0] || "";
+  return Number(number.replace(",", ".")) || 0;
+}
+
+function parseRuDate(value) {
+  const match = String(value).match(/(\d{2})\.(\d{2})\.(\d{4}),?\s+(\d{2}):(\d{2})/);
+  if (!match) return null;
+  return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]), Number(match[4]), Number(match[5]));
 }

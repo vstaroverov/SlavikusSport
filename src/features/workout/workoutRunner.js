@@ -26,6 +26,15 @@ export function addSetResult(session, value) {
   result.weights = Array.isArray(result.weights) ? result.weights : [];
   result.weights.push(parsed.weight);
 
+  return advanceWorkoutStep(session, result);
+}
+
+export function skipSet(session) {
+  const result = session.results[session.currentExercise];
+  return advanceWorkoutStep(session, result);
+}
+
+function advanceWorkoutStep(session, result) {
   if (session.currentSet < result.sets) {
     session.currentSet += 1;
     return session;

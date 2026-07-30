@@ -12,7 +12,7 @@ export function showInputDialog({
     overlay.className = "confirm-overlay";
     overlay.innerHTML = `
       <section class="confirm-dialog log-add-dialog" role="dialog" aria-modal="true" aria-labelledby="input-dialog-title">
-        <div class="confirm-mark">+</div>
+        <div class="confirm-mark" aria-hidden="true"></div>
         <h2 id="input-dialog-title">${escapeHtml(title)}</h2>
         <label>
           <span>${escapeHtml(label)}</span>
@@ -63,7 +63,7 @@ export function showChoiceDialog({
     overlay.className = "confirm-overlay";
     overlay.innerHTML = `
       <section class="confirm-dialog calendar-choice-dialog" role="dialog" aria-modal="true" aria-labelledby="choice-dialog-title">
-        <div class="confirm-mark">+</div>
+        <div class="confirm-mark" aria-hidden="true"></div>
         <h2 id="choice-dialog-title">${escapeHtml(title)}</h2>
         ${message ? `<p>${escapeHtml(message)}</p>` : ""}
         <div class="calendar-choice-list">

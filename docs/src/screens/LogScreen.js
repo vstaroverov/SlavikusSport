@@ -10,7 +10,7 @@ export function renderLogScreen() {
         <h1>Лог</h1>
         <button class="round-add" data-action="addManualLog" aria-label="Добавить запись в лог">+</button>
       </div>
-      ${entries.length ? entries.map(renderWorkoutLogCard).join("") : `
+      ${entries.length ? entries.map((entry, index) => renderWorkoutLogCard(entry, entries, index === 0)).join("") : `
         <div class="empty-state">Завершенные тренировки появятся здесь.</div>
       `}
     </section>

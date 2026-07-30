@@ -374,7 +374,7 @@ p {
 
 .today-panel {
   position: relative;
-  min-height: 286px;
+  min-height: 226px;
   display: block;
   padding: 0;
   border: 1px solid var(--line);
@@ -399,7 +399,7 @@ p {
 
 .today-copy {
   position: absolute;
-  top: 38px;
+  top: 30px;
   left: 22px;
   right: 22px;
   z-index: 1;
@@ -533,11 +533,30 @@ p {
 }
 
 .round-add {
+  position: relative;
+  overflow: hidden;
+  font-size: 0;
   background: rgba(10, 28, 57, .88);
   border: 1px solid rgba(83, 141, 224, .18);
   color: #2586ff;
-  font-size: 26px;
   box-shadow: 0 0 22px rgb(23 102 255 / 28%);
+}
+
+.round-add::before,
+.round-add::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 3px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.round-add::after {
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 .round-tool {
@@ -654,6 +673,10 @@ p {
   display: grid;
   gap: 8px;
   margin-top: 12px;
+}
+
+.workout-stack .current-card + .exercise-list {
+  margin-top: 22px;
 }
 
 .exercise-row {
@@ -819,8 +842,8 @@ p {
 .exercise-editor-title,
 .exercise-editor-header {
   display: grid;
-  grid-template-columns: 30px minmax(110px, 1fr) 56px 52px 56px 88px;
-  gap: 6px;
+  grid-template-columns: 30px minmax(86px, 1fr) 46px 42px 46px 76px;
+  gap: 5px;
   align-items: center;
 }
 
@@ -846,10 +869,10 @@ p {
 
 .exercise-edit-row {
   display: grid;
-  grid-template-columns: 30px minmax(110px, 1fr) 56px 52px 56px 88px;
-  gap: 6px;
+  grid-template-columns: 30px minmax(86px, 1fr) 46px 42px 46px 76px;
+  gap: 5px;
   align-items: center;
-  padding: 6px;
+  padding: 5px;
   border: 1px solid rgba(77, 145, 255, .18);
   border-radius: 10px;
   background: rgba(5, 18, 39, .78);
@@ -889,13 +912,14 @@ p {
 
 .exercise-edit-row input,
 .exercise-edit-row select {
+  min-width: 0;
   min-height: 36px;
-  padding: 0 8px;
+  padding: 0 6px;
   border-radius: 8px;
 }
 
 .exercise-edit-row select {
-  padding-right: 4px;
+  padding-right: 2px;
 }
 
 .exercise-position-button {
@@ -909,8 +933,8 @@ p {
 
 .exercise-edit-actions {
   display: grid;
-  grid-template-columns: 26px 26px 28px;
-  gap: 5px;
+  grid-template-columns: 22px 22px 24px;
+  gap: 4px;
   justify-content: end;
 }
 
@@ -925,11 +949,15 @@ p {
 }
 
 @media (max-width: 430px) {
+  .workout-editor {
+    padding: 12px 10px;
+  }
+
   .exercise-editor-title,
   .exercise-editor-header,
   .exercise-edit-row {
-    grid-template-columns: 28px minmax(92px, 1fr) 46px 42px 46px 76px;
-    gap: 5px;
+    grid-template-columns: 28px minmax(74px, 1fr) 42px 38px 42px 68px;
+    gap: 4px;
   }
 
   .exercise-edit-row {
@@ -939,12 +967,12 @@ p {
   .exercise-edit-row input,
   .exercise-edit-row select {
     min-height: 34px;
-    padding: 0 6px;
+    padding: 0 5px;
     font-size: 12px;
   }
 
   .exercise-edit-actions {
-    grid-template-columns: 22px 22px 26px;
+    grid-template-columns: 20px 20px 22px;
     gap: 3px;
   }
 
@@ -1068,19 +1096,87 @@ p {
 }
 
 .start-button {
-  width: 132px;
-  height: 132px;
+  position: relative;
+  isolation: isolate;
+  width: 142px;
+  height: 142px;
+  display: grid;
+  place-items: center;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 25%, #46bdff, #0757f6 62%, #062776);
+  border: 1px solid rgba(164, 210, 255, .44);
+  background:
+    linear-gradient(145deg, rgba(120, 212, 255, .95) 0%, rgba(22, 103, 255, .98) 48%, rgba(5, 33, 110, .98) 100%);
   color: #fff;
-  font-size: 22px;
+  font-size: 21px;
   font-weight: 900;
-  box-shadow: var(--glow), inset 0 1px 0 rgba(255, 255, 255, .32);
+  letter-spacing: 0;
+  line-height: 1.05;
+  padding: 18px;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 2px 8px rgba(0, 16, 52, .42);
+  box-shadow:
+    0 18px 42px rgba(22, 103, 255, .42),
+    0 4px 0 rgba(1, 13, 48, .8),
+    inset 0 2px 0 rgba(255, 255, 255, .52),
+    inset 0 -18px 30px rgba(0, 23, 96, .32);
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+
+.start-button::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  z-index: -1;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, .3);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .3), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0));
+}
+
+.start-button::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  z-index: -2;
+  border-radius: inherit;
+  background: conic-gradient(from 210deg, rgba(255, 214, 102, .78), rgba(60, 192, 255, .82), rgba(37, 99, 235, .28), rgba(255, 214, 102, .78));
+  filter: blur(.2px);
+  opacity: .86;
+}
+
+.start-button:active {
+  transform: translateY(3px) scale(.98);
+  box-shadow:
+    0 10px 26px rgba(22, 103, 255, .34),
+    0 1px 0 rgba(1, 13, 48, .8),
+    inset 0 2px 0 rgba(255, 255, 255, .42),
+    inset 0 -12px 24px rgba(0, 23, 96, .34);
 }
 
 .start-button.running {
-  background: radial-gradient(circle at 35% 25%, #ff9aa4, #ff596b 62%, #8e1630);
-  box-shadow: 0 0 34px rgb(255 89 107 / 36%);
+  background:
+    linear-gradient(145deg, rgba(255, 178, 113, .96) 0%, rgba(255, 89, 107, .98) 50%, rgba(121, 21, 52, .98) 100%);
+  border-color: rgba(255, 203, 169, .52);
+  box-shadow:
+    0 18px 42px rgba(255, 89, 107, .36),
+    0 4px 0 rgba(55, 3, 24, .8),
+    inset 0 2px 0 rgba(255, 255, 255, .48),
+    inset 0 -18px 30px rgba(88, 5, 35, .34);
+}
+
+.start-button.running::after {
+  background: conic-gradient(from 210deg, rgba(255, 214, 102, .82), rgba(255, 89, 107, .86), rgba(121, 21, 52, .3), rgba(255, 214, 102, .82));
+}
+
+.start-button.paused {
+  max-width: 142px;
+  font-size: 14px;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+  text-transform: none;
+  white-space: normal;
 }
 
 .timer {
@@ -1148,6 +1244,7 @@ p {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
+  margin-bottom: 12px;
 }
 
 .set-quick-actions button {
@@ -1156,11 +1253,19 @@ p {
   font-size: 12px;
 }
 
+.skip-set-button {
+  margin-top: 8px;
+  background: rgba(125, 145, 170, .16);
+  color: #b9c8dc;
+  border-color: rgba(185, 200, 220, .18);
+}
+
 .rest-timer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  margin-bottom: 12px;
   padding: 10px 12px;
   border: 1px solid rgba(77, 145, 255, .22);
   border-radius: 10px;
@@ -1188,6 +1293,14 @@ p {
   color: var(--soft);
   font-size: 13px;
   font-weight: 800;
+}
+
+.profile-panel .secondary-button + .secondary-button {
+  margin-top: 10px;
+}
+
+.app-version-panel .secondary-button {
+  margin-top: 10px;
 }
 
 .backup-date {
@@ -1702,16 +1815,34 @@ p {
 }
 
 .confirm-mark {
+  position: relative;
   width: 56px;
   height: 56px;
   display: grid;
   place-items: center;
   border-radius: 50%;
   color: #fff;
-  font-size: 30px;
+  font-size: 0;
   font-weight: 900;
   background: linear-gradient(180deg, #1775ff, #0757f6);
   box-shadow: 0 0 32px rgb(23 102 255 / 48%);
+}
+
+.confirm-mark::before,
+.confirm-mark::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 4px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.confirm-mark::after {
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 .confirm-mark.danger {
@@ -1836,11 +1967,6 @@ p {
   text-align: left;
 }
 
-.calendar-choice-list button:first-child {
-  display: block;
-  text-align: center;
-}
-
 .calendar-choice-list strong {
   min-width: 0;
   overflow-wrap: anywhere;
@@ -1849,6 +1975,8 @@ p {
 .calendar-choice-list span {
   color: #86b8ff;
   font-weight: 900;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .confirm-actions .primary-button,

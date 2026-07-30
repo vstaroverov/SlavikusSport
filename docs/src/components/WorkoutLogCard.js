@@ -1,9 +1,11 @@
 import { getExerciseCatalog } from "../features/exercises/exercisesStorage.js";
-import { formatLogText, getLogResults, getResultSummary } from "../features/log/logExercises.js";
+import { formatLogText, formatLogTextWithRecords, getLogResults, getResultSummary } from "../features/log/logExercises.js";
 
-export function renderWorkoutLogCard(entry) {
+export function renderWorkoutLogCard(entry, entries = [], showRecords = false) {
   const results = getLogResults(entry);
-  const text = formatLogText(results) || entry.text || "";
+  const text = showRecords
+    ? formatLogTextWithRecords(entry, entries) || formatLogText(results) || entry.text || ""
+    : formatLogText(results) || entry.text || "";
 
   return `
     <article class="log-card">
