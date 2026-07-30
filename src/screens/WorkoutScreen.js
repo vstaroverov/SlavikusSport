@@ -59,9 +59,8 @@ export function renderWorkoutScreen() {
             </div>
             ${workload ? `
               <div class="current-workload">
-                <span>Рабочий</span>
-                <strong>${escapeHtml(workload.latest)}</strong>
-                <small>(${escapeHtml(workload.best)})</small>
+                <span>Крайний ${escapeHtml(workload.latest)}</span>
+                <small>Лучший (${escapeHtml(workload.best)})</small>
               </div>
             ` : ""}
           </div>
