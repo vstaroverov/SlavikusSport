@@ -61,7 +61,7 @@ function renderExerciseEditorRow(logId, result, index) {
       <input value="${escapeAttr(summary.weight)}" inputmode="decimal" placeholder="61" data-change="updateLogExercise" data-log-id="${logId}" data-exercise-index="${index}" data-field="weight" />
       <input value="${escapeAttr(summary.repeats)}" inputmode="text" placeholder="20" data-change="updateLogExercise" data-log-id="${logId}" data-exercise-index="${index}" data-field="repeats" />
       <input value="${escapeAttr(summary.sets)}" type="number" min="1" step="1" data-change="updateLogExercise" data-log-id="${logId}" data-exercise-index="${index}" data-field="sets" />
-      <button class="danger" data-action="deleteLogExercise" data-log-id="${logId}" data-exercise-index="${index}">Удалить</button>
+      <button class="danger log-delete-exercise-button" data-action="deleteLogExercise" data-log-id="${logId}" data-exercise-index="${index}" aria-label="Удалить упражнение">Удалить</button>
     </div>
   `;
 }

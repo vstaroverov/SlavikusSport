@@ -1,4 +1,4 @@
-import { getExerciseCatalog } from "../exercises/exercisesStorage.js";
+import { getExerciseCatalog, getExerciseMeasure } from "../exercises/exercisesStorage.js";
 
 const WORKOUTS_KEY = "slavikus:workouts";
 const WORKOUTS_VERSION_KEY = "slavikus:workouts-version";
@@ -65,6 +65,7 @@ export function addExercise(workoutId) {
   const catalogExercise = getExerciseCatalog()[0];
   workout.exercises.push({
     name: catalogExercise?.name || "Упражнение",
+    measure: getExerciseMeasure(catalogExercise),
     target: "",
     weight: "",
     sets: ""
@@ -82,8 +83,13 @@ export function updateExercise(workoutId, exerciseIndex, field, value) {
     exerciseItem.sets = value === "" ? "" : Math.max(1, Number(value) || 1);
   } else if (field === "weight") {
     exerciseItem.weight = value.trim();
+  } else if (field === "name") {
+    const name = value.trim() || "Упражнение";
+    const catalogExercise = getExerciseCatalog().find((exercise) => exercise.name === name);
+    exerciseItem.name = name;
+    exerciseItem.measure = getExerciseMeasure(catalogExercise || exerciseItem);
   } else {
-    exerciseItem[field] = value.trim() || (field === "name" ? "Упражнение" : "");
+    exerciseItem[field] = value.trim() || "";
   }
 
   saveWorkouts(workouts);
@@ -130,5 +136,5 @@ export function moveExerciseToPosition(workoutId, exerciseIndex, position) {
 }
 
 function stripWorkoutPrefix(title) {
-  return String(title).trim().replace(/^Т\d+\.\s*/i, "").replace(/^Ğ¢\d+\.\s*/i, "");
+  return String(title).trim().replace(/^Т\d+\.\s*/i, "").replace(/^T\d+\.\s*/i, "").replace(/^Ğ¢\d+\.\s*/i, "");
 }

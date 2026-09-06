@@ -5,6 +5,7 @@ import { getExerciseCatalog } from "../features/exercises/exercisesStorage.js";
 
 export function renderStatsScreen() {
   const stats = buildExerciseStats(getLogEntries(), getExerciseCatalog());
+  requestAnimationFrame(scrollStatChartsToLatest);
 
   return `
     <section class="stack">
@@ -14,6 +15,12 @@ export function renderStatsScreen() {
       `}
     </section>
   `;
+}
+
+function scrollStatChartsToLatest() {
+  document.querySelectorAll(".stat-plot-scroll").forEach((chart) => {
+    chart.scrollLeft = chart.scrollWidth;
+  });
 }
 
 function renderExerciseStat(stat) {

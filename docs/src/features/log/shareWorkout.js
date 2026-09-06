@@ -1,8 +1,10 @@
 import { showConfirmDialog } from "../../components/ConfirmDialog.js";
+import { formatLogTextWithRecords } from "./logExercises.js";
 
-export async function shareWorkout(entry) {
+export async function shareWorkout(entry, entries = []) {
   const footer = "Трекинг создан в приложении SlavikusSport\n#спорт #тренировка #SlavikusSport";
-  const text = `${entry.title}\n${entry.finishedAt}\nВремя: ${entry.duration}\n\n${entry.text}\n\n${footer}`;
+  const workoutText = formatLogTextWithRecords(entry, entries) || entry.text || "";
+  const text = `${entry.title}\n${entry.finishedAt}\nВремя: ${entry.duration}\n\n${workoutText}\n\n${footer}`;
 
   if (navigator.share) {
     await navigator.share({ title: entry.title, text });

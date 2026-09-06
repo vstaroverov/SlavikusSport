@@ -8,6 +8,7 @@ export function finishWorkout(session) {
     const done = fillMissedSets(result);
     return {
       name: result.name,
+      measure: result.measure || "",
       target: result.target,
       weight: result.weight,
       weights: fillMissedWeights(result, done.length),
@@ -17,16 +18,19 @@ export function finishWorkout(session) {
   });
   const text = formatLogText(results);
 
-  addLogEntry({
+  const entry = {
     id: session.id,
     title: session.title,
     finishedAt: new Date().toLocaleString("ru-RU"),
     duration,
     text,
     results
-  });
+  };
+
+  addLogEntry(entry);
 
   clearActiveSession();
+  return entry;
 }
 
 function normalizeWeight(value) {

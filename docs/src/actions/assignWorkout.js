@@ -1,5 +1,6 @@
 import { clearPlannedWorkout, setPlannedWorkout } from "../features/program/calendarPlanner.js";
 import { getWorkouts } from "../features/program/programStorage.js";
+import { dispatchAppChangedKeepingScroll } from "./preserveScroll.js";
 
 export default async function assignWorkout(button) {
   const workouts = getWorkouts();
@@ -8,12 +9,12 @@ export default async function assignWorkout(button) {
 
   if (choice === "rest") {
     clearPlannedWorkout(button.dataset.date);
-    window.dispatchEvent(new CustomEvent("app:changed"));
+    dispatchAppChangedKeepingScroll(button);
     return;
   }
 
   setPlannedWorkout(button.dataset.date, choice);
-  window.dispatchEvent(new CustomEvent("app:changed"));
+  dispatchAppChangedKeepingScroll(button);
 }
 
 function showWorkoutChoiceDialog(date, workouts) {

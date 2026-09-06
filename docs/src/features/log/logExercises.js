@@ -16,6 +16,44 @@ export function formatLogTextWithRecords(entry, entries) {
   return results.map((result) => formatResultLineWithRecords(result, previousBest)).join("\n");
 }
 
+export function getWorkoutRecords(entry, entries = []) {
+  const previousBest = buildPreviousBestMap(entry, entries);
+  const records = [];
+
+  getLogResults(entry).forEach((result) => {
+    const normalized = normalizeResult(result);
+    const best = previousBest.get(normalizeName(normalized.name)) || { repeats: 0, weight: 0 };
+    let bestRepeats = 0;
+    let bestWeight = 0;
+
+    normalized.done.forEach((value, index) => {
+      bestRepeats = Math.max(bestRepeats, parseNumber(value));
+      bestWeight = Math.max(bestWeight, parseNumber(normalized.weights[index] || normalized.weight));
+    });
+
+    if (bestWeight > best.weight && bestWeight > 0) {
+      records.push({
+        name: normalized.name,
+        type: "weight",
+        value: bestWeight,
+        previous: best.weight
+      });
+      return;
+    }
+
+    if (bestRepeats > best.repeats && bestRepeats > 0) {
+      records.push({
+        name: normalized.name,
+        type: "repeats",
+        value: bestRepeats,
+        previous: best.repeats
+      });
+    }
+  });
+
+  return records;
+}
+
 export function parseSetText(value) {
   const text = String(value || "").trim();
   if (!text) return { done: [], weights: [] };
@@ -102,6 +140,7 @@ export function normalizeResult(result) {
 
   return {
     name: String(result.name || "").trim(),
+    measure: String(result.measure || ""),
     target: String(result.target || ""),
     weight: String(result.weight || ""),
     weights,

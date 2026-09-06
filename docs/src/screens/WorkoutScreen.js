@@ -65,11 +65,7 @@ export function renderWorkoutScreen() {
             ` : ""}
           </div>
           <input inputmode="text" value="${escapeAttr(workload?.latest || "")}" placeholder="${formatCurrentExercise(current)}" data-set-value />
-          <div class="set-quick-actions">
-            <button class="secondary-button" data-action="adjustSetValue" data-mode="repeats" data-step="1">+1 повтор</button>
-            <button class="secondary-button" data-action="adjustSetValue" data-mode="weight" data-step="2.5">+2.5 кг</button>
-            <button class="secondary-button" data-action="adjustSetValue" data-mode="weight" data-step="-2.5">-2.5 кг</button>
-          </div>
+          ${renderSetQuickActions(current)}
           ${restRemaining ? `
             <div class="rest-timer">
               <span>Отдых</span>
@@ -113,6 +109,24 @@ function formatCurrentExercise(exercise) {
   const repeats = String(exercise.target || "").trim();
   if (weight && repeats) return `${weight}х${repeats}`;
   return repeats || String(exercise.weight || "").trim();
+}
+
+function renderSetQuickActions(exercise) {
+  if (exercise.measure === "weighted") {
+    return `
+      <div class="set-quick-actions">
+        <button class="secondary-button" data-action="adjustSetValue" data-mode="repeats" data-step="1">+1 повтор</button>
+        <button class="secondary-button" data-action="adjustSetValue" data-mode="weight" data-step="2.5">+2.5 кг</button>
+        <button class="secondary-button" data-action="adjustSetValue" data-mode="weight" data-step="-2.5">-2.5 кг</button>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="set-quick-actions single">
+      <button class="secondary-button" data-action="adjustSetValue" data-mode="repeats" data-step="1">+1</button>
+    </div>
+  `;
 }
 
 function normalizeWeight(value) {

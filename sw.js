@@ -9,7 +9,7 @@ const APP_SHELL = [
   "./src/assets/auth-background.png",
   "./src/assets/auth-logo.png",
   "./src/assets/crown-icon.png",
-  "./src/assets/main-hero-bg.png",
+  "./src/assets/hair.jpg",
   "./src/assets/pwa-icon-192.png",
   "./src/assets/pwa-icon-512.png"
 ];

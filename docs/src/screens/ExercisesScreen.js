@@ -1,5 +1,6 @@
 import {
   exerciseCategories,
+  exerciseMeasures,
   getExerciseCatalog,
   isExerciseCatalogEditMode
 } from "../features/exercises/exercisesStorage.js";
@@ -23,11 +24,14 @@ export function renderExercisesScreen() {
             <article class="plain-panel exercise-directory-card compact-exercise-card">
               <div class="exercise-catalog-head">
                 <strong>${escapeHtml(exercise.name)}</strong>
-                ${renderCategory(exercise.category)}
+                <div class="exercise-badge-row">
+                  ${renderMeasure(exercise.measure)}
+                  ${renderCategory(exercise.category)}
+                </div>
               </div>
               ${editMode ? `
                 <div class="exercise-catalog-actions">
-                  <button data-action="renameCatalogExercise" data-exercise-id="${exercise.id}" data-exercise-name="${escapeAttr(exercise.name)}" data-exercise-category="${exercise.category || "base"}">Изменить</button>
+                  <button data-action="renameCatalogExercise" data-exercise-id="${exercise.id}" data-exercise-name="${escapeAttr(exercise.name)}" data-exercise-category="${exercise.category || "base"}" data-exercise-measure="${exercise.measure || "repeats"}">Изменить</button>
                   <button class="danger" data-action="deleteCatalogExercise" data-exercise-id="${exercise.id}">Удалить</button>
                 </div>
               ` : ""}
@@ -50,6 +54,11 @@ function renderCategory(categoryId) {
       <small>${category.label}</small>
     </span>
   `;
+}
+
+function renderMeasure(measureId) {
+  const measure = exerciseMeasures[measureId] || exerciseMeasures.repeats;
+  return `<span class="exercise-measure-badge">${escapeHtml(measure.shortLabel)}</span>`;
 }
 
 function getCategoryIcon(categoryId) {

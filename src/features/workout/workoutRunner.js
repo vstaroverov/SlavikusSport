@@ -10,6 +10,7 @@ export function createWorkoutSession(workout) {
     currentSet: 1,
     results: workout.exercises.map((exercise) => ({
       name: exercise.name,
+      measure: exercise.measure || "",
       target: exercise.target,
       weight: exercise.weight || "",
       sets: exercise.sets,

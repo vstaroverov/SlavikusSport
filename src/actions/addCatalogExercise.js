@@ -1,10 +1,10 @@
-import { addExerciseToCatalog, exerciseCategories } from "../features/exercises/exercisesStorage.js";
+import { addExerciseToCatalog, exerciseCategories, exerciseMeasures } from "../features/exercises/exercisesStorage.js";
 
 export default async function addCatalogExercise() {
   const details = await showExerciseDialog();
   if (!details?.name.trim()) return;
 
-  addExerciseToCatalog(details.name.trim(), details.category);
+  addExerciseToCatalog(details.name.trim(), details.category, details.measure);
   window.dispatchEvent(new Event("app:changed"));
 }
 
@@ -28,6 +28,14 @@ function showExerciseDialog() {
             `).join("")}
           </select>
         </label>
+        <label>
+          <span>Единица</span>
+          <select data-exercise-measure>
+            ${Object.entries(exerciseMeasures).map(([id, measure]) => `
+              <option value="${id}" ${id === "repeats" ? "selected" : ""}>${escapeHtml(measure.label)}</option>
+            `).join("")}
+          </select>
+        </label>
         <div class="confirm-actions">
           <button class="secondary-button" data-exercise-cancel>Отмена</button>
           <button class="primary-button" data-exercise-submit>Добавить</button>
@@ -43,7 +51,8 @@ function showExerciseDialog() {
 
     const submit = () => close({
       name: overlay.querySelector("[data-exercise-name]").value,
-      category: overlay.querySelector("[data-exercise-category]").value
+      category: overlay.querySelector("[data-exercise-category]").value,
+      measure: overlay.querySelector("[data-exercise-measure]").value
     });
 
     const onKeyDown = (event) => {
