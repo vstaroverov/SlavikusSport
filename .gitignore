@@ -1,4 +1,5 @@
 node_modules/
+test/
 www/
 android/.gradle/
 android/local.properties

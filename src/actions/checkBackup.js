@@ -1,4 +1,4 @@
-import { showConfirmDialog } from "../components/ConfirmDialog.js";
+import { showProfileDialog } from "../components/ProfileDialog.js";
 import { getBackupSummaryText } from "../features/storage/backupFiles.js";
 
 export default function checkBackup() {
@@ -16,7 +16,7 @@ export default function checkBackup() {
 
     try {
       const backup = JSON.parse(await file.text());
-      await showConfirmDialog({
+      await showProfileDialog({
         title: "Файл копии",
         message: getBackupSummaryText(backup),
         confirmText: "ОК",
@@ -24,12 +24,13 @@ export default function checkBackup() {
         danger: false
       });
     } catch (error) {
-      await showConfirmDialog({
+      await showProfileDialog({
         title: "Ошибка",
         message: error.message || "Не удалось прочитать файл резервной копии.",
         confirmText: "ОК",
         cancelText: "",
-        danger: true
+        danger: true,
+        icon: "warning"
       });
     } finally {
       input.remove();

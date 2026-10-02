@@ -1,4 +1,4 @@
-const CACHE_NAME = "slavikus-sport-v10032";
+const CACHE_NAME = "slavikus-sport-v10076";
 
 const APP_SHELL = [
   "./",
@@ -6,9 +6,16 @@ const APP_SHELL = [
   "./manifest.webmanifest",
   "./src/main.js",
   "./src/styles.css",
+  "./design-system-v-star-group/design-system-v-star-group.tokens.css",
+  "./design-system-v-star-group/design-system-v-star-group.css",
+  "./design-system-v-star-group/design-system-v-star-group.products.css",
+  "./design-system-v-star-group/design-system-v-star-group.sport.css",
+  "./design-system-v-star-group/design-system-v-star-group.fonts.css",
+  "./design-system-v-star-group/assets/fonts/Manrope-variable.ttf",
+  "./design-system-v-star-group/assets/slavikus-sport-logo.svg",
+  "./design-system-v-star-group/assets/slavikus-sport-crown.svg",
+  "./design-system-v-star-group/assets/slavikus-sport-invite-qr.svg",
   "./src/assets/auth-background.png",
-  "./src/assets/auth-logo.png",
-  "./src/assets/crown-icon.png",
   "./src/assets/hair.jpg",
   "./src/assets/pwa-icon-192.png",
   "./src/assets/pwa-icon-512.png"

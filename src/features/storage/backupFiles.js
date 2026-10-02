@@ -1,4 +1,6 @@
-import { showConfirmDialog } from "../../components/ConfirmDialog.js";
+import { appStorage } from "./persistentStorage.js";
+import { showProfileDialog } from "../../components/ProfileDialog.js";
+import { showSportFeedbackDialog } from "../../components/SportFeedbackDialog.js";
 import { exportBackup } from "./persistentStorage.js";
 
 const LAST_BACKUP_KEY = "slavikus:last-backup-at";
@@ -18,7 +20,7 @@ export async function downloadBackupFile() {
     downloadBlob(fileName, blob);
   }
 
-  localStorage.setItem(LAST_BACKUP_KEY, now.toISOString());
+  appStorage.setItem(LAST_BACKUP_KEY, now.toISOString());
   window.dispatchEvent(new CustomEvent("app:changed"));
   return true;
 }
@@ -47,7 +49,7 @@ async function shareAndroidBackup(fileName, backupText, blob) {
   };
 
   if (!navigator.share || (navigator.canShare && !navigator.canShare({ files: [file] }))) {
-    await showConfirmDialog({
+    await showProfileDialog({
       title: "Не удалось сохранить файл",
       message: "Android WebView не дал открыть сохранение файла. Попробуй сделать резервную копию в веб-версии.",
       confirmText: "ОК",
@@ -62,7 +64,7 @@ async function shareAndroidBackup(fileName, backupText, blob) {
     return true;
   } catch (error) {
     if (error?.name === "AbortError") return false;
-    await showConfirmDialog({
+    await showProfileDialog({
       title: "Не удалось сохранить файл",
       message: "Системное сохранение файла не завершилось. Попробуй еще раз.",
       confirmText: "ОК",
@@ -111,7 +113,7 @@ function isAndroidApp() {
 }
 
 export function getLastBackupLabel() {
-  const value = localStorage.getItem(LAST_BACKUP_KEY);
+  const value = appStorage.getItem(LAST_BACKUP_KEY);
   if (!value) return "Еще не создавалась";
 
   const date = new Date(value);
@@ -121,7 +123,7 @@ export function getLastBackupLabel() {
 }
 
 export function getBackupFreshness() {
-  const value = localStorage.getItem(LAST_BACKUP_KEY);
+  const value = appStorage.getItem(LAST_BACKUP_KEY);
   const date = value ? new Date(value) : null;
 
   if (!date || Number.isNaN(date.getTime())) {
@@ -153,12 +155,12 @@ export function getBackupFreshness() {
 export async function promptWorkoutBackup() {
   if (window.Capacitor?.getPlatform?.() === "android") return;
 
-  const confirmed = await showConfirmDialog({
+  const confirmed = await showSportFeedbackDialog({
     title: "Обновить резервную копию?",
-    message: "Скачай JSON-файл и сохрани его в Файлы > На iPhone > SlavikusSportData. Браузер не может сам обновить файл без твоего выбора.",
+    message: "Скачай свежую копию тренировок и истории в формате JSON. На iPhone сохрани файл в «Файлы» > «На iPhone» > SlavikusSportData.",
     confirmText: "Скачать JSON",
     cancelText: "Позже",
-    danger: false
+    icon: "backup"
   });
 
   if (confirmed) {

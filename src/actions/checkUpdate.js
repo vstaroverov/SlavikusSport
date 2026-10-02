@@ -1,8 +1,8 @@
-import { showConfirmDialog } from "../components/ConfirmDialog.js";
+import { showProfileDialog } from "../components/ProfileDialog.js";
 
 export default async function checkUpdate() {
   if (!("serviceWorker" in navigator)) {
-    await showConfirmDialog({
+    await showProfileDialog({
       title: "Обновление",
       message: "Проверка обновления недоступна в этом браузере.",
       confirmText: "ОК",
@@ -17,7 +17,7 @@ export default async function checkUpdate() {
     await registration?.update();
     registration?.waiting?.postMessage({ type: "SKIP_WAITING" });
 
-    await showConfirmDialog({
+    await showProfileDialog({
       title: "Обновление",
       message: "Проверка выполнена. Если новая версия доступна, закрой и снова открой приложение.",
       confirmText: "ОК",
@@ -25,12 +25,13 @@ export default async function checkUpdate() {
       danger: false
     });
   } catch {
-    await showConfirmDialog({
+    await showProfileDialog({
       title: "Обновление",
       message: "Не удалось проверить обновление. Проверь интернет и попробуй еще раз.",
       confirmText: "ОК",
       cancelText: "",
-      danger: true
+      danger: true,
+      icon: "warning"
     });
   }
 }

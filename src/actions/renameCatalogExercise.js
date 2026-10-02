@@ -1,52 +1,88 @@
-import { exerciseCategories, exerciseMeasures, updateExerciseInCatalog } from "../features/exercises/exercisesStorage.js";
-import { showChoiceDialog, showInputDialog } from "../components/InputDialog.js";
+import {
+  exerciseMeasures,
+  getExerciseCatalog,
+  updateExerciseInCatalog
+} from "../features/exercises/exercisesStorage.js";
+import { getWorkouts, saveWorkouts } from "../features/program/programStorage.js";
+import { getActiveSession, saveActiveSession } from "../features/workout/workoutTimer.js";
+import { showSportFeedbackDialog } from "../components/SportFeedbackDialog.js";
+import { showExerciseCatalogDialog } from "../components/ExerciseCatalogDialog.js";
 
 export default async function renameCatalogExercise(button) {
-  const id = button.dataset.exerciseId;
-  const currentName = button.dataset.exerciseName || "";
-  const currentCategory = button.dataset.exerciseCategory || "base";
-  const currentMeasure = button.dataset.exerciseMeasure || "repeats";
-  const name = await showInputDialog({
-    title: "Упражнение",
-    label: "Новое название",
-    value: currentName,
-    placeholder: "Название упражнения",
-    confirmText: "Далее"
-  });
-  if (!name?.trim()) return;
+  const exercise = getExerciseCatalog().find((item) => item.id === button.dataset.exerciseId);
+  if (!exercise) return;
 
-  const category = await chooseCategory("Категория упражнения", currentCategory);
-  if (!category) return;
+  const details = await showExerciseCatalogDialog({ exercise, returnFocus: button });
+  if (!details) return;
 
-  const measure = await chooseMeasure("Единица измерения", currentMeasure);
-  if (!measure) return;
-
-  updateExerciseInCatalog(id, name.trim(), category, measure);
-  window.dispatchEvent(new Event("app:changed"));
+  try {
+    updateCatalogExerciseAndWorkouts(exercise, details);
+    window.dispatchEvent(new Event("app:changed"));
+  } catch (error) {
+    await showSportFeedbackDialog({
+      title: "Не удалось сохранить упражнение",
+      message: error.message,
+      confirmText: "ОК",
+      returnFocus: button
+    });
+  }
 }
 
-function chooseCategory(title, currentCategory) {
-  const entries = Object.entries(exerciseCategories);
-  return showChoiceDialog({
-    title,
-    message: "Выбери раздел справочника.",
-    choices: entries.map(([id, category]) => ({
-      value: id,
-      label: category.label,
-      caption: id === currentCategory ? "текущая" : ""
-    }))
-  });
+export function updateCatalogExerciseAndWorkouts(exercise, details) {
+  const name = String(details.name || "").trim();
+  const category = details.category;
+  const measure = details.measure;
+  if (!name) throw new Error("Введи название упражнения.");
+  if (!exerciseMeasures[measure]) throw new Error("Выбери единицу измерения.");
+
+  const catalog = getExerciseCatalog();
+  if (catalog.some((item) => item.id !== exercise.id && normalizeName(item.name) === normalizeName(name))) {
+    throw new Error("Упражнение с таким названием уже есть.");
+  }
+
+  const session = getActiveSession();
+  updateExerciseInCatalog(exercise.id, name, category, measure);
+
+  const measureChanged = exercise.measure !== measure;
+  const workouts = getWorkouts();
+  let changed = false;
+  const updated = workouts.map((workout) => ({
+    ...workout,
+    exercises: workout.exercises.map((item) => {
+      if (normalizeName(item.name) !== normalizeName(exercise.name)) return item;
+      changed = true;
+      return {
+        ...item,
+        name,
+        measure,
+        ...(measureChanged ? { target: "", weight: "", time: "", sets: isDistance(measure) || measure === "completion" ? 1 : item.sets } : {})
+      };
+    })
+  }));
+  if (changed) saveWorkouts(updated);
+  if (session?.results?.length) {
+    let sessionChanged = false;
+    session.results.forEach((result) => {
+      if (normalizeName(result.name) !== normalizeName(exercise.name)) return;
+      result.name = name;
+      if (!result.done?.length) {
+        result.measure = measure;
+        if (measureChanged) {
+          result.target = "";
+          result.weight = "";
+          if (isDistance(measure) || measure === "completion") result.sets = 1;
+        }
+      }
+      sessionChanged = true;
+    });
+    if (sessionChanged) saveActiveSession(session);
+  }
 }
 
-function chooseMeasure(title, currentMeasure) {
-  const entries = Object.entries(exerciseMeasures);
-  return showChoiceDialog({
-    title,
-    message: "Выбери, как считать результат упражнения.",
-    choices: entries.map(([id, measure]) => ({
-      value: id,
-      label: measure.label,
-      caption: id === currentMeasure ? "текущая" : ""
-    }))
-  });
+function isDistance(measure) {
+  return measure === "distanceKm" || measure === "distanceM";
+}
+
+function normalizeName(name) {
+  return String(name || "").trim().toLocaleLowerCase("ru-RU");
 }

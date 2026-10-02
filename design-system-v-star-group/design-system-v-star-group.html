@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>V-STAR Group · Дизайн-система</title>
+  <link rel="stylesheet" href="design-system-v-star-group.tokens.css">
+  <link rel="stylesheet" href="design-system-v-star-group.css">
+  <link rel="stylesheet" href="design-system-v-star-group.catalog.css">
+  <script src="design-system-v-star-group.js" defer></script>
+</head>
+<body class="vsg">
+  <a class="catalog-skip" href="#main">К содержимому</a>
+  <aside class="catalog-sidebar">
+    <a href="#overview" aria-label="V-STAR Group — начало каталога"><img class="catalog-logo" src="assets/design-system-v-star-group-logo.png" alt="V-STAR Group Inc." width="170"></a>
+    <div class="catalog-product"><span class="vsg-eyebrow">Product foundations</span><p>Дизайн-система</p><span class="vsg-badge">v2.6.0 · Октябрь 2026</span></div>
+    <nav aria-label="Разделы дизайн-системы">
+      <a href="design-system-v-star-group.visual.html">Лого, выравнивание, выбор и промпты ↗</a><a href="#overview" aria-current="location"><span>00</span> Обзор</a>
+      <a href="#foundations"><span>01</span> Основы бренда</a>
+      <a href="#typography"><span>02</span> Типографика и сетка</a>
+      <a href="#actions"><span>03</span> Кнопки и действия</a>
+      <a href="#forms"><span>04</span> Поля и формы</a>
+      <a href="#navigation"><span>05</span> Навигация</a>
+      <a href="#data"><span>06</span> Карточки и данные</a>
+      <a href="#feedback"><span>07</span> Обратная связь</a>
+      <a href="#overlays"><span>08</span> Диалоги и подсказки</a>
+      <a href="#patterns"><span>09</span> Продуктовые сценарии</a>
+      <a href="#usage"><span>10</span> Использование</a>
+    </nav>
+    <div class="catalog-sidebar-footer"><span class="catalog-dot"></span> Единый язык продуктов<br><span class="vsg-muted vsg-small">Основано на v-star-group</span></div>
+  </aside>
+  <main id="main" class="catalog-main">
+    <header class="catalog-topbar"><span>V-STAR GROUP <span class="vsg-muted">/ PRODUCT DESIGN</span></span><a class="vsg-link" href="design-system-v-star-group.products.html">Продуктовый UI 2.6.0 →</a><a class="vsg-link" href="design-system-v-star-group.sport.html">Slavikus Sport →</a><a class="vsg-link" href="https://github.com/vstaroverov/v-star-group" target="_blank" rel="noopener">Исходный бренд ↗</a><p><a class="vsg-link" href="design-system-v-star-group.product-decisions.md">Правила продукта · 2.3.0: тёмная тема и минимализм</a></p></header>
+    <section id="overview" class="catalog-hero">
+      <div class="vsg-row"><span class="vsg-eyebrow">V-STAR GROUP DESIGN SYSTEM</span><span class="vsg-badge">Web · Desktop · Mobile</span></div>
+      <h1>Один бренд.<br><span>Любой продукт.</span></h1>
+      <p class="catalog-lead">Общий визуальный язык для цифровых продуктов V-STAR Group. От первого действия до сложного рабочего пространства.</p>
+      <div class="vsg-row"><a class="vsg-button vsg-button--primary" href="#actions">Изучить компоненты <span aria-hidden="true">↗</span></a><a class="vsg-button" href="#usage">Как использовать</a></div>
+      <div class="catalog-hero-bottom"><div><strong>01 / Характер</strong><span>Точный и технологичный</span></div><div><strong>02 / Акцент</strong><span>Лайм направляет действие</span></div><div><strong>03 / Принцип</strong><span>Содержание важнее декора</span></div></div>
+      <div class="catalog-orbit" aria-hidden="true"><i></i><i></i><i></i><b>V</b></div>
+    </section>
+
+    <section id="foundations" class="catalog-section">
+      <div class="catalog-heading"><div><span class="vsg-eyebrow">01 / Foundations</span><h2>Основа бренда</h2></div><span class="catalog-source">Из исходного сайта</span></div>
+      <p class="catalog-description">Глубокий тёмный фон, спокойные поверхности и один яркий акцент. Голубой — информация, лайм — главное действие, красный — ошибка или удаление.</p>
+      <div class="catalog-swatches">
+        <div><div style="background:#061014"></div><strong>Background</strong><code>#061014</code></div>
+        <div><div style="background:#0d2028"></div><strong>Surface</strong><code>#0D2028</code></div>
+        <div><div style="background:#102a33"></div><strong>Raised</strong><code>#102A33</code></div>
+        <div><div style="background:#d8ff18"></div><strong>Primary / Lime</strong><code>#D8FF18</code></div>
+        <div><div style="background:#24d4ee"></div><strong>Info / Cyan</strong><code>#24D4EE</code></div>
+        <div><div style="background:#4aa7ff"></div><strong>Blue</strong><code>#4AA7FF</code></div>
+        <div><div style="background:#f6fbff"></div><strong>Text</strong><code>#F6FBFF</code></div>
+        <div><div style="background:#9eb1b8"></div><strong>Muted</strong><code>#9EB1B8</code></div>
+      </div>
+      <div class="vsg-grid catalog-space"><article class="vsg-card vsg-stack"><h3>Тёмная рабочая среда</h3><p class="vsg-muted">Основная тема продуктов. Контрастные данные, тонкие границы, минимум визуального шума.</p><div class="vsg-row"><span class="vsg-badge vsg-badge--success">Активно</span><span class="vsg-badge vsg-badge--warning">На проверке</span><span class="vsg-badge vsg-badge--danger">Ошибка</span></div></article><article class="vsg-card vsg-card--paper vsg-stack"><span class="vsg-mono">PAPER · #F4F7F6 / #10191D</span><h3>Светлая редакционная поверхность</h3><p>Для чтения, предпросмотра и маркетинговых блоков. Это отдельная поверхность, а не готовая светлая тема приложения.</p></article></div>
+    </section>
+
+    <section id="typography" class="catalog-section">
+      <div class="catalog-heading"><div><span class="vsg-eyebrow">02 / Typography & layout</span><h2>Типографика и ритм</h2></div><span class="catalog-source">Manrope · 400–800</span></div>
+      <div class="vsg-card catalog-type"><div><span class="vsg-mono">DISPLAY / 56–72 / 800</span><p class="catalog-display">Идея становится продуктом.</p></div><div><span class="vsg-mono">H1 / 32 / 800</span><p style="font-size:32px;font-weight:800">Рабочее пространство</p></div><div><span class="vsg-mono">H2 / 28 / 700</span><h2>Всё готово к запуску</h2></div><div><span class="vsg-mono">BODY / 16 / 400</span><p>Понятный интерфейс помогает сосредоточиться на результате.</p></div><div><span class="vsg-mono">LABEL / 14 / 600</span><p class="vsg-small">Название канала</p></div><div><span class="vsg-mono">CAPTION / 12 / 400</span><p class="vsg-mono vsg-muted">Последнее обновление — сегодня в 12:40</p></div></div>
+      <div class="vsg-grid catalog-space"><div class="vsg-card vsg-stack"><h3>Шкала отступов</h3><div class="catalog-spacing"><span style="--size:4px">4</span><span style="--size:8px">8</span><span style="--size:12px">12</span><span style="--size:16px">16</span><span style="--size:24px">24</span><span style="--size:32px">32</span><span style="--size:48px">48</span><span style="--size:64px">64</span></div><p class="vsg-muted vsg-small">8–12 px внутри группы · 24 px между блоками · 48–64 px между разделами.</p></div><div class="vsg-card vsg-stack"><h3>Геометрия</h3><p class="vsg-muted vsg-small">Радиус 8 px · метки 5 px · аватары 50%. Поля и кнопки 46 px. Сетка: 12 / 8 / 4 колонки для desktop / tablet / mobile.</p><div class="catalog-grid-demo" aria-label="Пример сетки из 12 колонок"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
+    </section>
+
+    <section id="actions" class="catalog-section">
+      <div class="catalog-heading"><div><span class="vsg-eyebrow">03 / Actions</span><h2>Кнопки и действия</h2></div><span class="catalog-source">Бренд + продуктовые состояния</span></div>
+      <div class="vsg-card vsg-stack"><div class="vsg-row"><button class="vsg-button vsg-button--primary" data-toast="Демонстрационное действие выполнено">Основное действие ↗</button><button class="vsg-button" data-toast="Дополнительное действие">Вторичное</button><button class="vsg-button vsg-button--ghost" data-toast="Изменения отменены в демо">Без заливки</button><button class="vsg-button vsg-button--danger" data-dialog="delete-dialog">Удалить</button><button class="vsg-button vsg-button--icon" aria-label="Открыть настройки" data-dialog="settings-drawer">⚙</button></div><hr class="vsg-divider"><div class="vsg-row"><button class="vsg-button vsg-button--primary vsg-button--small" data-toast="Компактная кнопка">Малая</button><button class="vsg-button vsg-button--primary" data-toast="Стандартная кнопка">Стандартная</button><button class="vsg-button vsg-button--primary vsg-button--large" data-toast="Большая кнопка">Большая</button><button class="vsg-button" disabled>Недоступно</button><button class="vsg-button" disabled aria-busy="true"><span class="vsg-spinner" aria-hidden="true"></span> Сохранение</button><a class="vsg-link" href="#usage">Текстовая ссылка ↗</a></div><p class="vsg-muted vsg-small">Одна главная кнопка на смысловой блок. У иконки есть доступное название. Загрузка сохраняет понятную подпись действия.</p></div>
+    </section>
+
+    <section id="forms" class="catalog-section">
+      <div class="catalog-heading"><div><span class="vsg-eyebrow">04 / Inputs</span><h2>Поля и формы</h2></div><span class="catalog-source">Интерактивные примеры</span></div>
+      <form id="demo-form" class="vsg-card vsg-stack">
+        <div class="vsg-grid"><label class="vsg-field">Название проекта <span aria-hidden="true">*</span><input class="vsg-input" name="project" placeholder="Например, Ритм" required maxlength="80" aria-describedby="project-help"><small id="project-help">Обязательное поле. До 80 символов.</small></label><label class="vsg-field">Платформа<select class="vsg-input" name="platform"><option>VK</option><option>Telegram</option></select></label><label class="vsg-field">Поиск<input class="vsg-input" type="search" placeholder="Найти публикацию" name="search"></label><label class="vsg-field">Недоступное поле<input class="vsg-input" value="Назначается автоматически" disabled></label><label class="vsg-field">Дата публикации<input class="vsg-input" type="date" name="date"></label><label class="vsg-field">Время<input class="vsg-input" type="time" name="time" value="12:00"></label></div>
+        <label class="vsg-field">Описание<textarea class="vsg-input" name="description" placeholder="Расскажите о проекте"></textarea></label>
+        <div class="vsg-grid"><label class="vsg-field">Пример ошибки<input class="vsg-input" value="неверный адрес" aria-invalid="true" aria-describedby="email-error"><small id="email-error" class="vsg-error">Введите адрес в формате name@example.com.</small></label><label class="vsg-field">Только для чтения<input class="vsg-input" value="project-001" readonly><small>Значение можно выделить и скопировать.</small></label></div>
+        <div class="vsg-grid"><fieldset><legend>Формат публикации</legend><label class="vsg-choice"><input type="radio" name="format" value="single" checked> Текст и одна иллюстрация</label><label class="vsg-choice"><input type="radio" name="format" value="carousel"> История из трёх карточек</label></fieldset><fieldset><legend>Дополнительно</legend><label class="vsg-choice"><input type="checkbox" checked> Уведомлять о публикации</label><label class="vsg-switch"><input type="checkbox" role="switch" checked><span class="vsg-switch-track" aria-hidden="true"></span> Автопубликация</label></fieldset></div>
+        <div class="vsg-grid"><label class="vsg-field">Публикаций в день: <output id="range-output" for="post-range">3</output><input id="post-range" type="range" min="1" max="12" value="3"></label><label class="vsg-field vsg-upload">Изображение<input type="file" id="demo-file" accept="image/png,image/jpeg,image/webp" aria-describedby="file-help"><small id="file-help">Демо: файл не отправляется на сервер.</small><output id="file-output" aria-live="polite"></output></label></div>
+        <div class="vsg-row"><button class="vsg-button vsg-button--primary" type="submit">Сохранить пример</button><button class="vsg-button vsg-button--ghost" type="reset">Сбросить</button><span class="vsg-muted vsg-small">Данные остаются только на этой странице.</span></div>
+      </form>
+      <div class="vsg-card vsg-stack" aria-label="Поля подключения канала">
+        <h3>Выбор и подсказки для канала</h3>
+        <p class="vsg-muted vsg-small">У стрелки выбора справа такой же отступ 14 px, как у текста слева. Подсказки у ID и Secret API показываются для ВКонтакте.</p>
+        <div class="vsg-grid">
+          <label class="vsg-field">Социальная сеть<select class="vsg-input vsg-select" id="catalog-channel-platform"><option value="vk">ВКонтакте</option><option value="telegram">Telegram</option></select></label>
+          <label class="vsg-field">Часовой пояс<select class="vsg-input vsg-select"><option>Москва (UTC+3)</option><option>Самара (UTC+4)</option></select></label>
+          <div class="vsg-field" data-vk-only><div class="vsg-field-heading"><label for="catalog-vk-id">ID сообщества VK</label><span class="vsg-tooltip"><button class="vsg-field-help" type="button" aria-label="Подсказка для ID сообщества VK" aria-describedby="catalog-vk-id-help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7v6"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg></button><span role="tooltip" id="catalog-vk-id-help">Откройте любой пост сообщества, ID будет в ссылке сверху</span></span></div><input class="vsg-input" id="catalog-vk-id" inputmode="numeric"></div>
+          <div class="vsg-field" data-vk-only><div class="vsg-field-heading"><label for="catalog-vk-secret">Secret API — токен доступа VK</label><span class="vsg-tooltip"><button class="vsg-field-help" type="button" aria-label="Подсказка для токена доступа VK" aria-describedby="catalog-vk-secret-help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7v6"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg></button><span role="tooltip" id="catalog-vk-secret-help">В сообществе справа Управление -&gt; Дополнительно -&gt; Работа с API</span></span></div><input class="vsg-input" id="catalog-vk-secret" type="password" autocomplete="new-password"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="navigation" class="catalog-section">
+      <div class="catalog-heading"><div><span class="vsg-eyebrow">05 / Navigation</span><h2>Навигация и выбор</h2></div><span class="catalog-source">Продуктовое расширение</span></div>
+      <div class="vsg-card vsg-stack"><nav class="vsg-breadcrumb" aria-label="Хлебные крошки"><a href="#overview">Продукты</a><span aria-hidden="true">/</span><a href="#patterns">Ритм</a><span aria-hidden="true">/</span><span aria-current="page">Публикации</span></nav>
+        <div class="vsg-tabs" role="tablist" aria-label="Пример вкладок"><button class="vsg-tab" id="tab-plan" role="tab" aria-selected="true" aria-controls="panel-plan">Контент-план</button><button class="vsg-tab" id="tab-history" role="tab" aria-selected="false" aria-controls="panel-history" tabindex="-1">История</button><button class="vsg-tab" id="tab-settings" role="tab" aria-selected="false" aria-controls="panel-settings" tabindex="-1">Настройки</button></div>
+        <div role="tabpanel" id="panel-plan" aria-labelledby="tab-plan" tabindex="0"><p>Запланировано 3 публикации. Следующая — сегодня в 18:00.</p></div><div role="tabpanel" id="panel-history" aria-labelledby="tab-history" tabindex="0" hidden><p>Демонстрационная история: за неделю опубликовано 12 постов.</p></div><div role="tabpanel" id="panel-settings" aria-labelledby="tab-settings" tabindex="0" hidden><p>Платформа: VK · Часовой пояс: Москва, UTC+3.</p></div>
+        <div class="vsg-segment" role="group" aria-label="Вид контент-плана"><button class="vsg-button vsg-button--ghost vsg-button--small" aria-pressed="true">Список</button><button class="vsg-button vsg-button--ghost vsg-button--small" aria-pressed="false">Календарь</button></div><p id="view-output" class="vsg-muted vsg-small" aria-live="polite">Выбран вид: Список</p>
+        <ol class="vsg-stepper" aria-label="Этапы подключения"><li>Подключение</li><li aria-current="step">Настройка</li><li>Запуск</li></ol>
+      </div>
+    </section>
+
+    <section id="data" class="catalog-section">
+      <div class="catalog-heading"><div><span class="vsg-eyebrow">06 / Data display</span><h2>Карточки, таблицы и статусы</h2></div><span class="catalog-source">Демонстрационные данные</span></div>
+      <div class="catalog-stats"><article class="vsg-card vsg-stack"><span class="vsg-muted vsg-small">Публикации</span><strong class="vsg-stat">24<span class="catalog-stat-unit"> / месяц</span></strong><span class="vsg-badge vsg-badge--success">План выполняется</span></article><article class="vsg-card vsg-stack"><span class="vsg-muted vsg-small">Бюджет генерации</span><strong class="vsg-stat">32<span class="catalog-stat-unit"> / 100 ед.</span></strong><progress value="32" max="100" aria-label="Использовано 32 из 100 условных единиц бюджета"></progress></article><article class="vsg-card vsg-stack"><span class="vsg-muted vsg-small">Рабочее пространство</span><div class="vsg-row"><span class="vsg-avatar" aria-hidden="true">VS</span><strong>V-STAR Group</strong></div><span class="vsg-muted vsg-small">Владелец · личный кабинет</span></article></div>
+      <div class="vsg-row catalog-space"><span class="vsg-badge">Черновик</span><span class="vsg-badge vsg-badge--warning">На проверке</span><span class="vsg-badge vsg-badge--info">Генерация</span><span class="vsg-badge vsg-badge--purple">Готово</span><span class="vsg-badge vsg-badge--success">Опубликовано</span><span class="vsg-badge vsg-badge--paused">Пауза</span><span class="vsg-badge vsg-badge--danger">Ошибка</span></div>
+      <div class="vsg-table-wrap catalog-space"><table><caption>Публикации · пример таблицы</caption><thead><tr><th scope="col">Название</th><th scope="col">Канал</th><th scope="col">Статус</th><th scope="col">Дата</th><th scope="col">Действие</th></tr></thead><tbody id="demo-table-body"></tbody></table></div>
+      <nav class="vsg-pagination vsg-row catalog-space" aria-label="Страницы примера таблицы"><button class="vsg-button vsg-button--small" data-page="1" aria-current="page">1</button><button class="vsg-button vsg-button--small" data-page="2">2</button><span class="vsg-muted vsg-small" id="page-output">Страница 1 из 2</span></nav>
+      <div class="vsg-grid catalog-space"><article class="vsg-card vsg-stack"><span class="vsg-eyebrow">Карточка продукта</span><h3>Ритм</h3><p class="vsg-muted">Создание и публикация контента для социальных сетей.</p><div class="vsg-row"><span class="vsg-badge vsg-badge--info">AI</span><span class="vsg-badge">Контент</span></div><button class="vsg-button" data-dialog="settings-drawer">Настроить продукт ↗</button></article><div class="vsg-empty"><span class="catalog-empty-icon" aria-hidden="true">＋</span><h3>Публикаций ещё нет</h3><p class="vsg-muted vsg-small">Создайте первый пост, чтобы заполнить контент-план.</p><button class="vsg-button vsg-button--primary" data-dialog="create-dialog">Создать пост</button></div></div>
+    </section>
+
+    <section id="feedback" class="catalog-section">
+      <div class="catalog-heading"><div><span class="vsg-eyebrow">07 / Feedback</span><h2>Состояния системы</h2></div><span class="catalog-source">Не только цвет</span></div>
+      <div class="vsg-grid"><div class="vsg-stack"><div class="vsg-alert"><span aria-hidden="true">ⓘ</span><div><strong>Информация</strong><p>Следующая публикация запланирована на 18:00.</p></div></div><div class="vsg-alert vsg-alert--success"><span aria-hidden="true">✓</span><div><strong>Изменения сохранены</strong><p>Новые настройки будут применены к следующим заданиям.</p></div></div><div class="vsg-alert vsg-alert--warning"><span aria-hidden="true">△</span><div><strong>Бюджет заканчивается</strong><p>Проверьте лимит перед следующей генерацией.</p></div></div><div class="vsg-alert vsg-alert--danger"><span aria-hidden="true">!</span><div><strong>Не удалось подключиться</strong><p>Проверьте настройки интеграции и повторите попытку.</p></div></div></div><div class="vsg-card vsg-stack"><h3>Загрузка</h3><div class="vsg-row" role="status"><span class="vsg-spinner" aria-hidden="true"></span> Получаем данные…</div><div aria-hidden="true" class="vsg-stack"><div class="vsg-skeleton" style="width:60%"></div><div class="vsg-skeleton"></div><div class="vsg-skeleton" style="width:85%"></div></div><label class="vsg-field">Готово 2 из 3 изображений<progress max="3" value="2"></progress></label><button class="vsg-button" data-toast="Демо: настройки успешно сохранены">Показать уведомление</button><p class="vsg-muted vsg-small">Скелетон отражает форму контента. Статус объясняет, чего ждёт пользователь.</p></div></div>
+    </section>
+
+    <section id="overlays" class="catalog-section">
+      <div class="catalog-heading"><div><span class="vsg-eyebrow">08 / Overlays</span><h2>Диалоги и раскрытие деталей</h2></div><span class="catalog-source">Клавиатура · Escape · фокус</span></div>
+      <div class="vsg-card vsg-stack"><div class="vsg-row"><button class="vsg-button" data-dialog="create-dialog">Открыть диалог</button><button class="vsg-button" data-dialog="settings-drawer">Боковая панель</button><button class="vsg-button vsg-button--danger" data-dialog="delete-dialog">Подтверждение удаления</button><span class="vsg-tooltip"><button class="vsg-button vsg-button--icon" aria-label="О лимите генерации" aria-describedby="budget-tooltip">?</button><span role="tooltip" id="budget-tooltip">Лимит помогает контролировать расходы на генерацию.</span></span></div><details class="vsg-accordion"><summary>Как работает автоматическая публикация?</summary><p>Система создаёт контент и отправляет его в выбранный канал по расписанию. Это образец оформления справки.</p></details><details class="vsg-accordion"><summary>Можно ли изменить готовый пост?</summary><p>В продукте редактирование должно сохранять существующие правила версий и одобрения.</p></details></div>
+    </section>
+
+    <section id="patterns" class="catalog-section">
+      <div class="catalog-heading"><div><span class="vsg-eyebrow">09 / Product patterns</span><h2>Как элементы работают вместе</h2></div><span class="catalog-source">Пример для Ритма</span></div>
+      <article class="vsg-card catalog-pattern"><div class="vsg-row"><span class="vsg-avatar" aria-hidden="true">КМ</span><div><strong>KolinMagTor</strong><p class="vsg-muted vsg-small">VK · спортивный блог</p></div><span class="vsg-badge vsg-badge--success">Подключён</span></div><hr class="vsg-divider"><div class="vsg-grid"><div class="vsg-stack"><span class="vsg-eyebrow">Автопубликация</span><h2>Контент по расписанию</h2><p class="vsg-muted">Один пост в день с текстом и иллюстрацией. Сначала проверьте параметры, затем включите расписание.</p><div class="vsg-row"><span class="vsg-badge">09:00–12:00</span><span class="vsg-badge">Москва, UTC+3</span></div></div><div class="vsg-card vsg-card--raised vsg-stack"><div class="vsg-row"><strong>Состояние примера</strong><span id="pattern-status" class="vsg-badge vsg-badge--paused" role="status">На паузе</span></div><p class="vsg-muted vsg-small">Этот переключатель меняет только демонстрационный блок.</p><button id="pattern-toggle" class="vsg-button vsg-button--primary" aria-pressed="false">Включить расписание</button></div></div></article>
+    </section>
+
+    <section id="usage" class="catalog-section">
+      <div class="catalog-heading"><div><span class="vsg-eyebrow">10 / Implementation</span><h2>Подключение к продукту</h2></div><span class="catalog-source">HTML + CSS · без сборки</span></div>
+      <div class="vsg-grid"><div class="vsg-stack"><h3>Изолированные стили</h3><p class="vsg-muted">Подключите токены и компоненты. Добавьте класс <code>vsg</code> на корневой контейнер. Переносите оформление по одному компоненту, сохраняя обработчики, данные и состояния.</p><a class="vsg-link" href="design-system-v-star-group.md">Полная документация →</a><a class="vsg-link" href="design-system-v-star-group.tokens.json">Токены в JSON →</a></div><pre class="catalog-code"><code>&lt;link rel="stylesheet"
+ href="design-system-v-star-group.tokens.css"&gt;
+&lt;link rel="stylesheet"
+ href="design-system-v-star-group.css"&gt;
+
+&lt;div class="vsg"&gt;
+  &lt;button class="vsg-button
+                 vsg-button--primary"&gt;
+    Сохранить
+  &lt;/button&gt;
+&lt;/div&gt;</code></pre></div>
+    </section>
+    <footer class="catalog-footer"><strong>V-STAR GROUP</strong><span>Design system v2.6.0 · Создано на основе исходного бренда</span><a href="#overview">Наверх ↑</a></footer>
+  </main>
+  <dialog class="vsg-dialog" id="create-dialog" aria-labelledby="create-title"><form method="dialog" class="vsg-stack"><span class="vsg-eyebrow">Новая публикация</span><h2 id="create-title">Начните с темы</h2><label class="vsg-field">Тема поста<input class="vsg-input" name="title" placeholder="О чём расскажем сегодня?" required autofocus></label><p class="vsg-muted vsg-small">Демо: публикация не будет создана в приложении.</p><div class="vsg-row"><button class="vsg-button vsg-button--primary" value="created">Создать пример</button><button class="vsg-button" value="cancel" formnovalidate>Отмена</button></div></form></dialog>
+  <dialog class="vsg-dialog" id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description"><form method="dialog" class="vsg-stack"><span class="vsg-badge vsg-badge--danger">Удаление</span><h2 id="delete-title">Удалить черновик?</h2><p id="delete-description" class="vsg-muted">В реальном продукте это действие нельзя отменить. Здесь показан только пример подтверждения.</p><div class="vsg-row"><button class="vsg-button" value="cancel" autofocus>Оставить</button><button class="vsg-button vsg-button--danger" value="deleted">Удалить пример</button></div></form></dialog>
+  <dialog class="vsg-dialog vsg-dialog--drawer" id="settings-drawer" aria-labelledby="drawer-title"><form method="dialog" class="vsg-stack"><div class="vsg-row"><h2 id="drawer-title">Настройки</h2><button class="vsg-button vsg-button--icon" value="cancel" aria-label="Закрыть настройки">×</button></div><p class="vsg-muted">Параметры демонстрационного проекта.</p><label class="vsg-field">Имя проекта<input class="vsg-input" value="Ритм"></label><label class="vsg-field">Часовой пояс<select class="vsg-input"><option>Москва, UTC+3</option><option>UTC</option></select></label><label class="vsg-switch"><input type="checkbox" role="switch" checked><span class="vsg-switch-track" aria-hidden="true"></span> Уведомления</label><button class="vsg-button vsg-button--primary" value="saved">Сохранить пример</button></form></dialog>
+  <div class="vsg-toast vsg-alert vsg-alert--success" id="toast" hidden><span aria-hidden="true">✓</span><p id="toast-message" role="status" aria-live="polite"></p><button class="vsg-button vsg-button--ghost vsg-button--small" aria-label="Закрыть уведомление" id="toast-close">×</button></div>
+</body>
+</html>

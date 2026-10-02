@@ -118,10 +118,12 @@ textarea {
 .auth-logo {
   width: 120px;
   height: 120px;
-  margin: 0 auto 78px;
-  border-radius: 34px;
-  object-fit: cover;
-  box-shadow: var(--glow);
+  margin: 0 auto 64px;
+  object-fit: contain;
+}
+
+.auth-shell {
+  background: #061014;
 }
 
 .brand-mark::after,
@@ -861,16 +863,14 @@ p {
   margin-top: 12px;
 }
 
-.exercise-editor-title,
-.exercise-editor-header {
+.exercise-editor-title {
   display: grid;
-  grid-template-columns: 30px minmax(86px, 1fr) 46px 42px 46px 76px;
+  grid-template-columns: 1fr auto;
   gap: 5px;
   align-items: center;
 }
 
 .exercise-editor-title {
-  grid-template-columns: 1fr auto;
   padding: 2px 2px 4px;
 }
 
@@ -878,21 +878,16 @@ p {
   font-size: 15px;
 }
 
-.exercise-editor-title span,
-.exercise-editor-header span {
+.exercise-editor-title span {
   color: var(--soft);
   font-size: 11px;
   font-weight: 800;
 }
 
-.exercise-editor-header {
-  padding: 0 6px;
-}
-
 .exercise-edit-row {
   display: grid;
-  grid-template-columns: 30px minmax(86px, 1fr) 46px 42px 46px 76px;
-  gap: 5px;
+  grid-template-columns: 30px minmax(0, 1fr) 76px;
+  gap: 8px;
   align-items: center;
   padding: 5px;
   border: 1px solid rgba(77, 145, 255, .18);
@@ -906,14 +901,19 @@ p {
   min-width: 0;
 }
 
-.exercise-edit-metrics {
+.exercise-edit-params {
   display: grid;
-  grid-template-columns: 1fr 1fr .8fr;
+  grid-column: 2 / 4;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
+.exercise-edit-params.activity {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .exercise-edit-row label span {
-  display: none;
+  display: block;
   color: var(--soft);
   font-size: 12px;
   font-weight: 800;
@@ -955,6 +955,8 @@ p {
 
 .exercise-edit-actions {
   display: grid;
+  grid-column: 3;
+  grid-row: 1;
   grid-template-columns: 22px 22px 24px;
   gap: 4px;
   justify-content: end;
@@ -975,10 +977,8 @@ p {
     padding: 12px 10px;
   }
 
-  .exercise-editor-title,
-  .exercise-editor-header,
   .exercise-edit-row {
-    grid-template-columns: 28px minmax(74px, 1fr) 42px 38px 42px 68px;
+    grid-template-columns: 28px minmax(0, 1fr) 68px;
     gap: 4px;
   }
 
@@ -1928,55 +1928,6 @@ p {
   white-space: pre-line;
 }
 
-.workout-celebration-dialog {
-  gap: 12px;
-}
-
-.celebration-trophy {
-  width: 76px;
-  height: 76px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, .42), transparent 30%),
-    linear-gradient(180deg, #ffd85e, #ff9f1c);
-  box-shadow: 0 0 38px rgb(255 186 52 / 46%), inset 0 1px 0 rgba(255, 255, 255, .38);
-  font-size: 38px;
-}
-
-.celebration-records {
-  width: 100%;
-  display: grid;
-  gap: 8px;
-}
-
-.celebration-record {
-  display: grid;
-  gap: 3px;
-  padding: 10px 12px;
-  border: 1px solid rgba(255, 216, 94, .28);
-  border-radius: 12px;
-  background: rgba(255, 191, 64, .09);
-  text-align: left;
-}
-
-.celebration-record strong {
-  font-size: 14px;
-}
-
-.celebration-record span {
-  color: #ffd96b;
-  font-size: 18px;
-  font-weight: 900;
-}
-
-.celebration-record small,
-.celebration-quote {
-  color: var(--soft);
-  font-size: 12px;
-}
-
 .log-add-dialog label {
   width: 100%;
   display: grid;
@@ -2131,5 +2082,161 @@ p {
   .phone-shell {
     overflow-x: hidden;
     overflow-y: auto;
+  }
+}
+
+.distance-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.distance-inputs label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.distance-inputs input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+}
+
+.run-tracker, .activity-history {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.route-preview {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--soft);
+}
+
+.route-preview svg {
+  width: 100%;
+  height: 120px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+}
+
+.route-preview polyline {
+  fill: none;
+  stroke: var(--brand-2);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.run-tracker span, .activity-history span {
+  color: var(--soft);
+}
+
+/* Slavikus Sport design-system shell: home, header and bottom navigation. */
+.phone-shell.sport-home-shell {
+  background: var(--vsg-bg);
+  color: var(--vsg-text);
+  font-family: var(--vsg-font);
+}
+
+.phone-shell.sport-home-shell::before {
+  content: none;
+}
+
+.vsg.sport-header-scope {
+  position: sticky;
+  top: 8px;
+  z-index: 5;
+  margin: 10px 0 16px;
+  background: transparent;
+}
+
+.vsg .sport-app-header {
+  min-height: 64px;
+  border-bottom: 1px solid var(--vsg-line);
+  border-radius: var(--vsg-radius);
+}
+
+.vsg .sport-brand-link {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--vsg-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.sport-home-content {
+  display: grid;
+  gap: var(--vsg-space-4);
+}
+
+.vsg .sport-today-card {
+  min-height: 210px;
+  align-content: center;
+  padding: var(--vsg-space-5);
+}
+
+.vsg .sport-today-card h1 {
+  margin: 0;
+  font-size: clamp(26px, 7vw, 34px);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.vsg .sport-today-card p {
+  margin: 0;
+}
+
+.vsg .sport-home-quick {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.vsg .sport-home-quick button {
+  min-height: 92px;
+}
+
+.vsg .sport-home-quick button span:first-child {
+  min-width: 0;
+}
+
+.vsg.sport-footer-scope {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  z-index: 6;
+  width: min(460px, 100%);
+  transform: translateX(-50%);
+  background: transparent;
+}
+
+.vsg .sport-bottom-nav {
+  padding: 7px 8px calc(7px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--vsg-line);
+  border-bottom: 0;
+  border-radius: var(--vsg-radius) var(--vsg-radius) 0 0;
+  box-shadow: 0 -12px 32px rgb(0 0 0 / 32%);
+}
+
+.vsg .sport-bottom-nav button {
+  min-height: 60px;
+}
+
+@media (min-width: 760px) {
+  .vsg.sport-footer-scope {
+    bottom: 16px;
+    width: min(460px, calc(100% - 2px));
   }
 }

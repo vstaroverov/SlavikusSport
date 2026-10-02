@@ -4,18 +4,28 @@ import { clearActiveSession, formatSeconds, getElapsedSeconds } from "./workoutT
 
 export function finishWorkout(session) {
   const duration = formatSeconds(getElapsedSeconds(session));
-  const results = session.results.map((result) => {
-    const done = fillMissedSets(result);
+  const results = session.results.flatMap((result) => {
+    const completedIndexes = (result.done || [])
+      .map((value, index) => isCompletedValue(value) ? index : -1)
+      .filter((index) => index >= 0);
+    if (!completedIndexes.length) return [];
+    const done = completedIndexes.map((index) => String(result.done[index]));
     return {
       name: result.name,
       measure: result.measure || "",
       target: result.target,
       weight: result.weight,
-      weights: fillMissedWeights(result, done.length),
-      sets: result.sets,
+      weights: completedIndexes.map((index) => normalizeWeight(result.weights?.[index] || result.weight)),
+      times: Array.isArray(result.times) ? completedIndexes.map((index) => result.times[index] || 0) : [],
+      routes: Array.isArray(result.routes) ? result.routes : [],
+      sets: done.length,
       done
     };
   });
+  if (!results.length) {
+    clearActiveSession();
+    return null;
+  }
   const text = formatLogText(results);
 
   const entry = {
@@ -41,23 +51,9 @@ function normalizeWeight(value) {
   return normalized > 0 ? String(normalized) : "";
 }
 
-function fillMissedSets(result) {
-  const done = [...result.done];
-  while (done.length < result.sets) {
-    done.push("0");
-  }
-  return done;
-}
-
-function fillMissedWeights(result, length) {
-  const defaultWeight = normalizeWeight(result.weight);
-  const weights = Array.isArray(result.weights)
-    ? result.weights.map((value) => normalizeWeight(value))
-    : [];
-
-  while (weights.length < length) {
-    weights.push(defaultWeight);
-  }
-
-  return weights.slice(0, length);
+function isCompletedValue(value) {
+  const text = String(value || "").trim();
+  if (text === "+") return true;
+  const number = text.match(/\d+(?:[.,]\d+)?/)?.[0] || "";
+  return Number(number.replace(",", ".")) > 0;
 }

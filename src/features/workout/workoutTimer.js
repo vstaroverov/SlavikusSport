@@ -1,15 +1,69 @@
+import { appStorage } from "../storage/persistentStorage.js";
+import { getWorkout } from "../program/programStorage.js";
+import { getWeightedVariantName, hasAddedWeight } from "../exercises/exercisesStorage.js";
+
 const SESSION_KEY = "slavikus:active-workout";
 
 export function getActiveSession() {
-  return JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
+  const session = JSON.parse(appStorage.getItem(SESSION_KEY) || "null");
+  if (!session?.results?.some((result) => !result.measure || (
+    String(result.name || "").trim().toLocaleLowerCase("ru-RU") === "вис"
+    && (result.measure !== "seconds" || result.weight || result.weights?.some(Boolean) || /[^\d]/.test(String(result.target || "")))
+  ) || ["разминка", "заминка"].includes(String(result.name || "").trim().toLocaleLowerCase("ru-RU")) && result.measure !== "completion"
+    || getWeightedVariantName(result.name) && (result.measure === "weighted" || hasAddedWeight(result)))) return session;
+  const workout = getWorkout(session.workoutId);
+  if (!workout) return session;
+  let changed = false;
+  session.results.forEach((result, index) => {
+    const exercise = workout.exercises[index];
+    if (!exercise) return;
+    if (exercise.name === getWeightedVariantName(result.name) && (result.measure === "weighted" || hasAddedWeight(result))) {
+      result.name = exercise.name;
+      result.measure = "weighted";
+      changed = true;
+    }
+    if (result.name !== exercise.name) return;
+    if (exercise.measure === "completion" && result.measure !== "completion") {
+      result.measure = "completion";
+      result.target = "";
+      result.weight = "";
+      result.time = "";
+      result.sets = 1;
+      result.weights = (result.weights || []).map(() => "");
+      changed = true;
+      return;
+    }
+    if (exercise.measure === "seconds" && String(exercise.name).trim().toLocaleLowerCase("ru-RU") === "вис") {
+      if (result.measure !== "seconds" || result.target !== exercise.target || result.weight || result.weights?.some(Boolean)) {
+        result.measure = "seconds";
+        result.target = exercise.target;
+        result.weight = "";
+        result.weights = (result.weights || []).map(() => "");
+        changed = true;
+      }
+      return;
+    }
+    if (result.measure) return;
+    result.measure = exercise.measure;
+    if ((result.measure === "distanceKm" || result.measure === "distanceM")
+      && !result.done?.length && session.currentSet === 1
+      && String(result.target) === "10" && Number(result.sets) === 3
+      && Number(exercise.sets) === 1 && exercise.target === "") {
+      result.target = "";
+      result.sets = 1;
+    }
+    changed = true;
+  });
+  if (changed) saveActiveSession(session);
+  return session;
 }
 
 export function saveActiveSession(session) {
-  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  appStorage.setItem(SESSION_KEY, JSON.stringify(session));
 }
 
 export function clearActiveSession() {
-  localStorage.removeItem(SESSION_KEY);
+  appStorage.removeItem(SESSION_KEY);
 }
 
 export function formatSeconds(total) {

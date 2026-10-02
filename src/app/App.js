@@ -14,6 +14,8 @@ import { renderProfileScreen } from "../screens/ProfileScreen.js";
 import { seedInitialData } from "../features/program/programStorage.js";
 import { formatSeconds, getActiveSession, getElapsedSeconds, getRestRemainingSeconds } from "../features/workout/workoutTimer.js";
 import { applyAppMigration } from "../features/storage/appMigration.js";
+import { getRunTrackerStatus, renderRunTrackerStatus } from "../features/workout/runTracker.js";
+import { discardLogDrafts } from "../features/log/logStorage.js";
 
 const screens = {
   main: renderMainScreen,
@@ -40,16 +42,22 @@ export function createApp(root) {
     const route = getRoute();
     const screen = screens[route] || screens.main;
     root.innerHTML = `
-      <div class="phone-shell">
+      <div class="phone-shell ${["main", "workout", "program", "log", "stats", "exercises", "profile"].includes(route) ? "vsg sport-home-shell" : ""}">
         ${renderHeader(user)}
         <main class="screen">${screen()}</main>
         ${renderBottomNav(route)}
       </div>
     `;
     bindGlobalActions(root);
+    getRunTrackerStatus().then((status) => {
+      renderRunTrackerStatus(root, status);
+    }).catch(() => {});
   };
 
-  window.addEventListener("hashchange", render);
+  window.addEventListener("hashchange", () => {
+    if (getRoute() !== "log") discardLogDrafts();
+    render();
+  });
   window.addEventListener("app:changed", render);
   window.setInterval(() => {
     const timer = root.querySelector("[data-timer]");
@@ -57,6 +65,9 @@ export function createApp(root) {
     const session = getActiveSession();
     if (timer && session) timer.textContent = formatSeconds(getElapsedSeconds(session));
     if (restTimer && session) restTimer.textContent = formatSeconds(getRestRemainingSeconds(session));
+    if (root.querySelector("[data-run-tracker]")) {
+      getRunTrackerStatus().then((status) => renderRunTrackerStatus(root, status)).catch(() => {});
+    }
   }, 1000);
   render();
 }

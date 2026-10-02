@@ -1,4 +1,4 @@
-import { showInputDialog } from "../components/InputDialog.js";
+import { showProgramInputDialog } from "../components/ProgramDialog.js";
 import { setActiveWorkoutEditorId } from "../features/program/programEditorState.js";
 import { moveExerciseToPosition } from "../features/program/programStorage.js";
 import { dispatchAppChangedKeepingScroll } from "./preserveScroll.js";
@@ -6,12 +6,14 @@ import { dispatchAppChangedKeepingScroll } from "./preserveScroll.js";
 export default async function moveExerciseToPositionAction(button) {
   const total = Number(button.dataset.exerciseTotal || 0);
   const currentPosition = Number(button.dataset.exerciseIndex || 0) + 1;
-  const value = await showInputDialog({
+  const value = await showProgramInputDialog({
     title: "Переставить упражнение",
     label: `Новая позиция от 1 до ${total}`,
     value: String(currentPosition),
     placeholder: "Например: 3",
-    confirmText: "Переставить"
+    message: "Порядок упражнений изменится только в этой тренировке.",
+    confirmText: "Переставить",
+    returnFocus: button
   });
 
   if (value === null) return;

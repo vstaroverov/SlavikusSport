@@ -1,25 +1,28 @@
 import { setActiveWorkoutEditorId } from "../features/program/programEditorState.js";
 import { deleteExercise } from "../features/program/programStorage.js";
-import { showConfirmDialog } from "../components/ConfirmDialog.js";
+import { showSportFeedbackDialog } from "../components/SportFeedbackDialog.js";
 import { dispatchAppChangedKeepingScroll } from "./preserveScroll.js";
 
 export default async function deleteExerciseAction(button) {
-  const confirmed = await showConfirmDialog({
+  const confirmed = await showSportFeedbackDialog({
     title: "Удалить упражнение?",
     message: "Упражнение будет удалено из этой тренировки.",
-    confirmText: "Удалить"
+    confirmText: "Удалить",
+    cancelText: "Отмена",
+    icon: "delete",
+    tone: "danger",
+    returnFocus: button
   });
   if (!confirmed) return;
 
   setActiveWorkoutEditorId(button.dataset.workoutId);
   const deleted = deleteExercise(button.dataset.workoutId, Number(button.dataset.exerciseIndex));
   if (!deleted) {
-    await showConfirmDialog({
+    await showSportFeedbackDialog({
       title: "Не удалено",
       message: "Нельзя удалить последнее упражнение в тренировке.",
       confirmText: "ОК",
-      cancelText: "",
-      danger: false
+      returnFocus: button
     });
     return;
   }

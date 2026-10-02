@@ -20,51 +20,45 @@ export function showWorkoutCelebrationDialog(entry, entries = []) {
   const motivation = pickLine(motivationLines, `${entry.id}-motivation`);
 
   return new Promise((resolve) => {
-    const overlay = document.createElement("div");
-    overlay.className = "confirm-overlay";
-    overlay.innerHTML = `
-      <section class="confirm-dialog workout-celebration-dialog" role="dialog" aria-modal="true" aria-labelledby="celebration-title">
-        <div class="celebration-trophy" aria-hidden="true">🏆</div>
+    const previousFocus = document.activeElement;
+    const dialog = document.createElement("dialog");
+    dialog.className = "vsg vsg-sport-feedback-dialog";
+    dialog.setAttribute("aria-labelledby", "celebration-title");
+    dialog.innerHTML = `
+      <div class="vsg-sport-feedback-content">
+        <span class="vsg-sport-feedback-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 2 2.9 6.2 6.8.9-5 4.8 1.2 6.8-5.9-3.2-5.9 3.2 1.2-6.8-5-4.8 6.8-.9z"/></svg></span>
         <h2 id="celebration-title">${records.length ? "Новый рекорд!" : "Тренировка завершена!"}</h2>
         <p>${escapeHtml(praise)}</p>
         ${records.length ? `
-          <div class="celebration-records">
+          <div class="vsg-sport-feedback-records">
             ${records.slice(0, 3).map(renderRecord).join("")}
           </div>
         ` : ""}
-        <p class="celebration-quote">${escapeHtml(motivation)}</p>
-        <div class="confirm-actions single">
-          <button class="primary-button" data-celebration-ok>К логу</button>
+        <p class="vsg-sport-feedback-note">${escapeHtml(motivation)}</p>
+        <div class="vsg-sport-feedback-actions">
+          <button class="vsg-button vsg-button--primary" type="button" data-celebration-ok>К логу</button>
         </div>
-      </section>
+      </div>
     `;
-
-    const close = () => {
-      document.removeEventListener("keydown", onKeyDown);
-      overlay.remove();
+    dialog.addEventListener("close", () => {
+      dialog.remove();
+      previousFocus?.focus?.();
       resolve(true);
-    };
-
-    const onKeyDown = (event) => {
-      if (event.key === "Escape" || event.key === "Enter") close();
-    };
-
-    overlay.addEventListener("click", (event) => {
-      if (event.target === overlay) close();
-    });
-    overlay.querySelector("[data-celebration-ok]").addEventListener("click", close);
-    document.addEventListener("keydown", onKeyDown);
-    document.body.append(overlay);
-    overlay.querySelector("[data-celebration-ok]").focus();
+    }, { once: true });
+    dialog.querySelector("[data-celebration-ok]").addEventListener("click", () => dialog.close());
+    document.body.append(dialog);
+    dialog.showModal();
+    dialog.querySelector("[data-celebration-ok]").focus();
   });
 }
 
 function renderRecord(record) {
-  const label = record.type === "weight" ? `${record.value} кг` : `${record.value} повторов`;
+  const unit = record.type === "weight" ? "кг" : record.type === "distanceKm" ? "км" : record.type === "distanceM" ? "м" : record.type === "seconds" ? "с" : "повторов";
+  const label = `${record.value} ${unit}`;
   const previous = record.previous > 0 ? `Было: ${record.previous}` : "Первый лучший результат";
 
   return `
-    <div class="celebration-record">
+    <div class="vsg-sport-feedback-record">
       <strong>${escapeHtml(record.name)}</strong>
       <span>${escapeHtml(label)}</span>
       <small>${escapeHtml(previous)}</small>

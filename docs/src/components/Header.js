@@ -1,16 +1,19 @@
 export function renderHeader(user) {
   return `
-    <header class="app-header">
-      <button class="header-logo" data-route="main" aria-label="Главная">
-        <img src="./src/assets/auth-logo.png" alt="" />
-      </button>
-      <div>
-        <strong>Slavikus Sport</strong>
-        <span>${user.plan}</span>
-      </div>
-      <button class="profile-button" data-route="profile" aria-label="Профиль">
-        <img src="./src/assets/crown-icon.png" alt="" />
-      </button>
-    </header>
+    <div class="vsg sport-header-scope">
+      <header class="vsg-sport-app-header sport-app-header">
+        <button class="vsg-sport-brand sport-brand-link" type="button" data-route="main" aria-label="На главную">
+          <img src="./design-system-v-star-group/assets/slavikus-sport-logo.svg" alt="" />
+          <span><strong>Slavikus Sport</strong><small>${escapeHtml(user?.plan || "Тренировки")}</small></span>
+        </button>
+        <button class="vsg-sport-profile-trigger" type="button" data-route="profile" aria-label="Открыть профиль">
+          <img src="./design-system-v-star-group/assets/slavikus-sport-crown.svg" alt="" />
+        </button>
+      </header>
+    </div>
   `;
+}
+
+function escapeHtml(value) {
+  return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }

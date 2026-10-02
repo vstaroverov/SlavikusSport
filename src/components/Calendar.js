@@ -1,6 +1,11 @@
 import { dateToIso, getCalendarMonth, getPlannedWorkoutId } from "../features/program/calendarPlanner.js";
 
 const weekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+let selectedDate = null;
+
+export function selectCalendarDate(iso) {
+  selectedDate = iso;
+}
 
 export function renderCalendar(workouts) {
   const visibleMonth = getCalendarMonth();
@@ -11,17 +16,17 @@ export function renderCalendar(workouts) {
   const monthTitle = visibleMonth.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
 
   return `
-    <section class="calendar-card">
-      <div class="calendar-head">
-        <button class="calendar-nav-button" data-action="changeCalendarMonth" data-direction="-1" aria-label="Предыдущий месяц">‹</button>
-        <strong>${capitalize(monthTitle)}</strong>
-        <button class="calendar-nav-button" data-action="changeCalendarMonth" data-direction="1" aria-label="Следующий месяц">›</button>
+    <section class="vsg-card vsg-sport-program-calendar" aria-label="Календарь тренировок">
+      <div class="vsg-sport-calendar-head">
+        <button class="vsg-button vsg-button--icon" type="button" data-action="changeCalendarMonth" data-direction="-1" aria-label="Предыдущий месяц">‹</button>
+        <strong aria-live="polite">${capitalize(monthTitle)}</strong>
+        <button class="vsg-button vsg-button--icon" type="button" data-action="changeCalendarMonth" data-direction="1" aria-label="Следующий месяц">›</button>
       </div>
-      <div class="calendar-weekdays">
+      <div class="vsg-sport-weekdays" aria-hidden="true">
         ${weekDays.map((day) => `<span>${day}</span>`).join("")}
       </div>
-      <div class="calendar-grid">
-        ${Array.from({ length: firstDayOffset }, () => `<span class="calendar-empty"></span>`).join("")}
+      <div class="vsg-sport-days">
+        ${Array.from({ length: firstDayOffset }, () => `<span aria-hidden="true"></span>`).join("")}
         ${Array.from({ length: days }, (_, index) => renderDay(index + 1, year, month, workouts)).join("")}
       </div>
     </section>
@@ -34,9 +39,9 @@ function renderDay(day, year, month, workouts) {
   const planned = workouts.find((item) => item.id === getPlannedWorkoutId(iso, false));
 
   return `
-    <button data-action="assignWorkout" data-date="${iso}" class="${isToday(date) ? "today" : ""}">
+    <button type="button" data-action="assignWorkout" data-date="${iso}" ${planned ? "data-planned" : ""} ${isToday(date) ? "data-today" : ""} aria-pressed="${selectedDate === iso}" aria-label="${escapeAttr(date.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }))}${planned ? `, ${escapeAttr(planned.title)}` : ", день отдыха"}">
       <span>${day}</span>
-      <small>${planned ? planned.shortName : ""}</small>
+      <small>${planned ? escapeHtml(planned.shortName || planned.title) : ""}</small>
     </button>
   `;
 }
@@ -52,4 +57,12 @@ function isToday(date) {
 
 function capitalize(value) {
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function escapeHtml(value) {
+  return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replaceAll('"', "&quot;");
 }

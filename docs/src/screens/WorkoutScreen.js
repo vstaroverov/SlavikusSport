@@ -5,6 +5,7 @@ import { createWorkoutSession, isWorkoutComplete } from "../features/workout/wor
 import { getActiveSession, formatSeconds, getElapsedSeconds, getRestRemainingSeconds } from "../features/workout/workoutTimer.js";
 import { getLogEntries } from "../features/log/logStorage.js";
 import { getLogResults } from "../features/log/logExercises.js";
+import { isRunExercise } from "../features/workout/automaticRunTracking.js";
 
 export function renderWorkoutScreen() {
   const workout = getWorkout(getPlannedWorkoutId(todayIso(), false));
@@ -14,76 +15,97 @@ export function renderWorkoutScreen() {
 
   if (!active) {
     return `
-      <section class="workout-top rest-day">
-        <div class="timer">00:00:00</div>
-      </section>
-      <section class="stack">
-        <div class="current-card">
-          <span>Сегодня</span>
-          <h1>Тренировка не назначена</h1>
-          <p>Создай программу или выбери тренировку в календаре.</p>
-          <button class="primary-button" data-route="program">Открыть программу</button>
-        </div>
-      </section>
+      <div class="vsg vsg-sport-workout-screen">
+        <section class="vsg-card vsg-sport-workout-hero" aria-labelledby="workout-title">
+          <span class="vsg-badge">День отдыха</span>
+          <h1 id="workout-title">Тренировка не назначена</h1>
+          <p class="vsg-muted">Создай программу или выбери тренировку в календаре.</p>
+          <output class="vsg-sport-timer" aria-label="Время тренировки">00:00:00</output>
+          <button class="vsg-button vsg-button--primary" type="button" data-route="program">Открыть программу</button>
+        </section>
+      </div>
     `;
   }
 
   const complete = isWorkoutComplete(active);
   const current = complete ? null : active.results[active.currentExercise];
-  const workload = current ? getExerciseWorkloadInfo(current.name) : null;
+  const isDistance = current?.measure === "distanceKm" || current?.measure === "distanceM";
+  const isCompletion = current?.measure === "completion";
+  const workload = current && !isDistance && !isCompletion ? getExerciseWorkloadInfo(current.name, current.measure) : null;
   const restRemaining = getRestRemainingSeconds(active);
-  const startButtonText = !visibleSession ? "Старт" : (active.running ? "Пауза" : "Продолжить");
+  const state = complete ? "complete" : !visibleSession ? "waiting" : active.running ? "running" : "paused";
+  const status = { complete: "Готово", waiting: "Ожидание", running: "Идёт тренировка", paused: "Пауза" }[state];
+  const startButtonText = complete ? "Сохранить в лог" : !visibleSession ? "Начать тренировку" : (active.running ? "Пауза" : "Продолжить");
 
   return `
-    <section class="workout-top">
-      <button class="start-button ${active.running ? "running" : ""} ${visibleSession && !active.running ? "paused" : ""}" data-action="${visibleSession ? "toggleWorkout" : "startWorkout"}">
-        ${startButtonText}
-      </button>
-      <div class="timer" ${visibleSession ? "data-timer" : ""}>${formatSeconds(getElapsedSeconds(active))}</div>
-    </section>
+    <div class="vsg vsg-sport-workout-screen">
+      <section class="vsg-card vsg-sport-workout-hero" aria-labelledby="workout-title">
+        <div class="vsg-sport-between"><span class="vsg-badge vsg-sport-session-status" data-state="${state}">${status}</span><span class="vsg-muted">Сегодня</span></div>
+        <h1 id="workout-title">${escapeHtml(active.title)}</h1>
+        <output class="vsg-sport-timer" aria-label="Время тренировки" ${visibleSession ? "data-timer" : ""}>${formatSeconds(getElapsedSeconds(active))}</output>
+        <button class="vsg-button vsg-button--primary" type="button" data-action="${complete ? "finishWorkout" : visibleSession ? "toggleWorkout" : "startWorkout"}">${startButtonText}</button>
+      </section>
 
-    <section class="stack workout-stack">
-      <h1>${active.title}</h1>
-
-      ${active.running ? `
-      <div class="current-card">
+      ${visibleSession ? `
+      <section class="vsg-card current-card vsg-sport-current-card" aria-labelledby="current-exercise-title">
         ${complete ? `
-          <strong>Все упражнения закрыты</strong>
-          <button class="primary-button" data-action="finishWorkout">Сохранить в лог</button>
+          <h2 id="current-exercise-title">Все упражнения закрыты</h2>
+          <p class="vsg-muted">Сохрани результат, чтобы увидеть его в логе.</p>
         ` : `
-          <div class="current-card-head">
-            <div>
-              <span>Сейчас</span>
-              <h2>${current.name}</h2>
-              <p>${formatCurrentExercise(current)}, подход ${active.currentSet} из ${current.sets}</p>
-            </div>
-            ${workload ? `
-              <div class="current-workload">
-                <span>Крайний ${escapeHtml(workload.latest)}</span>
-                <small>Лучший (${escapeHtml(workload.best)})</small>
-              </div>
-            ` : ""}
+          <div class="vsg-sport-between">
+            <span class="vsg-eyebrow">${active.running ? "Сейчас" : "На паузе"}</span>
+            <span class="vsg-badge">${isDistance ? "Дистанция" : isCompletion ? "Факт выполнения" : `Подход ${active.currentSet} из ${current.sets}`}</span>
           </div>
-          <input inputmode="text" value="${escapeAttr(workload?.latest || "")}" placeholder="${formatCurrentExercise(current)}" data-set-value />
-          ${renderSetQuickActions(current)}
+          <h2 id="current-exercise-title">${escapeHtml(current.name)}</h2>
+          <p class="vsg-muted">${isDistance ? `${current.target ? `План: ${escapeHtml(current.target)} ${current.measure === "distanceKm" ? "км" : "м"}` : "Запиши дистанцию и время"}${current.time ? ` · ${escapeHtml(current.time)} мин` : ""}` : isCompletion ? "Отметь, когда закончишь разминку." : `План: ${escapeHtml(formatCurrentExercise(current)) || "укажи результат"}`}</p>
+          ${workload ? `<div class="vsg-sport-workload"><span>Крайний ${escapeHtml(workload.latest)}</span><span>Лучший ${escapeHtml(workload.best)}</span></div>` : ""}
+          ${isRunExercise(current) && window.Capacitor?.getPlatform?.() === "android" ? `
+            <div class="vsg-sport-gps" data-run-tracker>
+              <strong>GPS-маршрут</strong>
+              <span data-run-tracker-status>${active.running ? "GPS запускается" : "GPS на паузе"}</span>
+            </div>
+          ` : ""}
+          ${active.running ? `
+          ${isCompletion ? "" : isDistance ? `
+            <div class="vsg-sport-fields">
+              <label class="vsg-field">Дистанция, ${current.measure === "distanceKm" ? "км" : "м"}
+                <input class="vsg-input" type="number" min="0" step="any" inputmode="decimal" placeholder="${escapeAttr(current.target || "0")}" data-distance-value />
+              </label>
+              <label class="vsg-field">Время, мм:сс
+                <input class="vsg-input" inputmode="numeric" placeholder="${escapeAttr(current.time || "25:00")}" data-duration-value />
+              </label>
+            </div>
+          ` : `
+            <label class="vsg-field">${current.measure === "seconds" ? "Результат, секунды" : "Результат подхода"}
+              <input class="vsg-input" ${current.measure === "seconds" ? 'type="number" min="0" step="1" inputmode="numeric"' : 'inputmode="text"'} value="${escapeAttr(current.measure === "seconds" ? (parseNumber(workload?.latest) || "") : (workload?.latest || ""))}" placeholder="${escapeAttr(current.measure === "seconds" ? parseNumber(current.target) || "" : formatCurrentExercise(current))}" data-set-value />
+            </label>
+            ${renderSetQuickActions(current)}
+          `}
           ${restRemaining ? `
-            <div class="rest-timer">
+            <div class="vsg-sport-rest">
               <span>Отдых</span>
               <strong data-rest-timer>${formatSeconds(restRemaining)}</strong>
             </div>
           ` : ""}
-          <button class="primary-button" data-action="completeSet">Выполнено</button>
-          <button class="secondary-button skip-set-button" data-action="skipSet">Пропустить</button>
+          ${!isDistance && !isCompletion ? `<progress max="${Math.max(1, Number(current.sets) || 1)}" value="${Math.max(0, active.currentSet - 1)}" aria-label="Пройдено подходов"></progress>` : ""}
+          <div class="vsg-sport-actions">
+            <button class="vsg-button vsg-button--primary" type="button" data-action="completeSet">${isCompletion ? "Выполнена" : "Выполнено"}</button>
+            <button class="vsg-button" type="button" data-action="skipSet">Пропустить</button>
+          </div>
+          ` : `<p class="vsg-muted">Продолжи тренировку, чтобы записать результат.</p>`}
         `}
-      </div>
+      </section>
       ` : ""}
 
-      ${renderExerciseList(active.results, active.currentExercise)}
+      <section class="vsg-card vsg-sport-workout-plan" aria-labelledby="workout-plan-title">
+        <h2 id="workout-plan-title">Упражнения</h2>
+        ${renderExerciseList(active.results, active.currentExercise, { workout: true, sessionStarted: Boolean(visibleSession) })}
+      </section>
 
       ${visibleSession ? `
-      <button class="secondary-button finish-early-button" data-action="finishWorkout">Завершить досрочно</button>
+      ${!complete ? `<button class="vsg-button vsg-sport-workout-finish" type="button" data-action="finishWorkout">Завершить досрочно</button>` : ""}
       ` : ""}
-    </section>
+    </div>
   `;
 }
 
@@ -99,12 +121,14 @@ function isSessionForWorkout(session, workout) {
   return sessionExercises.every((exercise, index) => (
     exercise.name === workoutExercises[index]?.name
     && String(exercise.target || "") === String(workoutExercises[index]?.target || "")
+    && String(exercise.time || "") === String(workoutExercises[index]?.time || "")
     && String(exercise.weight || "") === String(workoutExercises[index]?.weight || "")
     && Number(exercise.sets || 0) === Number(workoutExercises[index]?.sets || 0)
   ));
 }
 
 function formatCurrentExercise(exercise) {
+  if (exercise.measure === "seconds") return parseNumber(exercise.target) > 0 ? `${parseNumber(exercise.target)} с` : "";
   const weight = normalizeWeight(exercise.weight);
   const repeats = String(exercise.target || "").trim();
   if (weight && repeats) return `${weight}х${repeats}`;
@@ -114,17 +138,21 @@ function formatCurrentExercise(exercise) {
 function renderSetQuickActions(exercise) {
   if (exercise.measure === "weighted") {
     return `
-      <div class="set-quick-actions">
-        <button class="secondary-button" data-action="adjustSetValue" data-mode="repeats" data-step="1">+1 повтор</button>
-        <button class="secondary-button" data-action="adjustSetValue" data-mode="weight" data-step="2.5">+2.5 кг</button>
-        <button class="secondary-button" data-action="adjustSetValue" data-mode="weight" data-step="-2.5">-2.5 кг</button>
+      <div class="vsg-sport-set-quick">
+        <button class="vsg-button vsg-button--small" type="button" data-action="adjustSetValue" data-mode="repeats" data-step="1">+1 повтор</button>
+        <button class="vsg-button vsg-button--small" type="button" data-action="adjustSetValue" data-mode="weight" data-step="2.5">+2.5 кг</button>
+        <button class="vsg-button vsg-button--small" type="button" data-action="adjustSetValue" data-mode="weight" data-step="-2.5">−2.5 кг</button>
       </div>
     `;
   }
 
+  if (exercise.measure === "seconds") {
+    return `<div class="vsg-sport-set-quick"><button class="vsg-button vsg-button--small" type="button" data-action="adjustSetValue" data-mode="repeats" data-step="1">+1 с</button></div>`;
+  }
+
   return `
-    <div class="set-quick-actions single">
-      <button class="secondary-button" data-action="adjustSetValue" data-mode="repeats" data-step="1">+1</button>
+    <div class="vsg-sport-set-quick">
+      <button class="vsg-button vsg-button--small" type="button" data-action="adjustSetValue" data-mode="repeats" data-step="1">+1</button>
     </div>
   `;
 }
@@ -137,7 +165,7 @@ function normalizeWeight(value) {
   return normalized > 0 ? String(normalized) : "";
 }
 
-function getExerciseWorkloadInfo(name) {
+function getExerciseWorkloadInfo(name, measure) {
   const approaches = getLogEntries()
     .map((entry, entryIndex) => ({
       entry,
@@ -160,22 +188,25 @@ function getExerciseWorkloadInfo(name) {
 
   if (!approaches.length) return null;
 
-  const latest = approaches.slice().sort((a, b) => (
+  const completedApproaches = approaches.filter((approach) => approach.repeats > 0);
+  if (!completedApproaches.length) return null;
+
+  const latest = completedApproaches.slice().sort((a, b) => (
     b.timestamp - a.timestamp
     || a.entryIndex - b.entryIndex
     || b.resultIndex - a.resultIndex
     || b.approachIndex - a.approachIndex
   ))[0];
 
-  const best = approaches.slice().sort((a, b) => (
-    b.weight - a.weight
+  const best = completedApproaches.slice().sort((a, b) => (
+    (measure === "seconds" ? 0 : b.weight - a.weight)
     || b.repeats - a.repeats
     || b.timestamp - a.timestamp
   ))[0];
 
   return {
-    latest: formatApproach(latest),
-    best: formatApproach(best)
+    latest: formatApproach(latest, measure),
+    best: formatApproach(best, measure)
   };
 }
 
@@ -189,10 +220,11 @@ function getResultApproaches(result) {
     rawRepeats: String(value || "").trim(),
     weight: parseNumber(weights[index]) || fallbackWeight,
     rawWeight: String(weights[index] || result.weight || "").trim()
-  })).filter((approach) => approach.repeats > 0 || approach.rawRepeats);
+  })).filter((approach) => approach.repeats > 0);
 }
 
-function formatApproach(approach) {
+function formatApproach(approach, measure) {
+  if (measure === "seconds") return `${formatNumber(approach.repeats)} с`;
   if (approach.weight > 0) return `${formatNumber(approach.weight)}х${approach.rawRepeats || formatNumber(approach.repeats)}`;
   return approach.rawRepeats || formatNumber(approach.repeats);
 }

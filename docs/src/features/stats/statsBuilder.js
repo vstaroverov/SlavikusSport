@@ -3,6 +3,7 @@ import { parseSetText } from "../log/logExercises.js";
 export function buildExerciseStats(entries, catalog = []) {
   const map = new Map();
   const catalogByName = new Map(catalog.map((exercise) => [normalizeName(exercise.name), exercise.name]));
+  const catalogMeasureByName = new Map(catalog.map((exercise) => [normalizeName(exercise.name), exercise.measure]));
 
   [...entries].map((entry, index) => ({
     ...entry,
@@ -15,19 +16,21 @@ export function buildExerciseStats(entries, catalog = []) {
     const date = entry.finishedAt || "";
     const textNames = new Set();
 
-    String(entry.text || "").split("\n").forEach((line) => {
+    if (!Array.isArray(entry.results) || !entry.results.length) String(entry.text || "").split("\n").forEach((line) => {
       const parsed = parseTextLine(line);
       if (!parsed) return;
       const name = catalogByName.get(normalizeName(parsed.name)) || parsed.name;
       if (catalog.length && !catalogByName.has(normalizeName(parsed.name))) return;
+      const measure = catalogMeasureByName.get(normalizeName(name)) || "repeats";
       textNames.add(normalizeName(name));
       addPoint(map, name, {
         date,
-        value: parsed.repeats,
+        value: measure === "completion" ? Number(parsed.repeats > 0) : parsed.repeats,
+        measure,
         target: parsed.target,
-        weight: parsed.weight,
+        weight: measure === "seconds" || measure === "completion" ? 0 : parsed.weight,
         sets: parsed.sets,
-        volume: parsed.repeats * parsed.weight
+        volume: measure === "seconds" || measure === "completion" ? 0 : parsed.repeats * parsed.weight
       });
     });
 
@@ -36,11 +39,19 @@ export function buildExerciseStats(entries, catalog = []) {
         const name = catalogByName.get(normalizeName(result.name)) || result.name;
         if (catalog.length && !catalogByName.has(normalizeName(result.name))) return;
         const repeats = sumNumbers(result.done);
-        const weight = getResultWeight(result);
+        const catalogMeasure = catalogMeasureByName.get(normalizeName(name));
+        const measure = catalogMeasure === "seconds" || catalogMeasure === "completion" ? catalogMeasure : result.measure || catalogMeasure || "repeats";
+        const weight = measure === "seconds" || measure === "completion" ? 0 : getResultWeight(result);
         const hasTextValue = textNames.has(normalizeName(name));
+        const distance = result.measure === "distanceKm" || result.measure === "distanceM";
+        const distanceValue = distance ? (result.done || []).reduce((sum, value) => sum + (Number(String(value).replace(",", ".")) || 0), 0) : 0;
+        const timeSeconds = distance ? (result.times || []).reduce((sum, value) => sum + (Number(value) || 0), 0) : 0;
+        if (distance && distanceValue <= 0) return;
         addPoint(map, name, {
           date,
-          value: hasTextValue ? 0 : repeats,
+          value: distance ? distanceValue : hasTextValue ? 0 : measure === "completion" ? Number(repeats > 0) : repeats,
+          measure,
+          timeSeconds,
           target: result.target,
           weight,
           sets: result.sets || result.done?.length || 0,
@@ -51,7 +62,7 @@ export function buildExerciseStats(entries, catalog = []) {
   });
 
   return [...map.values()]
-    .map((item) => buildExerciseSummary(item.name, [...item.points.values()]))
+    .map((item) => buildExerciseSummary(item.name, [...item.points.values()], item.measure))
     .sort((a, b) => a.name.localeCompare(b.name, "ru"));
 }
 
@@ -62,11 +73,13 @@ function addPoint(map, name, point) {
   if (!map.has(nameKey)) {
     map.set(nameKey, {
       name: cleanName(name),
+      measure: point.measure || "repeats",
       points: new Map()
     });
   }
 
   const item = map.get(nameKey);
+  if (point.measure === "distanceKm" || point.measure === "distanceM" || point.measure === "seconds" || point.measure === "completion") item.measure = point.measure;
   if (!item.points.has(dateKey)) {
     item.points.set(dateKey, {
       date: point.date,
@@ -76,12 +89,14 @@ function addPoint(map, name, point) {
       target: "",
       weight: 0,
       sets: 0,
-      volume: 0
+      volume: 0,
+      timeSeconds: 0
     });
   }
 
   const current = item.points.get(dateKey);
   current.value += point.value || 0;
+  current.timeSeconds += point.timeSeconds || 0;
   current.weight = Math.max(current.weight || 0, point.weight || 0);
   current.sets += point.sets || 0;
   current.volume += point.volume || 0;
@@ -174,20 +189,21 @@ function hasTimeUnit(value) {
   return /(^|\s)\d+(?:[.,]\d+)?\s*(?:мин|минута|минут|сек|секунда|секунд|час|часа|часов|ч)(?=\s|$)/i.test(String(value));
 }
 
-function buildExerciseSummary(name, points) {
+function buildExerciseSummary(name, points, measure) {
   points.sort((a, b) => a.timestamp - b.timestamp);
   const latestPoint = points.at(-1) || {};
   const previousPoint = points.at(-2) || {};
   const latest = latestPoint.value || 0;
   const previous = previousPoint.value || 0;
   const latestWeight = latestPoint.weight || 0;
-  const previousWeight = previousPoint.weight || 0;
+  const previousWeight = [...points.slice(0, -1)].reverse().find((point) => point.weight > 0)?.weight || 0;
   const trendValue = latest - previous;
-  const trendWeight = latestWeight - previousWeight;
+  const trendWeight = latestWeight > 0 && previousWeight > 0 ? latestWeight - previousWeight : 0;
   const trendPercent = previous > 0 ? Math.round(trendValue / previous * 100) : 0;
 
   return {
     name,
+    measure: measure || "repeats",
     points,
     latest,
     previous,

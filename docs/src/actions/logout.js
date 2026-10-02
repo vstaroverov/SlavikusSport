@@ -1,14 +1,14 @@
 import { clearCurrentUser, getCurrentUser } from "../features/profile/profileStorage.js";
-import { showConfirmDialog } from "../components/ConfirmDialog.js";
-import { showChoiceDialog } from "../components/InputDialog.js";
+import { showProfileDialog, showProfileChoiceDialog } from "../components/ProfileDialog.js";
 import { resetWorkoutData } from "../features/storage/appMigration.js";
 import { downloadBackupFile, getBackupFreshness } from "../features/storage/backupFiles.js";
+import { getRunTrackerStatus, stopRunTracker } from "../features/workout/runTracker.js";
 
 export default async function logout() {
   const backup = getBackupFreshness();
 
   if (!backup.isFresh) {
-    const choice = await showChoiceDialog({
+    const choice = await showProfileChoiceDialog({
       title: "Резервная копия",
       message: `${backup.warning}\nПосле выхода локальные данные очистятся.`,
       choices: [
@@ -26,7 +26,7 @@ export default async function logout() {
     if (choice !== "logout") return;
   }
 
-  const confirmed = await showConfirmDialog({
+  const confirmed = await showProfileDialog({
     title: "Выйти из профиля?",
     message: `${backup.warning}\nВыйти и очистить локальные данные?`,
     confirmText: "Выйти",
@@ -36,6 +36,7 @@ export default async function logout() {
 
   if (!confirmed) return;
 
+  if ((await getRunTrackerStatus())?.active) await stopRunTracker();
   const user = getCurrentUser();
   resetWorkoutData(user?.id);
   clearCurrentUser();

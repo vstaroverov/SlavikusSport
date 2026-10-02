@@ -1,13 +1,14 @@
+import { appStorage } from "../storage/persistentStorage.js";
 const USER_KEY = "slavikus:user";
 
 export function getCurrentUser() {
-  return JSON.parse(localStorage.getItem(USER_KEY) || "null");
+  return JSON.parse(appStorage.getItem(USER_KEY) || "null");
 }
 
 export function setCurrentUser(user) {
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
+  appStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
 export function clearCurrentUser() {
-  localStorage.removeItem(USER_KEY);
+  appStorage.removeItem(USER_KEY);
 }

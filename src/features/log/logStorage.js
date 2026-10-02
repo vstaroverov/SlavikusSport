@@ -1,42 +1,73 @@
+import { appStorage } from "../storage/persistentStorage.js";
 import { getCurrentUser } from "../profile/profileStorage.js";
+import { cleanZeroLogEntries } from "./logCleanup.js";
 
 const LEGACY_LOG_KEY = "slavikus:log";
 const LOG_KEY_PREFIX = "slavikus:log:";
 const LOG_MIGRATION_KEY_PREFIX = "slavikus:log-migrated:";
+const activeEdits = new Map();
 
 export function getLogEntries() {
   migrateLegacyLogEntries();
-  return sortEntriesByDateDesc(readEntries(getLogKey()));
+  const stored = readEntries(getLogKey());
+  const cleaned = cleanZeroLogEntries(stored, activeEdits);
+  if (JSON.stringify(cleaned) !== JSON.stringify(stored)) {
+    appStorage.setItem(getLogKey(), JSON.stringify(cleaned));
+  }
+  return sortEntriesByDateDesc(cleaned);
 }
 
 export function addLogEntry(entry) {
   const entries = getLogEntries();
+  if (entry.draft) activeEdits.set(entry.id, null);
   entries.unshift(entry);
-  localStorage.setItem(getLogKey(), JSON.stringify(entries));
+  appStorage.setItem(getLogKey(), JSON.stringify(entries));
 }
 
 export function updateLogText(id, text) {
   const entries = getLogEntries().map((entry) => entry.id === id ? { ...entry, text } : entry);
-  localStorage.setItem(getLogKey(), JSON.stringify(entries));
+  appStorage.setItem(getLogKey(), JSON.stringify(entries));
 }
 
 export function updateLogDetails(id, details) {
   const entries = getLogEntries().map((entry) => entry.id === id ? { ...entry, ...details } : entry);
-  localStorage.setItem(getLogKey(), JSON.stringify(entries));
+  appStorage.setItem(getLogKey(), JSON.stringify(entries));
+}
+
+export function beginLogEdit(id) {
+  if (!activeEdits.has(id)) activeEdits.set(id, getLogEntry(id) || null);
+}
+
+export function finishLogEdit(id) {
+  const entries = getLogEntries().map((entry) => entry.id === id ? { ...entry, draft: false } : entry);
+  activeEdits.delete(id);
+  appStorage.setItem(getLogKey(), JSON.stringify(entries));
+}
+
+export function discardLogDrafts() {
+  if (!activeEdits.size) return;
+  const entries = getLogEntries().flatMap((entry) => {
+    if (!activeEdits.has(entry.id)) return [entry];
+    const original = activeEdits.get(entry.id);
+    return original ? [original] : [];
+  });
+  activeEdits.clear();
+  appStorage.setItem(getLogKey(), JSON.stringify(entries));
 }
 
 export function updateLogMedia(id, media) {
   const entries = getLogEntries().map((entry) => entry.id === id ? { ...entry, media } : entry);
-  localStorage.setItem(getLogKey(), JSON.stringify(entries));
+  appStorage.setItem(getLogKey(), JSON.stringify(entries));
 }
 
 export function deleteLogEntry(id) {
   const entries = getLogEntries().filter((entry) => entry.id !== id);
-  localStorage.setItem(getLogKey(), JSON.stringify(entries));
+  activeEdits.delete(id);
+  appStorage.setItem(getLogKey(), JSON.stringify(entries));
 }
 
 export function clearLogEntries() {
-  localStorage.setItem(getLogKey(), JSON.stringify([]));
+  appStorage.setItem(getLogKey(), JSON.stringify([]));
 }
 
 export function getLogEntry(id) {
@@ -44,13 +75,13 @@ export function getLogEntry(id) {
 }
 
 export function seedDemoLogData() {
-  if (localStorage.getItem(LEGACY_LOG_KEY)) return;
+  if (appStorage.getItem(LEGACY_LOG_KEY)) return;
 
   const entries = getLogEntries();
   if (entries.some((entry) => String(entry.id).startsWith("demo-log-"))) return;
 
   const demoEntries = buildDemoMonthEntries();
-  localStorage.setItem(getLogKey(), JSON.stringify([...demoEntries, ...entries]));
+  appStorage.setItem(getLogKey(), JSON.stringify([...demoEntries, ...entries]));
 }
 
 function getLogKey() {
@@ -64,7 +95,7 @@ function getMigrationKey() {
 }
 
 function migrateLegacyLogEntries() {
-  if (localStorage.getItem(getMigrationKey())) return;
+  if (appStorage.getItem(getMigrationKey())) return;
 
   const legacyEntries = readEntries(LEGACY_LOG_KEY);
   if (legacyEntries.length) {
@@ -72,15 +103,15 @@ function migrateLegacyLogEntries() {
     [...legacyEntries, ...readEntries(getLogKey())].forEach((entry) => {
       entriesById.set(entry.id || `${entry.finishedAt}-${entry.title}`, entry);
     });
-    localStorage.setItem(getLogKey(), JSON.stringify([...entriesById.values()]));
+    appStorage.setItem(getLogKey(), JSON.stringify([...entriesById.values()]));
   }
 
-  localStorage.setItem(getMigrationKey(), "true");
+  appStorage.setItem(getMigrationKey(), "true");
 }
 
 function readEntries(key) {
   try {
-    const entries = JSON.parse(localStorage.getItem(key) || "[]");
+    const entries = JSON.parse(appStorage.getItem(key) || "[]");
     return Array.isArray(entries) ? entries : [];
   } catch {
     return [];

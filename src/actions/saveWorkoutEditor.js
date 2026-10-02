@@ -7,6 +7,13 @@ export default function saveWorkoutEditor(button) {
   const editor = button.closest("[data-workout-editor]");
   if (!workoutId || !editor) return;
 
+  const invalid = [...editor.querySelectorAll("[data-change='updateExercise']")]
+    .find((input) => !input.checkValidity());
+  if (invalid) {
+    invalid.reportValidity();
+    return;
+  }
+
   setActiveWorkoutEditorId(workoutId);
   editor.querySelectorAll("[data-change='updateExercise']").forEach((input) => {
     updateExercise(

@@ -1,15 +1,17 @@
-import { showChoiceDialog } from "../components/InputDialog.js";
+import { showProgramChoiceDialog } from "../components/ProgramDialog.js";
 import { getWorkouts, saveWorkouts } from "../features/program/programStorage.js";
 import { workoutTemplates } from "../features/program/workoutTemplates.js";
 
-export default async function addWorkoutTemplate() {
-  const templateId = await showChoiceDialog({
-    title: "Шаблон тренировки",
-    message: "Выбери готовую программу. Ее можно сразу редактировать.",
+export default async function addWorkoutTemplate(button) {
+  const templateId = await showProgramChoiceDialog({
+    title: "Выбрать шаблон",
+    message: "Выбери готовую тренировку и настрой её под себя.",
+    returnFocus: button,
     choices: workoutTemplates.map((template) => ({
       value: template.id,
       label: template.title,
-      caption: `${template.exercises.length} упр.`
+      caption: `${template.exercises.length} упр.`,
+      summary: template.exercises.slice(0, 3).map((exercise) => exercise.name).join(", ")
     }))
   });
 

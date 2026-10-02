@@ -2,7 +2,7 @@ export function renderVkLogin() {
   return `
     <div class="auth-shell">
       <section class="auth-card">
-        <img class="auth-logo" src="./src/assets/auth-logo.png" alt="Slavikus Sport" />
+        <img class="auth-logo" src="./design-system-v-star-group/assets/slavikus-sport-logo.svg" alt="" />
         <h1>Slavikus Sport</h1>
         <p>Тренировка дня, быстрый старт, лог и прогресс без лишних экранов.</p>
         <button class="primary-button" data-action="loginVk">Начать</button>

@@ -22,12 +22,25 @@ export function getWorkoutRecords(entry, entries = []) {
 
   getLogResults(entry).forEach((result) => {
     const normalized = normalizeResult(result);
-    const best = previousBest.get(normalizeName(normalized.name)) || { repeats: 0, weight: 0 };
+    if (normalized.measure === "completion") return;
+    const best = previousBest.get(normalizeName(normalized.name)) || { repeats: 0, weight: 0, distance: 0 };
+    if (isDistanceResult(normalized)) {
+      const distance = Math.max(0, ...normalized.done.map((value) => Number(String(value).replace(",", ".")) || 0));
+      if (distance > best.distance) records.push({
+        name: normalized.name,
+        type: normalized.measure,
+        value: distance,
+        previous: best.distance
+      });
+      return;
+    }
     let bestRepeats = 0;
     let bestWeight = 0;
 
     normalized.done.forEach((value, index) => {
-      bestRepeats = Math.max(bestRepeats, parseNumber(value));
+      const repeats = parseNumber(value);
+      if (repeats <= 0) return;
+      bestRepeats = Math.max(bestRepeats, repeats);
       bestWeight = Math.max(bestWeight, parseNumber(normalized.weights[index] || normalized.weight));
     });
 
@@ -44,7 +57,7 @@ export function getWorkoutRecords(entry, entries = []) {
     if (bestRepeats > best.repeats && bestRepeats > 0) {
       records.push({
         name: normalized.name,
-        type: "repeats",
+        type: normalized.measure === "seconds" ? "seconds" : "repeats",
         value: bestRepeats,
         previous: best.repeats
       });
@@ -117,6 +130,10 @@ export function getResultSummary(result) {
   };
 }
 
+export function isRunMeterInput(result) {
+  return result.measure === "distanceKm" && normalizeName(result.name) === "бег";
+}
+
 export function buildResultFromCells(name, weight, repeats, sets) {
   const setCount = Math.max(1, Number(sets) || 1);
   const cleanWeight = parseWeight(weight);
@@ -133,30 +150,55 @@ export function buildResultFromCells(name, weight, repeats, sets) {
 }
 
 export function normalizeResult(result) {
-  const done = Array.isArray(result.done) ? result.done.map(String) : [];
-  const weights = Array.isArray(result.weights)
+  const isHang = String(result.name || "").trim().toLocaleLowerCase("ru-RU") === "вис";
+  const isCompletionExercise = ["разминка", "заминка"].includes(String(result.name || "").trim().toLocaleLowerCase("ru-RU"));
+  const measure = isCompletionExercise ? "completion" : isHang ? "seconds" : String(result.measure || "");
+  const done = Array.isArray(result.done) ? result.done.map((value) => {
+    const text = String(value);
+    if (measure === "completion") return text === "+" || parseNumber(text) > 0 ? "1" : "0";
+    return measure === "seconds" ? text.replace(/^\d+(?:[.,]\d+)?\s*[xх]\s*(\d+)$/i, "$1") : text;
+  }) : [];
+  const weights = measure === "seconds" || measure === "completion" ? done.map(() => "") : Array.isArray(result.weights)
     ? result.weights.map((value) => String(value || ""))
     : done.map(() => parseWeight(result.weight || "") || "");
 
   return {
     name: String(result.name || "").trim(),
-    measure: String(result.measure || ""),
-    target: String(result.target || ""),
-    weight: String(result.weight || ""),
+    measure,
+    target: measure === "completion" ? "" : String(result.target || ""),
+    weight: measure === "seconds" || measure === "completion" ? "" : String(result.weight || ""),
     weights,
-    sets: Number(result.sets || done.length || 0),
+    times: Array.isArray(result.times) ? result.times.map(Number) : [],
+    routes: Array.isArray(result.routes) ? result.routes : [],
+    sets: measure === "completion" ? 1 : Number(result.sets || done.length || 0),
     done
   };
 }
 
 export function formatResultLine(result) {
   const normalized = normalizeResult(result);
+  if (normalized.measure === "completion") return `${normalized.name} · ${normalized.done.includes("1") ? "Выполнена" : "Пропущена"}`;
+  if (isDistanceResult(normalized)) return formatDistanceLine(normalized);
+  if (normalized.measure === "seconds") return [normalized.name, normalized.done.map((value) => Number(value) > 0 ? `${value} с` : "").filter(Boolean).join(", ")].filter(Boolean).join(" ");
   const sets = formatSetsInput(normalized);
   return [normalized.name, sets].filter(Boolean).join(" ");
 }
 
 function formatResultLineWithRecords(result, previousBest) {
   const normalized = normalizeResult(result);
+  if (normalized.measure === "completion") return formatResultLine(normalized);
+  if (isDistanceResult(normalized)) {
+    const previous = previousBest.get(normalizeName(normalized.name))?.distance || 0;
+    const distance = Math.max(0, ...normalized.done.map((value) => Number(String(value).replace(",", ".")) || 0));
+    const line = formatDistanceLine(normalized);
+    return distance > previous ? `${line} ★` : line;
+  }
+  if (normalized.measure === "seconds") {
+    const best = previousBest.get(normalizeName(normalized.name))?.repeats || 0;
+    const current = Math.max(0, ...normalized.done.map(parseNumber));
+    const line = formatResultLine(normalized);
+    return current > best ? `${line} ★` : line;
+  }
   const best = previousBest.get(normalizeName(normalized.name)) || { repeats: 0, weight: 0 };
   let hasRecord = false;
   const sets = normalized.done.map((value, index) => {
@@ -165,7 +207,7 @@ function formatResultLineWithRecords(result, previousBest) {
     const repeats = parseNumber(repeatsText);
     const weight = parseNumber(weightText);
 
-    if (weight > 0) {
+    if (weight > 0 && repeats > 0) {
       if (weight > best.weight) hasRecord = true;
       return `${weightText}х${repeatsText}`;
     }
@@ -176,6 +218,30 @@ function formatResultLineWithRecords(result, previousBest) {
 
   const line = [normalized.name, sets].filter(Boolean).join(" ");
   return hasRecord ? `${line} ★` : line;
+}
+
+function isDistanceResult(result) {
+  return result.measure === "distanceKm" || result.measure === "distanceM";
+}
+
+function formatDistanceLine(result) {
+  const unit = result.measure === "distanceKm" ? "км" : "м";
+  const sets = result.done.map((distance, index) => {
+    const value = Number(String(distance).replace(",", "."));
+    if (!Number.isFinite(value) || value <= 0) return "";
+    const seconds = Number(result.times[index] || 0);
+    const time = seconds > 0 ? ` за ${formatDuration(seconds)}` : "";
+    return `${distance} ${unit}${time}`;
+  }).filter(Boolean).join(", ");
+  return [result.name, sets].filter(Boolean).join(" ");
+}
+
+function formatDuration(total) {
+  const seconds = Math.round(total);
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainder = String(seconds % 60).padStart(2, "0");
+  return hours ? `${hours}:${String(minutes).padStart(2, "0")}:${remainder}` : `${minutes}:${remainder}`;
 }
 
 function buildPreviousBestMap(entry, entries = []) {
@@ -194,11 +260,22 @@ function buildPreviousBestMap(entry, entries = []) {
 
     getLogResults(candidate).forEach((result) => {
       const normalized = normalizeResult(result);
+      if (normalized.measure === "completion") return;
       const key = normalizeName(normalized.name);
-      const best = bestMap.get(key) || { repeats: 0, weight: 0 };
+      const best = bestMap.get(key) || { repeats: 0, weight: 0, distance: 0 };
+
+      if (isDistanceResult(normalized)) {
+        normalized.done.forEach((value) => {
+          best.distance = Math.max(best.distance, Number(String(value).replace(",", ".")) || 0);
+        });
+        bestMap.set(key, best);
+        return;
+      }
 
       normalized.done.forEach((value, approachIndex) => {
-        best.repeats = Math.max(best.repeats, parseNumber(value));
+        const repeats = parseNumber(value);
+        if (repeats <= 0) return;
+        best.repeats = Math.max(best.repeats, repeats);
         best.weight = Math.max(best.weight, parseNumber(normalized.weights[approachIndex] || normalized.weight));
       });
 

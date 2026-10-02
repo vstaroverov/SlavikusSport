@@ -1,5 +1,5 @@
-import { updateLogDetails } from "../features/log/logStorage.js";
-import { formatLogText } from "../features/log/logExercises.js";
+import { beginLogEdit, deleteLogEntry, finishLogEdit, getLogEntries, getLogEntry, updateLogDetails } from "../features/log/logStorage.js";
+import { formatLogText, formatLogTextWithRecords, getLogResults } from "../features/log/logExercises.js";
 import { collectLogExerciseRows } from "./logExerciseDom.js";
 
 export default function editLog(button) {
@@ -11,12 +11,24 @@ export default function editLog(button) {
   const editing = !editor.hidden;
 
   if (editing) {
-    const results = collectLogExerciseRows(id);
+    const currentEntry = getLogEntry(id);
+    const results = collectLogExerciseRows(id, getLogResults(currentEntry || {}));
     const finishedAt = formatDateTime(dateInput.value);
     const nextText = formatLogText(results);
 
+    if (!results.some((result) => result.done.some((value) => hasCompletedValue(value)))) {
+      deleteLogEntry(id);
+      window.dispatchEvent(new Event("app:changed"));
+      return;
+    }
+
     updateLogDetails(id, { results, text: nextText, finishedAt });
-    text.textContent = nextText;
+    finishLogEdit(id);
+    const entry = getLogEntry(id);
+    const shownText = entry ? formatLogTextWithRecords(entry, getLogEntries()) || nextText : nextText;
+    text.textContent = shownText;
+    const recordBadge = button.closest(".vsg-sport-log-card")?.querySelector(`[data-log-record="${id}"]`);
+    if (recordBadge) recordBadge.hidden = !shownText.includes("★");
     text.hidden = false;
     editor.hidden = true;
     dateInput.hidden = true;
@@ -26,11 +38,18 @@ export default function editLog(button) {
     return;
   }
 
+  beginLogEdit(id);
   editor.hidden = false;
   text.hidden = true;
   dateInput.hidden = false;
   dateLabel.hidden = true;
   button.textContent = "Сохранить";
+}
+
+function hasCompletedValue(value) {
+  const text = String(value || "").trim();
+  return text === "+" || /^выполнен[ао]?$/i.test(text)
+    || (text.match(/\d+(?:[.,]\d+)?/g) || []).some((number) => Number(number.replace(",", ".")) > 0);
 }
 
 function formatDateTime(value) {

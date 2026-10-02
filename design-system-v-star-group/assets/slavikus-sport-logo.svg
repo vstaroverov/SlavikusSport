@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Slavikus Sport</title>
+  <rect width="128" height="128" rx="28" fill="#061014"/>
+  <path fill="#D8FF18" d="M51 14h27c18 0 30 11 33 29H53c-11 0-18 7-18 17 0 9 7 15 18 15h27c8 0 13 5 13 12 0 7-5 12-14 12H49c-22 0-36-16-36-39 0-27 16-46 38-46Z"/>
+  <path fill="#F6FBFF" d="M50 58h30c18 0 31 11 31 28 0 18-15 31-36 31H19l13-22h43c8 0 13-4 13-10 0-5-4-8-11-8H50c-6 0-10-4-10-10 0-5 4-9 10-9Z"/>
+</svg>

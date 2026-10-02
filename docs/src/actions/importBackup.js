@@ -1,11 +1,10 @@
-import { importBackup } from "../features/storage/persistentStorage.js";
-import { showConfirmDialog } from "../components/ConfirmDialog.js";
-import { getBackupSummaryText } from "../features/storage/backupFiles.js";
+import { importSportFile } from "../features/storage/importSportFile.js";
+import { showProfileDialog } from "../components/ProfileDialog.js";
 
 export default function importBackupAction() {
-  showConfirmDialog({
+  showProfileDialog({
     title: "Восстановить копию",
-    message: "Выбери JSON-файл из папки Файлы > На iPhone > SlavikusSportData, если она есть.",
+    message: "Выбери JSON-файл Slavikus Sport. Полная копия заменит данные приложения, файл тренировок добавит их в программу.",
     confirmText: "Выбрать файл",
     cancelText: "Отмена",
     danger: false
@@ -17,31 +16,32 @@ export default function importBackupAction() {
 function openBackupFilePicker() {
   const input = document.createElement("input");
   input.type = "file";
-  input.accept = "application/json";
+  input.accept = ".json,application/json";
 
   input.addEventListener("change", async () => {
     const file = input.files?.[0];
     if (!file) return;
 
     try {
-      const backup = JSON.parse(await file.text());
-      const summary = getBackupSummaryText(backup);
-      await importBackup(backup);
+      const result = await importSportFile(await file.text());
       window.dispatchEvent(new Event("app:changed"));
-      await showConfirmDialog({
-        title: "Готово",
-        message: `Файл с параметрами загружен.\n\n${summary}`,
+      await showProfileDialog({
+        title: result.kind === "workout-share" ? "Тренировки добавлены" : "Готово",
+        message: result.kind === "workout-share"
+          ? `Загружено: ${result.count}. Твоя программа и история сохранены.`
+          : `Файл с параметрами загружен.\n\n${result.summary}`,
         confirmText: "ОК",
         cancelText: "",
         danger: false
       });
     } catch (error) {
-      await showConfirmDialog({
+      await showProfileDialog({
         title: "Ошибка",
         message: error.message || "Не удалось восстановить резервную копию.",
         confirmText: "ОК",
         cancelText: "",
-        danger: true
+        danger: true,
+        icon: "warning"
       });
     }
   });

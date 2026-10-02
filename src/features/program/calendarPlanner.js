@@ -1,3 +1,4 @@
+import { appStorage } from "../storage/persistentStorage.js";
 import { getCurrentUser } from "../profile/profileStorage.js";
 
 const LEGACY_PLAN_KEY = "slavikus:calendar";
@@ -7,7 +8,7 @@ const MONTH_KEY_PREFIX = "slavikus:calendar-month:";
 
 export function getPlan() {
   migrateLegacyPlan();
-  return JSON.parse(localStorage.getItem(getPlanKey()) || "{}");
+  return JSON.parse(appStorage.getItem(getPlanKey()) || "{}");
 }
 
 export function getPlannedWorkoutId(date = todayIso(), withFallback = true) {
@@ -35,7 +36,7 @@ export function removeWorkoutFromPlan(workoutId) {
 }
 
 export function getCalendarMonth() {
-  const saved = localStorage.getItem(getMonthKey());
+  const saved = appStorage.getItem(getMonthKey());
   if (saved && /^\d{4}-\d{2}$/.test(saved)) {
     const [year, month] = saved.split("-").map(Number);
     return new Date(year, month - 1, 1);
@@ -48,11 +49,11 @@ export function getCalendarMonth() {
 export function shiftCalendarMonth(direction) {
   const current = getCalendarMonth();
   const next = new Date(current.getFullYear(), current.getMonth() + direction, 1);
-  localStorage.setItem(getMonthKey(), monthToKey(next));
+  appStorage.setItem(getMonthKey(), monthToKey(next));
 }
 
 function savePlan(plan) {
-  localStorage.setItem(getPlanKey(), JSON.stringify(plan));
+  appStorage.setItem(getPlanKey(), JSON.stringify(plan));
 }
 
 function getPlanKey() {
@@ -72,17 +73,17 @@ function getMonthKey() {
 
 function migrateLegacyPlan() {
   const migrationKey = getMigrationKey();
-  if (localStorage.getItem(migrationKey)) return;
+  if (appStorage.getItem(migrationKey)) return;
 
-  const legacyPlan = JSON.parse(localStorage.getItem(LEGACY_PLAN_KEY) || "{}");
+  const legacyPlan = JSON.parse(appStorage.getItem(LEGACY_PLAN_KEY) || "{}");
   const planKey = getPlanKey();
-  const currentPlan = JSON.parse(localStorage.getItem(planKey) || "{}");
+  const currentPlan = JSON.parse(appStorage.getItem(planKey) || "{}");
 
   if (Object.keys(legacyPlan).length && !Object.keys(currentPlan).length) {
-    localStorage.setItem(planKey, JSON.stringify(legacyPlan));
+    appStorage.setItem(planKey, JSON.stringify(legacyPlan));
   }
 
-  localStorage.setItem(migrationKey, "true");
+  appStorage.setItem(migrationKey, "true");
 }
 
 export function todayIso() {

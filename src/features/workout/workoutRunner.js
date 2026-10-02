@@ -12,9 +12,11 @@ export function createWorkoutSession(workout) {
       name: exercise.name,
       measure: exercise.measure || "",
       target: exercise.target,
+      time: exercise.time || "",
       weight: exercise.weight || "",
       sets: exercise.sets,
       weights: [],
+      times: [],
       done: []
     }))
   };
@@ -22,6 +24,24 @@ export function createWorkoutSession(workout) {
 
 export function addSetResult(session, value) {
   const result = session.results[session.currentExercise];
+  if (result.measure === "completion") {
+    result.done.push("1");
+    result.weights = Array.isArray(result.weights) ? result.weights : [];
+    result.weights.push("");
+    return advanceWorkoutStep(session, result);
+  }
+  if (result.measure === "distanceKm" || result.measure === "distanceM") {
+    const distance = Number(String(value?.distance || "").replace(",", "."));
+    const seconds = Number(value?.seconds || 0);
+    if (!Number.isFinite(distance) || distance <= 0 || !Number.isFinite(seconds) || seconds <= 0) {
+      throw new Error("Укажи дистанцию и время больше нуля.");
+    }
+    result.done.push(String(distance));
+    result.times = Array.isArray(result.times) ? result.times : [];
+    result.times.push(Math.round(seconds));
+    result.weights.push("");
+    return advanceWorkoutStep(session, result);
+  }
   const parsed = parseSetInput(value, result);
   result.done.push(parsed.repeats);
   result.weights = Array.isArray(result.weights) ? result.weights : [];

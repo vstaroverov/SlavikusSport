@@ -1,10 +1,14 @@
-import { clearPlannedWorkout, setPlannedWorkout } from "../features/program/calendarPlanner.js";
+import { clearPlannedWorkout, getPlannedWorkoutId, setPlannedWorkout } from "../features/program/calendarPlanner.js";
 import { getWorkouts } from "../features/program/programStorage.js";
+import { selectCalendarDate } from "../components/Calendar.js";
 import { dispatchAppChangedKeepingScroll } from "./preserveScroll.js";
 
 export default async function assignWorkout(button) {
   const workouts = getWorkouts();
-  const choice = await showWorkoutChoiceDialog(button.dataset.date, workouts);
+  selectCalendarDate(button.dataset.date);
+  button.parentElement?.querySelectorAll('button[aria-pressed="true"]').forEach((day) => day.setAttribute("aria-pressed", "false"));
+  button.setAttribute("aria-pressed", "true");
+  const choice = await showWorkoutChoiceDialog(button, workouts);
   if (!choice) return;
 
   if (choice === "rest") {
@@ -17,58 +21,63 @@ export default async function assignWorkout(button) {
   dispatchAppChangedKeepingScroll(button);
 }
 
-function showWorkoutChoiceDialog(date, workouts) {
+function showWorkoutChoiceDialog(button, workouts) {
   return new Promise((resolve) => {
-    const overlay = document.createElement("div");
-    overlay.className = "confirm-overlay";
-    overlay.innerHTML = `
-      <section class="confirm-dialog calendar-choice-dialog" role="dialog" aria-modal="true" aria-labelledby="calendar-choice-title">
-        <div class="confirm-mark">✓</div>
-        <h2 id="calendar-choice-title">Тренировка на дату</h2>
-        <p>${formatDate(date)}</p>
-        <div class="calendar-choice-list">
-          <button class="secondary-button" data-workout-choice="rest">День отдыха</button>
-          ${workouts.map((workout) => `
-            <button class="secondary-button" data-workout-choice="${escapeAttr(workout.id)}">
-              <strong>${escapeHtml(workout.title)}</strong>
-              <span>${escapeHtml(workout.shortName || "")}</span>
-            </button>
-          `).join("")}
-        </div>
-        <div class="confirm-actions single">
-          <button class="secondary-button" data-choice-cancel>Отмена</button>
-        </div>
-      </section>
+    const date = button.dataset.date;
+    const plannedId = getPlannedWorkoutId(date, false);
+    const plannedWorkout = workouts.find((workout) => workout.id === plannedId);
+    const dialog = document.createElement("dialog");
+    dialog.className = "vsg vsg-sport-program-day-dialog";
+    dialog.setAttribute("aria-labelledby", "calendar-choice-title");
+    dialog.setAttribute("aria-describedby", "calendar-choice-date calendar-choice-status");
+    dialog.innerHTML = `
+      <div class="vsg-sport-program-dialog-head"><span class="vsg-sport-program-dialog-mark" aria-hidden="true">▦</span><div><span class="vsg-eyebrow">Календарь</span><h2 id="calendar-choice-title">Тренировка на дату</h2></div></div>
+      <time class="vsg-sport-program-day-date" id="calendar-choice-date" datetime="${escapeAttr(date)}">${escapeHtml(formatDate(date))}</time>
+      <p class="vsg-sport-program-day-status" id="calendar-choice-status">Сейчас: ${plannedWorkout ? escapeHtml(plannedWorkout.title) : "день отдыха"}</p>
+      <div class="vsg-sport-program-choice-list" role="group" aria-label="Назначить на дату">
+        <button class="vsg-sport-program-day-option" type="button" data-workout-choice="rest" aria-pressed="${!plannedWorkout}"><span class="vsg-sport-program-index">–</span><span><strong>День отдыха</strong><small>Без тренировки</small></span>${!plannedWorkout ? "<em>Назначен</em>" : ""}</button>
+        ${workouts.map((workout, index) => `
+          <button class="vsg-sport-program-day-option" type="button" data-workout-choice="${escapeAttr(workout.id)}" aria-pressed="${plannedId === workout.id}">
+            <span class="vsg-sport-program-index">Т${index + 1}</span><span><strong>${escapeHtml(stripWorkoutPrefix(workout.title))}</strong><small>${workout.exercises.length} ${plural(workout.exercises.length, "упражнение", "упражнения", "упражнений")}</small></span>${plannedId === workout.id ? "<em>Назначена</em>" : ""}
+          </button>
+        `).join("")}
+      </div>
+      <button class="vsg-button" type="button" data-choice-cancel>Отмена</button>
     `;
-
-    const close = (value) => {
-      document.removeEventListener("keydown", onKeyDown);
-      overlay.remove();
+    dialog.addEventListener("close", () => {
+      const value = dialog.returnValue || null;
+      dialog.remove();
+      button.focus();
       resolve(value);
-    };
-
-    const onKeyDown = (event) => {
-      if (event.key === "Escape") close(null);
-    };
-
-    overlay.addEventListener("click", (event) => {
-      if (event.target === overlay) close(null);
+    }, { once: true });
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
     });
-    overlay.querySelector("[data-choice-cancel]").addEventListener("click", () => close(null));
-    overlay.querySelectorAll("[data-workout-choice]").forEach((item) => {
-      item.addEventListener("click", () => close(item.dataset.workoutChoice));
+    dialog.querySelector("[data-choice-cancel]").addEventListener("click", () => dialog.close());
+    dialog.querySelectorAll("[data-workout-choice]").forEach((item) => {
+      item.addEventListener("click", () => dialog.close(item.dataset.workoutChoice));
     });
-
-    document.addEventListener("keydown", onKeyDown);
-    document.body.append(overlay);
-    overlay.querySelector("[data-workout-choice]")?.focus();
+    document.body.append(dialog);
+    dialog.showModal();
+    dialog.querySelector("[data-workout-choice]")?.focus();
   });
 }
 
 function formatDate(value) {
   const [year, month, day] = String(value).split("-");
   if (!year || !month || !day) return value;
-  return `${day}.${month}.${year}`;
+  return new Date(Number(year), Number(month) - 1, Number(day)).toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+}
+
+function stripWorkoutPrefix(title) {
+  return String(title).replace(/^Т\d+\.\s*/i, "");
+}
+
+function plural(count, one, few, many) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return one;
+  return mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14) ? few : many;
 }
 
 function escapeHtml(value) {

@@ -1,6 +1,6 @@
 import { renderCalendar } from "../components/Calendar.js";
 import { renderExerciseList } from "../components/ExerciseList.js";
-import { getExerciseCatalog } from "../features/exercises/exercisesStorage.js";
+import { getExerciseCatalog, isDistanceMeasure } from "../features/exercises/exercisesStorage.js";
 import { getWorkouts } from "../features/program/programStorage.js";
 import { getActiveWorkoutEditorId, isProgramEditMode } from "../features/program/programEditorState.js";
 
@@ -11,33 +11,36 @@ export function renderProgramScreen() {
   const exerciseCatalog = getExerciseCatalog();
 
   return `
-    <section class="stack">
-      <div class="section-head">
-        <h1>Программа</h1>
-        <div class="section-actions">
-          <button class="round-add" data-action="addWorkout" aria-label="Добавить тренировку">+</button>
-          <button class="round-tool" data-action="addWorkoutTemplate" aria-label="Шаблоны тренировок">▦</button>
-          <button class="round-tool ${editMode ? "active" : ""}" data-action="toggleProgramEdit" aria-label="Изменить тренировки">⚙</button>
-        </div>
+    <section class="vsg vsg-sport-program-screen">
+      <div class="vsg-sport-program-heading">
+        <div><span class="vsg-eyebrow">План занятий</span><h1>Программа</h1><p class="vsg-muted">${workouts.length} ${plural(workouts.length, "тренировка", "тренировки", "тренировок")} · календарь занятий</p></div>
+        <button class="vsg-button vsg-button--primary" type="button" data-action="addWorkout">+ Тренировка</button>
       </div>
-      ${editMode ? `<div class="edit-mode-hint">Режим редактирования: выбери тренировку, измени упражнения или порядок.</div>` : ""}
+      <div class="vsg-sport-program-toolbar">
+        <button class="vsg-button" type="button" data-action="addWorkoutTemplate">Шаблоны</button>
+        <button class="vsg-button" type="button" data-action="toggleProgramEdit" aria-pressed="${editMode}">${editMode ? "Готово" : "Изменить"}</button>
+      </div>
+      ${editMode ? `<div class="vsg-sport-program-hint"><strong>Режим редактирования</strong><span>Выбери тренировку, чтобы изменить состав и порядок упражнений.</span></div>` : ""}
       ${workouts.length ? workouts.map((workout, index) => `
-        <details class="workout-editor ${editMode ? "editable" : ""}" ${isWorkoutOpen(workout.id, editMode, activeWorkoutId) ? "open" : ""}>
+        <details class="vsg-sport-program-card" ${isWorkoutOpen(workout.id, editMode, activeWorkoutId) ? "open" : ""}>
           <summary>
-            <span class="workout-title">${escapeHtml(formatWorkoutTitle(workout, index))}</span>
-            <span>${editMode ? "Редактировать" : `${workout.exercises.length} упр.`}</span>
+            <span class="vsg-sport-program-index">Т${index + 1}</span>
+            <span class="vsg-sport-program-summary"><strong>${escapeHtml(stripWorkoutPrefix(workout.title))}</strong><small>${workout.exercises.length} ${plural(workout.exercises.length, "упражнение", "упражнения", "упражнений")}</small></span>
+            <span aria-hidden="true">⌄</span>
           </summary>
-          ${editMode ? renderWorkoutControls(workout, index, workouts.length) : ""}
-          ${editMode ? renderExerciseEditor(workout, exerciseCatalog) : renderExerciseList(workout.exercises)}
+          <div class="vsg-sport-program-body">
+            ${editMode ? renderWorkoutControls(workout, index, workouts.length) : ""}
+            ${editMode ? renderExerciseEditor(workout, exerciseCatalog) : renderExerciseList(workout.exercises, -1, { program: true })}
+          </div>
         </details>
       `).join("") : `
-        <div class="empty-state">
-          <strong>Программ пока нет</strong>
-          <p>Создай тренировку кнопкой плюс. Упражнения уже есть в справочнике.</p>
-          <button class="primary-button" data-action="addWorkout">Создать тренировку</button>
+        <div class="vsg-card vsg-sport-program-empty">
+          <h2>Тренировок пока нет</h2>
+          <p class="vsg-muted">Создай тренировку или выбери готовый шаблон.</p>
+          <button class="vsg-button vsg-button--primary" type="button" data-action="addWorkout">Создать тренировку</button>
         </div>
       `}
-      <h2>Календарь</h2>
+      <div class="vsg-sport-program-calendar-title"><span class="vsg-eyebrow">Расписание</span><h2>Календарь</h2><p class="vsg-muted">Нажми на день, чтобы назначить тренировку.</p></div>
       ${renderCalendar(workouts)}
     </section>
   `;
@@ -50,60 +53,69 @@ function isWorkoutOpen(workoutId, editMode, activeWorkoutId) {
 
 function renderWorkoutControls(workout, index, total) {
   return `
-    <div class="workout-controls">
-      <button data-action="renameWorkout" data-workout-id="${workout.id}">Имя</button>
-      <button data-action="moveWorkoutUp" data-workout-id="${workout.id}" ${index === 0 ? "disabled" : ""}>↑</button>
-      <button data-action="moveWorkoutDown" data-workout-id="${workout.id}" ${index === total - 1 ? "disabled" : ""}>↓</button>
-      <button data-action="copyWorkout" data-workout-id="${workout.id}">Копия</button>
-      <button class="danger" data-action="deleteWorkout" data-workout-id="${workout.id}">Удалить</button>
+    <div class="vsg-sport-program-controls">
+      <div class="vsg-sport-program-controls-title"><strong>Редактирование тренировки</strong><small>Название и порядок</small></div>
+      <div class="vsg-sport-program-control-actions">
+        <button class="vsg-button" type="button" data-action="renameWorkout" data-workout-id="${workout.id}">Название</button>
+        <button class="vsg-button" type="button" data-action="moveWorkoutUp" data-workout-id="${workout.id}" aria-label="Переместить тренировку выше" ${index === 0 ? "disabled" : ""}>↑</button>
+        <button class="vsg-button" type="button" data-action="moveWorkoutDown" data-workout-id="${workout.id}" aria-label="Переместить тренировку ниже" ${index === total - 1 ? "disabled" : ""}>↓</button>
+        <button class="vsg-button" type="button" data-action="copyWorkout" data-workout-id="${workout.id}">Копия</button>
+      </div>
+      <button class="vsg-button vsg-button--danger" type="button" data-action="deleteWorkout" data-workout-id="${workout.id}">Удалить тренировку</button>
     </div>
   `;
 }
 
 function renderExerciseEditor(workout, exerciseCatalog) {
   return `
-    <div class="exercise-editor" data-workout-editor="${workout.id}">
-      <div class="exercise-editor-title">
+    <div class="vsg-sport-program-editor" data-workout-editor="${workout.id}">
+      <div class="vsg-sport-program-editor-title">
         <strong>Упражнения</strong>
         <span>${workout.exercises.length} в тренировке</span>
       </div>
-      <div class="exercise-editor-header" aria-hidden="true">
-        <span>№</span>
-        <span>Упражнение</span>
-        <span>Повторы</span>
-        <span>Вес</span>
-        <span>Подходы</span>
-        <span></span>
-      </div>
       ${workout.exercises.map((exercise, index) => `
-        <div class="exercise-edit-row">
-          <button class="exercise-position-button" data-action="moveExerciseToPosition" data-workout-id="${workout.id}" data-exercise-index="${index}" data-exercise-total="${workout.exercises.length}" aria-label="Переставить упражнение ${index + 1}">${index + 1}</button>
-          <label>
+        <div class="vsg-sport-program-exercise">
+          <button class="vsg-sport-program-index vsg-sport-program-position" type="button" data-action="moveExerciseToPosition" data-workout-id="${workout.id}" data-exercise-index="${index}" data-exercise-total="${workout.exercises.length}" aria-label="Переставить упражнение ${index + 1}">${index + 1}</button>
+          <label class="vsg-field">
             <span>Упражнение</span>
             ${renderExerciseSelect(exercise, exerciseCatalog, workout.id, index)}
           </label>
-          <label>
-            <span>Повторы</span>
-            <input value="${escapeAttr(exercise.target)}" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="target" />
-          </label>
-          <label>
-            <span>Вес</span>
-            <input value="${escapeAttr(exercise.weight || "")}" placeholder="40" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="weight" />
-          </label>
-          <label>
-            <span>Подходы</span>
-            <input type="number" min="1" step="1" value="${exercise.sets}" data-change="updateExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" data-field="sets" />
-          </label>
-          <div class="exercise-edit-actions">
-            <button data-action="moveExerciseUp" data-workout-id="${workout.id}" data-exercise-index="${index}" ${index === 0 ? "disabled" : ""}>↑</button>
-            <button data-action="moveExerciseDown" data-workout-id="${workout.id}" data-exercise-index="${index}" ${index === workout.exercises.length - 1 ? "disabled" : ""}>↓</button>
-            <button class="danger" data-action="deleteExercise" data-workout-id="${workout.id}" data-exercise-index="${index}">×</button>
+          <div class="vsg-sport-program-fields ${!isDistanceMeasure(exercise.measure) && exercise.measure === "weighted" ? "vsg-sport-program-fields--three" : ""}">
+            ${renderExerciseParams(exercise, workout.id, index)}
+          </div>
+          <div class="vsg-sport-program-row-actions">
+            <button class="vsg-button" type="button" data-action="moveExerciseUp" data-workout-id="${workout.id}" data-exercise-index="${index}" aria-label="Упражнение выше" ${index === 0 ? "disabled" : ""}>↑</button>
+            <button class="vsg-button" type="button" data-action="moveExerciseDown" data-workout-id="${workout.id}" data-exercise-index="${index}" aria-label="Упражнение ниже" ${index === workout.exercises.length - 1 ? "disabled" : ""}>↓</button>
+            <button class="vsg-button vsg-button--danger" type="button" data-action="deleteExercise" data-workout-id="${workout.id}" data-exercise-index="${index}" aria-label="Удалить упражнение">×</button>
           </div>
         </div>
       `).join("")}
-      <button class="secondary-button compact" data-action="addExercise" data-workout-id="${workout.id}">Добавить упражнение</button>
-      <button class="primary-button compact" data-action="saveWorkoutEditor" data-workout-id="${workout.id}">Сохранить</button>
+      <div class="vsg-sport-program-footer"><button class="vsg-button" type="button" data-action="addExercise" data-workout-id="${workout.id}">Добавить упражнение</button>
+      <button class="vsg-button vsg-button--primary" type="button" data-action="saveWorkoutEditor" data-workout-id="${workout.id}">Сохранить</button></div>
     </div>
+  `;
+}
+
+function renderExerciseParams(exercise, workoutId, index) {
+  const attributes = `data-change="updateExercise" data-workout-id="${workoutId}" data-exercise-index="${index}"`;
+  if (exercise.measure === "completion") return `<p class="vsg-muted vsg-sport-program-fact">Без показателя · отметка выполнения</p>`;
+  if (isDistanceMeasure(exercise.measure)) {
+    const unit = exercise.measure === "distanceKm" ? "км" : "м";
+    return `
+      <label class="vsg-field"><span>Расстояние, ${unit}</span><input class="vsg-input" type="number" min="0" step="any" inputmode="decimal" value="${escapeAttr(exercise.target || "")}" ${attributes} data-field="target" /></label>
+      <label class="vsg-field"><span>Плановое время, мм:сс</span><input class="vsg-input" inputmode="numeric" pattern="[0-9]+:[0-5][0-9]" placeholder="37:12" value="${escapeAttr(exercise.time || "")}" ${attributes} data-field="time" /></label>
+    `;
+  }
+  if (exercise.measure === "seconds") {
+    return `
+      <label class="vsg-field"><span>Цель, секунды</span><input class="vsg-input" type="number" min="0" step="1" inputmode="numeric" value="${escapeAttr(exercise.target || "")}" ${attributes} data-field="target" /></label>
+      <label class="vsg-field"><span>Подходы</span><input class="vsg-input" type="number" min="1" step="1" value="${exercise.sets}" ${attributes} data-field="sets" /></label>
+    `;
+  }
+  return `
+    <label class="vsg-field"><span>Повторы</span><input class="vsg-input" value="${escapeAttr(exercise.target || "")}" ${attributes} data-field="target" /></label>
+    ${exercise.measure === "weighted" ? `<label class="vsg-field"><span>Вес, кг</span><input class="vsg-input" inputmode="decimal" value="${escapeAttr(exercise.weight || "")}" placeholder="0" ${attributes} data-field="weight" /></label>` : ""}
+    <label class="vsg-field"><span>Подходы</span><input class="vsg-input" type="number" min="1" step="1" value="${exercise.sets}" ${attributes} data-field="sets" /></label>
   `;
 }
 
@@ -116,7 +128,7 @@ function renderExerciseSelect(exercise, exerciseCatalog, workoutId, index) {
   }
 
   return `
-    <select data-change="updateExercise" data-workout-id="${workoutId}" data-exercise-index="${index}" data-field="name">
+    <select class="vsg-input" data-change="updateExercise" data-workout-id="${workoutId}" data-exercise-index="${index}" data-field="name">
       ${options.map((item) => `
         <option value="${escapeAttr(item.name)}" ${item.name === exercise.name ? "selected" : ""}>${escapeHtml(item.name)}</option>
       `).join("")}
@@ -124,12 +136,15 @@ function renderExerciseSelect(exercise, exerciseCatalog, workoutId, index) {
   `;
 }
 
-function formatWorkoutTitle(workout, index) {
-  return `Т${index + 1}. ${stripWorkoutPrefix(workout.title)}`;
-}
-
 function stripWorkoutPrefix(title) {
   return String(title).replace(/^Т\d+\.\s*/i, "").replace(/^Ğ¢\d+\.\s*/i, "");
+}
+
+function plural(count, one, few, many) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return one;
+  return mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14) ? few : many;
 }
 
 function escapeHtml(value) {

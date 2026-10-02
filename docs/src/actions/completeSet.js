@@ -1,26 +1,73 @@
 import { addSetResult, isWorkoutComplete } from "../features/workout/workoutRunner.js";
 import { getActiveSession, saveActiveSession } from "../features/workout/workoutTimer.js";
-import { finishWorkout } from "../features/workout/workoutStorage.js";
-import { promptWorkoutBackup } from "../features/storage/backupFiles.js";
+import finishWorkout from "./finishWorkout.js";
 import { dispatchAppChangedKeepingScroll } from "./preserveScroll.js";
+import { showConfirmDialog } from "../components/ConfirmDialog.js";
+import { showSportFeedbackDialog } from "../components/SportFeedbackDialog.js";
+import { getRunTrackerStatus } from "../features/workout/runTracker.js";
+import { currentRun, getRunTotals, startAutomaticRunTracking, stopAutomaticRunTracking } from "../features/workout/automaticRunTracking.js";
 
 export default async function completeSet(button) {
   const session = getActiveSession();
   if (!session) return;
 
-  const input = button.closest(".current-card").querySelector("[data-set-value]");
-  addSetResult(session, input.value.trim());
+  const card = button.closest(".current-card");
+  const result = session.results[session.currentExercise];
+  const isDistance = result.measure === "distanceKm" || result.measure === "distanceM";
+  let value = card.querySelector("[data-set-value]")?.value.trim() || "";
+  if (isDistance) {
+    const run = currentRun(session);
+    const tracker = run && session.trackerStarted ? await getRunTrackerStatus() : null;
+    const totals = run ? getRunTotals(result, tracker) : null;
+    const gpsReady = totals?.meters > 0 && totals?.seconds > 0;
+    const distance = gpsReady ? (totals.meters / 1000).toFixed(2) : card.querySelector("[data-distance-value]")?.value || "";
+    const seconds = gpsReady ? totals.seconds : parseDuration(card.querySelector("[data-duration-value]")?.value || "");
+    value = { distance, seconds };
+    if (Number(String(distance).replace(",", ".")) <= 0 || seconds <= 0) {
+      await showSportFeedbackDialog({
+        title: "Нужны дистанция и время",
+        message: "Укажи пройденную дистанцию и время в формате мм:сс.",
+        confirmText: "Вернуться к вводу",
+        returnFocus: Number(String(distance).replace(",", ".")) <= 0
+          ? card.querySelector("[data-distance-value]")
+          : card.querySelector("[data-duration-value]")
+      });
+      return;
+    }
+    if (run) {
+      try {
+        await stopAutomaticRunTracking(session);
+      } catch (error) {
+        await showConfirmDialog({ title: "GPS ещё записывает", message: error?.message || "Не удалось остановить GPS. Попробуй ещё раз.", confirmText: "ОК", cancelText: "", danger: false });
+        return;
+      }
+      const finalTotals = getRunTotals(result);
+      if (finalTotals.meters > 0 && finalTotals.seconds > 0) {
+        value = { distance: (finalTotals.meters / 1000).toFixed(2), seconds: finalTotals.seconds };
+      }
+    }
+  }
+  addSetResult(session, value);
   session.restStartedAt = Date.now();
   session.restDuration = Number(session.restDuration || 90);
 
   if (isWorkoutComplete(session)) {
-    finishWorkout(session);
-    window.location.hash = "#/log";
-    window.dispatchEvent(new CustomEvent("app:changed"));
-    await promptWorkoutBackup();
+    saveActiveSession(session);
+    await finishWorkout();
     return;
   }
 
   saveActiveSession(session);
+  await startAutomaticRunTracking(session);
+  saveActiveSession(session);
   dispatchAppChangedKeepingScroll(button);
+}
+
+function parseDuration(value) {
+  const parts = String(value).trim().split(":").map(Number);
+  if (!parts.length || parts.some((part) => !Number.isInteger(part) || part < 0)) return 0;
+  if (parts.length === 1) return parts[0];
+  if (parts.length === 2 && parts[1] < 60) return parts[0] * 60 + parts[1];
+  if (parts.length === 3 && parts[1] < 60 && parts[2] < 60) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  return 0;
 }

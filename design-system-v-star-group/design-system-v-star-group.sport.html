@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>V-STAR Group · Slavikus Sport</title>
+  <link rel="stylesheet" href="design-system-v-star-group.tokens.css">
+  <link rel="stylesheet" href="design-system-v-star-group.css">
+  <link rel="stylesheet" href="design-system-v-star-group.products.css">
+  <link rel="stylesheet" href="design-system-v-star-group.sport.css">
+  <script type="module" src="design-system-v-star-group.sport.js"></script>
+</head>
+<body class="vsg" data-theme="dark">
+  <a class="vsg-skip" href="#sport-content">К содержимому</a>
+  <header class="vsg-sport-header">
+    <a class="vsg-link" href="design-system-v-star-group.products.html">← Продуктовый каталог</a>
+    <strong>Slavikus Sport · дизайн-система приложения</strong>
+    <span class="vsg-muted">UI 2.6.0</span>
+  </header>
+  <main id="sport-content" class="vsg-sport-page">
+    <div class="vsg-stack">
+      <span class="vsg-eyebrow">Отдельный раздел приложения</span>
+      <h1>Slavikus Sport</h1>
+      <p class="vsg-muted">Правила интерфейса, карта экранов и элементы для тренировки, планирования и прогресса. Примеры демонстрационные: данные, GPS, вход и резервные копии здесь не изменяются.</p>
+      <p><a class="vsg-link" href="design-system-v-star-group.sport.md">Полные правила и контракты приложения ↗</a></p>
+    </div>
+    <nav class="vsg-sport-toc" aria-label="Разделы Slavikus Sport">
+      <a href="#sport-rules-title">Правила</a>
+      <a href="#sport-brand-title">Знак</a>
+      <a href="#sport-screens-title">Экраны</a>
+      <a href="#sport-auth-title">Вход</a>
+      <a href="#sport-navigation-title">Главная</a>
+      <a href="#sport-calendar-title">Календарь</a>
+      <a href="#sport-program-title">Программа</a>
+      <a href="#sport-workout-title">Тренировка</a>
+      <a href="#sport-activity-title">Бег и плавание</a>
+      <a href="#sport-catalog-title">Упражнения</a>
+      <a href="#sport-history-title">Лог</a>
+      <a href="#sport-stats-title">Статистика</a>
+      <a href="#sport-profile-title">Профиль</a>
+      <a href="#sport-states-title">Состояния</a>
+    </nav>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-brand-title">
+      <h2 id="sport-brand-title">Логотип и иконка Slavikus Sport</h2>
+      <p class="vsg-muted">Новый знак сохраняет композицию прежней «S»: верхняя дуга и нижняя лента образуют единый силуэт. Плоские лайм и светлый цвет заменяют старый синий градиент. Название Slavikus Sport набирается отдельно шрифтом Manrope.</p>
+      <div class="vsg-sport-logo-samples">
+        <div><img src="assets/slavikus-sport-logo-previous.png" width="96" height="96" alt="Прежний синий знак Slavikus Sport"><span>Прежний знак</span></div>
+        <div><img src="assets/slavikus-sport-logo.svg" width="96" height="96" alt="Новый знак Slavikus Sport"><span>Новый знак</span></div>
+        <div><img src="assets/slavikus-sport-logo.svg" width="38" height="38" alt=""><span>Размер шапки</span></div>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-rules-title">
+      <h2 id="sport-rules-title">Правила приложения</h2>
+      <p class="vsg-muted">Общие правила V-STAR Group дополнены поведением Slavikus Sport. Подробные требования к каждому экрану, данным и состояниям собраны в документе выше.</p>
+      <div class="vsg-sport-rules">
+        <article class="vsg-card vsg-stack"><h3>Визуальный язык</h3><p>Использовать тёмные поверхности, Manrope, лаймовое основное действие и семантические токены V-STAR Group. Состояние передавать текстом и формой, а не только цветом. Специальные сценарии ai-gen-content к спорту не относятся.</p><p class="vsg-muted vsg-small">Основа: фон <code>--vsg-bg</code>, карточка <code>--vsg-surface</code>, текст <code>--vsg-text</code>, акцент <code>--vsg-primary</code>.</p></article>
+        <article class="vsg-card vsg-stack"><h3>Мобильная геометрия</h3><p>Одна колонка, длинные названия переносятся, основные действия доступны большим пальцем. Высота сенсорной цели от 44 px. Нижняя навигация не закрывает содержимое и учитывает безопасную область экрана.</p></article>
+        <article class="vsg-card vsg-stack"><h3>Числа и единицы</h3><p>Повторения и вес в кг показываются отдельно. Для бега — км и время, для плавания — м и время. Длительность тренировки — чч:мм:сс, активность — мм:сс. Ноль, пропуск и отсутствие результата различаются.</p></article>
+        <article class="vsg-card vsg-stack"><h3>Сохранение и доступность</h3><p>У каждого поля есть видимая подпись, у кнопки — название действия, фокус заметен. Ошибка указывает, что произошло и что сохранилось. Локальные данные и JSON-копия не означают синхронизацию между устройствами.</p></article>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-screens-title">
+      <h2 id="sport-screens-title">Карта экранов</h2>
+      <div class="vsg-sport-screen-grid">
+        <a href="#sport-auth-title"><strong>Вход</strong><span>Название, действие «Начать»</span></a>
+        <a href="#sport-navigation-title"><strong>Главная</strong><span>День и быстрый старт</span></a>
+        <a href="#sport-calendar-title"><strong>Программа</strong><span>Календарь и состав тренировок</span></a>
+        <a href="#sport-workout-title"><strong>Тренировка</strong><span>Таймер, подходы, GPS</span></a>
+        <a href="#sport-catalog-title"><strong>Упражнения</strong><span>Категория и измерение</span></a>
+        <a href="#sport-history-title"><strong>Лог</strong><span>История, медиа, маршрут</span></a>
+        <a href="#sport-stats-title"><strong>Статистика</strong><span>Последний, лучший, динамика</span></a>
+        <a href="#sport-profile-title"><strong>Профиль</strong><span>Пользователь, копия, версия</span></a>
+        <a href="#sport-states-title"><strong>Информация и состояния</strong><span>Версия, пусто, ошибка, успех</span></a>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-auth-title">
+      <h2 id="sport-auth-title">Вход</h2>
+      <p class="vsg-muted">На первом экране название приложения и одно основное действие. Демо-кнопка не запускает авторизацию.</p>
+      <div class="vsg-sport-phone">
+        <article class="vsg-card vsg-stack vsg-sport-auth">
+          <span class="vsg-eyebrow">V-STAR Group</span>
+          <img class="vsg-sport-auth-logo" src="assets/slavikus-sport-logo.svg" width="120" height="120" alt="Знак Slavikus Sport">
+          <h3>Slavikus Sport</h3>
+          <p class="vsg-muted">Тренировка дня, быстрый старт, лог и прогресс.</p>
+          <button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: вход не выполняется.">Начать</button>
+        </article>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-navigation-title">
+      <h2 id="sport-navigation-title">01 · Навигация и день</h2>
+      <p class="vsg-muted">На телефоне основные разделы доступны снизу. Текущий раздел обозначен текстом и <code>aria-current</code>.</p>
+      <div class="vsg-sport-phone">
+        <header class="vsg-sport-app-header"><div class="vsg-sport-brand"><img src="assets/slavikus-sport-logo.svg" alt=""><div><strong>Slavikus Sport</strong><small>Твой план тренировок</small></div></div><button class="vsg-sport-profile-trigger" type="button" aria-label="Открыть профиль спортсмена" data-demo-message="Демо: профиль не открывается."><img src="assets/slavikus-sport-crown.svg" alt=""></button></header>
+        <article class="vsg-card vsg-sport-today-card">
+          <time class="vsg-eyebrow vsg-sport-date" datetime="2026-10-02">Сегодня · 2 октября</time>
+          <h3>Силовая тренировка</h3>
+          <p class="vsg-muted">3 упражнения · 9 подходов</p>
+          <button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: экран тренировки не открывается.">Начать тренировку</button>
+        </article>
+        <div class="vsg-sport-quick-grid" aria-label="Быстрые разделы">
+          <a href="#sport-workout-title">Тренировка</a><a href="#sport-calendar-title">Программа</a><a href="#sport-history-title">Лог</a><a href="#sport-stats-title">Стата</a><a href="#sport-catalog-title">Упражнения</a>
+        </div>
+        <section class="vsg-sport-coach" aria-labelledby="sport-coach-title">
+          <h2 id="sport-coach-title">Тренер</h2>
+          <div class="vsg-sport-coach-grid">
+            <button type="button" data-demo-message="Демо: откроется окно с QR-кодом и кнопкой отправки ссылки."><strong>Пригласить друга</strong><small>QR-код и ссылка</small></button>
+            <button type="button" data-demo-message="Демо: выберите тренировки галочками и отправьте JSON-файл."><strong>Поделиться тренировкой</strong><small>Файл с программами</small></button>
+          </div>
+        </section>
+        <nav class="vsg-sport-bottom-nav" aria-label="Разделы спортивного приложения">
+          <a href="#sport-navigation-title" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v11H3zM9 21v-7h6v7"/></svg>Главная</a>
+          <a href="#sport-workout-title"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 9v6M8 7v10M16 7v10M19 9v6M8 12h8M3 10v4M21 10v4"/></svg>Тренировка</a>
+          <a href="#sport-calendar-title"><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg>Программа</a>
+          <a href="#sport-history-title"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 3h12v18H6zM9 8h6M9 12h6M9 16h4"/></svg>Лог</a>
+          <a href="#sport-stats-title"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 20V9M10 20V4M16 20v-7M22 20V8M2 20h22"/></svg>Стата</a>
+        </nav>
+      </div>
+      <div class="vsg vsg-sport-invite-dialog" style="display:block;position:static;margin:20px 0 0">
+        <h2>Пригласить друга</h2>
+        <p class="vsg-muted">Покажи QR-код другу для установки приложения.</p>
+        <img class="vsg-sport-invite-qr" src="assets/slavikus-sport-invite-qr.svg" alt="QR-код ссылки на Slavikus Sport в RuStore">
+        <a class="vsg-sport-invite-link" href="https://www.rustore.ru/catalog/app/ru.slavikus.sport">https://www.rustore.ru/catalog/app/ru.slavikus.sport</a>
+        <div class="vsg-sport-invite-actions"><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: откроется системная отправка ссылки.">Поделиться ссылкой</button><button class="vsg-button" type="button" data-demo-message="Демо: ссылка будет скопирована.">Скопировать ссылку</button></div>
+      </div>
+      <div class="vsg-sport-phone vsg-card vsg-stack" style="margin-top:20px">
+        <h3>Выбор тренировок для отправки</h3>
+        <div class="vsg-sport-share-list">
+          <label><input type="checkbox" checked>Т1. Силовая тренировка</label>
+          <label><input type="checkbox">Т4. Пробежка</label>
+        </div>
+        <div class="vsg-sport-share-actions">
+          <button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: будет отправлен JSON-файл только с выбранными тренировками.">Отправить</button>
+          <button class="vsg-button" type="button" data-demo-message="Демо: полученные тренировки добавляются к существующим.">Загрузить полученный файл</button>
+        </div>
+      </div>
+      <div class="vsg vsg-sport-download-dialog" style="display:block;position:static;margin:20px 0 0">
+        <span class="vsg-sport-download-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></span>
+        <h2>Файл скачан</h2>
+        <p>Найди файл в папке «Загрузки» и отправь его другу удобным способом.</p>
+        <strong class="vsg-sport-download-file">slavikus-trenirovki-2026-10-02.json</strong>
+        <button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: окно закрывается.">Понятно</button>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-calendar-title">
+      <h2 id="sport-calendar-title">02 · Календарь плана</h2>
+      <p class="vsg-muted">У даты отдельно различаются сегодня, выбранный день и назначенная тренировка. Название тренировки остаётся доступным текстом.</p>
+      <div class="vsg-sport-phone">
+        <div class="vsg-card vsg-stack">
+          <div class="vsg-sport-calendar-head">
+            <button class="vsg-button vsg-button--icon" id="sport-prev-month" type="button" aria-label="Предыдущий месяц">‹</button>
+            <strong id="sport-month-label" aria-live="polite"></strong>
+            <button class="vsg-button vsg-button--icon" id="sport-next-month" type="button" aria-label="Следующий месяц">›</button>
+          </div>
+          <div class="vsg-sport-calendar" role="group" aria-label="Выбор даты">
+            <div class="vsg-sport-weekdays" aria-hidden="true"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+            <div id="sport-calendar-days" class="vsg-sport-days"></div>
+          </div>
+          <p id="sport-calendar-selection" class="vsg-muted" role="status"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-program-title">
+      <h2 id="sport-program-title">02a · Состав тренировки</h2>
+      <p class="vsg-muted">Силовые упражнения используют цель, вес и подходы. Бег и плавание в редакторе используют расстояние и плановое время; карточка дня показывает эти значения, если активность в тренировке одна.</p>
+      <div class="vsg-sport-phone vsg-stack">
+        <div class="vsg-sport-program-heading">
+          <div><span class="vsg-eyebrow">План занятий</span><h3>Программа</h3><p class="vsg-muted">Тренировки и календарь</p></div>
+          <button class="vsg-button vsg-button--primary" type="button">+ Тренировка</button>
+        </div>
+        <div class="vsg-sport-program-toolbar"><button class="vsg-button" type="button">Шаблоны</button><button class="vsg-button" type="button" aria-pressed="true">Готово</button></div>
+        <div class="vsg-sport-program-hint"><strong>Режим редактирования</strong><span>Выбери тренировку, чтобы изменить состав и порядок упражнений.</span></div>
+        <details class="vsg-accordion vsg-sport-program" open>
+          <summary>Силовая тренировка · 3 упражнения</summary>
+          <ol class="vsg-sport-exercise-list">
+            <li><strong>Приседания</strong><span>3 × 12 · 40 кг</span></li>
+            <li><strong>Отжимания</strong><span>3 × 15 повторений</span></li>
+            <li><strong>Планка</strong><span>3 × 60 секунд</span></li>
+          </ol>
+          <button class="vsg-button" id="sport-edit-program" type="button">Изменить программу</button>
+        </details>
+        <details class="vsg-accordion vsg-sport-program-card" open>
+          <summary><span class="vsg-sport-program-index">Т1</span><span class="vsg-sport-program-summary"><strong>Силовая тренировка</strong><small>3 упражнения</small></span><span aria-hidden="true">⌄</span></summary>
+          <div class="vsg-sport-program-body">
+            <div class="vsg-sport-program-controls"><div class="vsg-sport-program-controls-title"><strong>Редактирование тренировки</strong><small>Название и порядок</small></div><div class="vsg-sport-program-control-actions"><button class="vsg-button" type="button">Название</button><button class="vsg-button" type="button" aria-label="Выше">↑</button><button class="vsg-button" type="button" aria-label="Ниже">↓</button><button class="vsg-button" type="button">Копия</button></div><button class="vsg-button vsg-button--danger" type="button">Удалить тренировку</button></div>
+            <div class="vsg-sport-program-exercise"><span class="vsg-sport-program-index">1</span><label class="vsg-field">Упражнение<select class="vsg-input"><option>Бег</option></select></label><div class="vsg-sport-program-fields"><label class="vsg-field">Расстояние, км<input class="vsg-input" type="number" value="10"></label><label class="vsg-field">Плановое время, мм:сс<input class="vsg-input" value="37:12"></label></div><div class="vsg-sport-program-row-actions"><button class="vsg-button" type="button">↑</button><button class="vsg-button" type="button">↓</button><button class="vsg-button vsg-button--danger" type="button" aria-label="Удалить упражнение">×</button></div></div>
+            <div class="vsg-sport-program-footer"><button class="vsg-button" type="button">Добавить упражнение</button><button class="vsg-button vsg-button--primary" type="button">Сохранить</button></div>
+          </div>
+        </details>
+        <article class="vsg-card vsg-stack">
+          <h3>Т4. Пробежка</h3>
+          <strong>Бег</strong>
+          <div class="vsg-sport-fields">
+            <label class="vsg-field">Расстояние, км<input class="vsg-input" type="number" min="0" step="any" value="10"></label>
+            <label class="vsg-field">Плановое время, мм:сс<input class="vsg-input" inputmode="numeric" pattern="[0-9]+:[0-5][0-9]" value="37:12"></label>
+          </div>
+          <p class="vsg-muted">На главной: 10 км · 37:12 мин</p>
+        </article>
+        <div class="vsg-card vsg-sport-program-choice vsg-sport-program-day-dialog"><div class="vsg-sport-program-dialog-head"><span class="vsg-sport-program-dialog-mark" aria-hidden="true">▦</span><div><span class="vsg-eyebrow">Календарь</span><h3>Тренировка на дату</h3></div></div><time datetime="2026-10-02" class="vsg-sport-program-day-date">Пятница, 2 октября 2026</time><p class="vsg-sport-program-day-status">Сейчас назначена: Силовая тренировка</p><div class="vsg-sport-program-choice-list"><button class="vsg-sport-program-day-option" type="button"><span class="vsg-sport-program-index">–</span><span><strong>День отдыха</strong><small>Без тренировки</small></span></button><button class="vsg-sport-program-day-option" type="button" aria-pressed="true"><span class="vsg-sport-program-index">Т1</span><span><strong>Силовая тренировка</strong><small>3 упражнения</small></span><em>Назначена</em></button></div><button class="vsg-button" type="button">Отмена</button></div>
+        <div class="vsg-card vsg-sport-program-input-dialog"><div class="vsg-sport-program-dialog-head"><span class="vsg-sport-program-dialog-mark" aria-hidden="true">+</span><div><span class="vsg-eyebrow">Программа</span><h3>Новая тренировка</h3></div></div><p class="vsg-muted">Дай тренировке название. Упражнения можно изменить после создания.</p><label class="vsg-field">Название<input class="vsg-input" value="День ног"></label><div class="vsg-sport-program-dialog-actions"><button class="vsg-button" type="button">Отмена</button><button class="vsg-button vsg-button--primary" type="button">Создать</button></div></div>
+        <div class="vsg-card vsg-sport-program-choice-dialog"><div class="vsg-sport-program-dialog-head"><span class="vsg-sport-program-dialog-mark" aria-hidden="true">▦</span><div><span class="vsg-eyebrow">Программа</span><h3>Выбрать шаблон</h3></div></div><p class="vsg-muted">Выбери готовую тренировку и настрой её под себя.</p><div class="vsg-sport-program-template-list"><button class="vsg-sport-program-template" type="button"><span class="vsg-sport-program-index">01</span><span><strong>Силовая тренировка</strong><small>3 упражнения · Приседания, Отжимания, Планка</small></span><span aria-hidden="true">›</span></button></div><button class="vsg-button" type="button">Отмена</button></div>
+        <div class="vsg-card vsg-sport-program-delete-preview"><span class="vsg-badge">Удаление</span><h3>Удалить тренировку?</h3><p class="vsg-muted">Тренировка и её назначения в календаре будут удалены.</p><div class="vsg-sport-feedback-subject"><strong>Т1 · Силовая тренировка</strong><small>3 упражнения</small></div><div class="vsg-sport-program-dialog-actions"><button class="vsg-button" type="button">Отмена</button><button class="vsg-button vsg-button--danger" type="button">Удалить</button></div></div>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-workout-title">
+      <h2 id="sport-workout-title">03 · Активная тренировка</h2>
+      <p class="vsg-muted">Таймер, состояние сессии, текущий подход и отдых читаются независимо от цвета. Значение вводится вместе с единицей.</p>
+      <div class="vsg-sport-phone vsg-stack">
+        <article class="vsg-card vsg-sport-workout-hero">
+          <div class="vsg-sport-between"><span class="vsg-badge" id="sport-session-status">Ожидание</span><span class="vsg-muted">Силовая тренировка</span></div>
+          <output class="vsg-sport-timer" id="sport-timer" aria-label="Время тренировки">00:00:00</output>
+          <button class="vsg-button vsg-button--primary" id="sport-timer-toggle" type="button">Начать</button>
+        </article>
+        <article class="vsg-card vsg-sport-current-card">
+          <div class="vsg-sport-between"><span class="vsg-eyebrow">Сейчас</span><span id="sport-set-count" class="vsg-badge">Подход 1 из 3</span></div>
+          <h3>Приседания</h3>
+          <p class="vsg-muted">План: 40×12</p>
+          <div class="vsg-sport-workload"><span>Крайний 40×12</span><span>Лучший 42,5×10</span></div>
+          <label class="vsg-field">Результат подхода<input class="vsg-input" inputmode="text" value="40х12"></label>
+          <div class="vsg-sport-set-quick"><button class="vsg-button vsg-button--small" type="button" data-demo-message="Демо: значение не меняется.">+1 повтор</button><button class="vsg-button vsg-button--small" type="button" data-demo-message="Демо: значение не меняется.">+2.5 кг</button></div>
+          <progress id="sport-set-progress" max="3" value="0" aria-label="Выполнено подходов"></progress>
+          <div class="vsg-sport-actions">
+            <button class="vsg-button vsg-button--primary" id="sport-complete-set" type="button">Выполнено</button>
+            <button class="vsg-button" id="sport-skip-set" type="button">Пропустить</button>
+          </div>
+          <p id="sport-set-result" role="status" class="vsg-muted">Выполнено: 0 из 3. Отдых: 00:00.</p>
+        </article>
+        <ol class="vsg-sport-exercise-list vsg-card" aria-label="Упражнения тренировки">
+          <li data-state="current"><strong>Приседания</strong><span>Сейчас · 3 подхода</span></li>
+          <li><strong>Отжимания</strong><span>Далее · 3 подхода</span></li>
+          <li><strong>Планка</strong><span>Далее · 3 подхода</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-activity-title">
+      <h2 id="sport-activity-title">04 · Дистанционная активность</h2>
+      <p class="vsg-muted">Для бега и плавания используйте дистанцию и длительность вместо повторений и веса. GPS запускается автоматически только для упражнения «Бег» на Android после старта тренировки и останавливается при паузе или завершении.</p>
+      <div class="vsg-sport-phone">
+        <article class="vsg-card vsg-stack">
+          <div class="vsg-sport-between"><h3>Бег</h3><span class="vsg-badge vsg-badge--info">Дистанция · км</span></div>
+          <div class="vsg-sport-fields">
+            <label class="vsg-field">Дистанция, км<input class="vsg-input" type="number" min="0" step="0.01" inputmode="decimal" value="5.2"></label>
+            <label class="vsg-field">Время, мм:сс<input class="vsg-input" inputmode="numeric" value="28:40" pattern="[0-9]+:[0-5][0-9]"></label>
+          </div>
+          <div class="vsg-sport-gps"><strong>GPS-маршрут</strong><span>Запись начнётся после нажатия «Начать тренировку». При паузе запись останавливается.</span></div>
+          <p class="vsg-muted vsg-small">Если GPS недоступен, остаётся ручной ввод дистанции и времени. Записанные отрезки сохраняются вместе с результатом бега.</p>
+        </article>
+      </div>
+      <div class="vsg-sport-phone">
+        <article class="vsg-card vsg-stack">
+          <div class="vsg-sport-between"><h3>Вис</h3><span class="vsg-badge vsg-badge--info">Секунды</span></div>
+          <p>План: 60 с · 1 подход. Результат: 45 с.</p>
+          <label class="vsg-field">Результат, секунды<input class="vsg-input" type="number" min="0" inputmode="numeric" value="45"></label>
+          <p class="vsg-muted vsg-small">Для упражнений по времени не показывать вес и запись «кг × повторы».</p>
+        </article>
+      </div>
+      <div class="vsg-sport-phone">
+        <article class="vsg-card vsg-stack">
+          <div class="vsg-sport-between"><h3>Разминка</h3><span class="vsg-badge vsg-badge--success">Факт выполнения</span></div>
+          <p>Без цели, веса, времени и количества подходов. После начала тренировки достаточно отметить выполнение.</p>
+          <button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: разминка отмечена выполненной.">Выполнена</button>
+          <p class="vsg-muted vsg-small">Для разминки и заминки. В логе: «Заминка · Выполнена». Пропуск не засчитывается как выполнение.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-catalog-title">
+      <h2 id="sport-catalog-title">05 · Каталог упражнений и редактор</h2>
+      <p class="vsg-muted">Просмотр и режим изменения используют одни карточки. Название, категория и единица видны сразу; действия изменения появляются только в выбранном режиме. Формы создания и редактирования открываются в диалоге.</p>
+      <div class="vsg-sport-phone vsg-sport-catalog-screen">
+        <div class="vsg-sport-catalog-heading"><div><span class="vsg-eyebrow">Справочник</span><h3>Упражнения</h3><p>Выбирай упражнения для программы и лога.</p></div><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: открывается форма нового упражнения.">+ Добавить</button></div>
+        <div class="vsg-sport-catalog-toolbar"><span>2 упражнения</span><button class="vsg-button vsg-button--small" type="button" aria-pressed="false" data-demo-message="Демо: режим изменения включён.">Изменить список</button></div>
+        <div class="vsg-sport-catalog-list">
+          <article class="vsg-card vsg-sport-catalog-card"><h3>Бег</h3><div class="vsg-sport-catalog-meta"><span class="vsg-badge vsg-badge--info">км · время</span><span class="vsg-badge vsg-sport-catalog-category"><b>WK</b>Воркаут</span></div></article>
+          <article class="vsg-card vsg-sport-catalog-card"><h3>Подтягивания с весом</h3><div class="vsg-sport-catalog-meta"><span class="vsg-badge vsg-badge--info">кг × повторы</span><span class="vsg-badge vsg-sport-catalog-category"><b>WK</b>Воркаут</span></div><div class="vsg-sport-catalog-actions"><button class="vsg-button" type="button" data-demo-message="Демо: открывается редактор упражнения.">Изменить</button><button class="vsg-button vsg-button--danger" type="button" data-demo-message="Демо: открывается подтверждение удаления.">Удалить</button></div></article>
+        </div>
+        <div class="vsg-empty"><strong>Упражнений пока нет</strong><p>Добавь первое упражнение, чтобы использовать его в программе.</p></div>
+      </div>
+      <div class="vsg-sport-phone vsg-stack" style="margin-top:16px">
+        <div class="vsg-card vsg-sport-catalog-form"><div class="vsg-sport-catalog-dialog-head"><span class="vsg-sport-catalog-dialog-mark" aria-hidden="true">+</span><div><span class="vsg-eyebrow">Справочник</span><h3>Новое упражнение</h3></div></div><p class="vsg-sport-catalog-dialog-copy">Название, категория и единица измерения определяют поля в программе и логе.</p><div class="vsg-sport-catalog-fields"><label class="vsg-field">Название<input class="vsg-input" value="Планка"></label><label class="vsg-field">Категория<select class="vsg-input vsg-select"><option>База</option></select></label><label class="vsg-field">Единица измерения<select class="vsg-input vsg-select"><option>секунды</option></select></label></div><div class="vsg-sport-catalog-dialog-actions"><button class="vsg-button" type="button" data-demo-message="Демо: окно закрыто.">Отмена</button><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: упражнение не создаётся.">Добавить</button></div></div>
+        <div class="vsg-card vsg-sport-catalog-form"><div class="vsg-sport-catalog-dialog-head"><span class="vsg-sport-catalog-dialog-mark" aria-hidden="true">✎</span><div><span class="vsg-eyebrow">Справочник</span><h3>Редактировать упражнение</h3></div></div><div class="vsg-sport-catalog-dialog-preview"><strong>Подтягивания с весом</strong><small>кг × повторы · Воркаут</small></div><div class="vsg-sport-catalog-fields"><label class="vsg-field">Название<input class="vsg-input" value="Подтягивания с весом"></label><label class="vsg-field">Категория<select class="vsg-input vsg-select"><option>Воркаут</option></select></label><label class="vsg-field">Единица измерения<select class="vsg-input vsg-select"><option>кг × повторы</option></select></label></div><div class="vsg-sport-catalog-dialog-actions"><button class="vsg-button" type="button" data-demo-message="Демо: окно закрыто.">Отмена</button><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: упражнение не меняется.">Сохранить</button></div></div>
+        <div class="vsg-card vsg-stack"><span class="vsg-badge vsg-badge--danger">Удаление</span><h3>Удалить упражнение?</h3><p class="vsg-muted">Упражнение исчезнет из справочника для новых тренировок.</p><div class="vsg-sport-catalog-dialog-preview"><strong>Подтягивания с весом</strong><small>кг × повторы · Воркаут</small></div><div class="vsg-sport-catalog-dialog-actions"><button class="vsg-button" type="button" data-demo-message="Демо: отмена удаления.">Отмена</button><button class="vsg-button vsg-button--danger" type="button" data-demo-message="Демо: упражнение не удаляется.">Удалить</button></div></div>
+      </div>
+      <div class="vsg-sport-phone vsg-stack">
+        <article class="vsg-card vsg-stack">
+          <div class="vsg-sport-between"><h3>Бег</h3><span class="vsg-badge vsg-badge--info">км · время</span></div>
+          <span class="vsg-badge">Воркаут</span>
+          <button class="vsg-button" id="sport-edit-exercise" type="button">Изменить упражнение</button>
+        </article>
+        <article class="vsg-card vsg-stack">
+          <div class="vsg-sport-between"><h3>Подтягивания</h3><span class="vsg-badge">Повторы</span></div>
+          <p>Без дополнительного веса · 12 повторов · 3 подхода.</p>
+        </article>
+        <article class="vsg-card vsg-stack">
+          <div class="vsg-sport-between"><h3>Подтягивания с весом</h3><span class="vsg-badge vsg-badge--info">Кг × повторы</span></div>
+          <div class="vsg-sport-fields"><label class="vsg-field">Повторы<input class="vsg-input" type="number" value="8"></label><label class="vsg-field">Вес, кг<input class="vsg-input" type="number" value="15"></label></div>
+          <label class="vsg-field">Подходы<input class="vsg-input" type="number" value="3"></label>
+        </article>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-history-title">
+      <h2 id="sport-history-title">06 · Лог и результат</h2>
+      <p class="vsg-muted">Запись сохраняет дату, длительность, выполненные результаты, рекорды и вложение. Редактор показывает поля с подписями на узком экране.</p>
+      <div class="vsg-sport-phone vsg-sport-log-screen">
+        <div class="vsg-sport-log-page-head"><div><span class="vsg-eyebrow">История</span><h3>Лог</h3><p class="vsg-muted">Результаты тренировок</p></div><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: запись не добавляется.">+ Запись</button></div>
+        <article class="vsg-card vsg-sport-log-card">
+          <div class="vsg-sport-log-card-head"><div><h3>Утренняя тренировка</h3><time datetime="2026-10-02T08:30">2 октября · 08:30</time></div><details class="vsg-sport-log-menu"><summary aria-label="Другие действия">•••</summary><button class="vsg-button vsg-button--danger" type="button" id="sport-delete-log-trigger">Удалить запись</button></details></div>
+          <div class="vsg-sport-log-meta"><span class="vsg-badge">Время · 00:42:18</span><span class="vsg-badge vsg-badge--success">★ Личный рекорд</span></div>
+          <div class="vsg-sport-log-results"><div>Бег · 5,2 км за 28:40 ★</div><div>Приседания · 40 кг × 12 · 3 подхода</div></div>
+          <div class="vsg-sport-route" role="img" aria-label="Схема записанного GPS-маршрута"><svg aria-hidden="true" viewBox="0 0 300 96"><polyline points="12,72 45,54 74,58 104,34 139,42 172,18 206,31 242,16 286,22"/></svg></div>
+          <label class="vsg-sport-log-media"><span>▣</span> Добавить фото или видео<input type="file" accept="image/*,video/*"></label>
+          <div class="vsg-sport-log-actions"><button class="vsg-button" type="button" data-demo-message="Демо: откроется редактор записи.">Изменить</button><button class="vsg-button" type="button" id="sport-share-log-trigger">Поделиться</button></div>
+        </article>
+        <article class="vsg-card vsg-sport-log-edit-row"><label class="vsg-field">Упражнение<select class="vsg-input"><option>Приседания</option></select></label><div class="vsg-sport-log-edit-fields"><label class="vsg-field">Вес, кг<input class="vsg-input" value="40"></label><label class="vsg-field">Повторы<input class="vsg-input" value="12"></label><label class="vsg-field">Подходы<input class="vsg-input" value="3"></label></div><button class="vsg-button vsg-button--danger" type="button" data-demo-message="Демо: упражнение не удаляется.">Удалить упражнение</button></article>
+        <article class="vsg-card vsg-sport-log-edit-row"><label class="vsg-field">Упражнение<select class="vsg-input"><option>Бег</option></select></label><div class="vsg-sport-log-edit-fields"><label class="vsg-field">Дистанция, м<input class="vsg-input" value="5000"></label><label class="vsg-field">Время, мм:сс<input class="vsg-input" value="30:00"></label></div></article>
+        <article class="vsg-card vsg-sport-log-edit-row"><label class="vsg-field">Упражнение<select class="vsg-input"><option>Заплыв</option></select></label><div class="vsg-sport-log-edit-fields"><label class="vsg-field">Дистанция, м<input class="vsg-input" value="500"></label><label class="vsg-field">Время, мм:сс<input class="vsg-input" value="10:30"></label></div></article>
+        <div class="vsg-card vsg-sport-log-add-form"><div class="vsg-sport-log-add-head"><span class="vsg-sport-log-add-mark" aria-hidden="true">+</span><div><span class="vsg-eyebrow">Лог тренировок</span><h2>Новая запись</h2></div></div><p class="vsg-sport-log-add-copy">Укажите название и дату. После создания добавьте упражнения и результаты.</p><div class="vsg-sport-log-add-fields"><label class="vsg-field">Название<input class="vsg-input" value="Ручная запись"></label><label class="vsg-field">Дата и время<input class="vsg-input" type="datetime-local" value="2026-10-02T08:30"></label></div><div class="vsg-sport-log-add-actions"><button class="vsg-button" type="button" data-demo-message="Демо: окно не открыто.">Отмена</button><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: запись не добавляется.">Создать запись</button></div></div>
+        <div class="vsg-empty"><strong>Записей пока нет</strong><p>Заверши тренировку, чтобы сохранить результаты здесь.</p><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: переход к тренировке.">Начать тренировку</button></div>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-stats-title">
+      <h2 id="sport-stats-title">07 · Статистика и завершение</h2>
+      <p class="vsg-muted">Статистика подписывает показатель и единицу. Окна завершения и ошибки ввода описывают выполненное действие и следующий шаг.</p>
+      <div class="vsg-sport-phone vsg-sport-stats-screen">
+        <header class="vsg-sport-stats-heading"><span class="vsg-eyebrow">Результаты</span><h3>Стата</h3><p>Последние результаты и прогресс по упражнениям.</p></header>
+        <div class="vsg-sport-stats-overview"><div><strong>12</strong><span>Записей в логе</span></div><div><strong>4</strong><span>Упражнения</span></div></div>
+        <article class="vsg-card vsg-sport-stats-card">
+          <div class="vsg-sport-stats-card-head"><div><span class="vsg-eyebrow">Дистанция · 3 записи</span><h3>Бег</h3></div><span class="vsg-badge vsg-badge--success">Дистанция</span></div>
+          <div class="vsg-sport-stats-metrics"><div><span>Последний</span><strong>5,2 <small>км</small></strong><small>за 28:30</small></div><div><span>Лучший</span><strong>6,0 <small>км</small></strong></div></div>
+          <div class="vsg-sport-stats-history"><strong>История</strong><div><span>28.09</span><b>5,2 км · 28:30</b></div><div><span>25.09</span><b>6,0 км · 32:00</b></div></div>
+        </article>
+        <article class="vsg-card vsg-sport-stats-card">
+          <div class="vsg-sport-stats-card-head"><div><span class="vsg-eyebrow">Повторения · 3 записи</span><h3>Подтягивания</h3></div><span class="vsg-badge vsg-badge--success">Рост</span></div>
+          <div class="vsg-sport-stats-metrics"><div><span>Последний</span><strong>32 <small>повт.</small></strong></div><div><span>Лучший</span><strong>32 <small>повт.</small></strong></div></div>
+          <div class="vsg-sport-stats-trend">Динамика: +4 повт.</div>
+          <div class="vsg-sport-stats-chart" aria-label="Повторения по датам"><div class="vsg-sport-stats-plot"><button class="vsg-sport-stats-bar vsg-sport-stats-bar--first" type="button" style="--height:60%" aria-label="20.09: 24 повторения"><span>24</span><i></i><small>20.09</small><span class="vsg-sport-stats-tooltip" aria-hidden="true"><span>Повторения: 24</span></span></button><button class="vsg-sport-stats-bar" type="button" style="--height:85%" aria-label="24.09: 28 повторений"><span>28</span><i></i><small>24.09</small><span class="vsg-sport-stats-tooltip" aria-hidden="true"><span>Повторения: 28</span></span></button><button class="vsg-sport-stats-bar vsg-sport-stats-bar--last" type="button" style="--height:100%" aria-label="28.09: 32 повторения"><span>32</span><i></i><small>28.09</small><span class="vsg-sport-stats-tooltip" aria-hidden="true"><span>Повторения: 32</span></span></button></div></div>
+        </article>
+        <article class="vsg-card vsg-sport-stats-card">
+          <div class="vsg-sport-stats-card-head"><div><span class="vsg-eyebrow">Повторения и вес · 3 записи</span><h3>Подтягивания с весом</h3></div><span class="vsg-badge vsg-badge--success">Рост</span></div>
+          <div class="vsg-sport-stats-metrics"><div><span>Последний</span><strong>18 <small>повт.</small></strong><small>15 кг</small></div><div><span>Лучший</span><strong>18 <small>повт.</small></strong><small>до 15 кг</small></div></div>
+          <div class="vsg-sport-stats-chart"><span class="vsg-sport-stats-chart-label">Динамика по датам</span><div class="vsg-sport-stats-plot" style="--points:3"><button class="vsg-sport-stats-bar vsg-sport-stats-bar--first" type="button" style="--height:60%" aria-label="20.09: 10 повторений, 5 кг"><span>10</span><i></i><small>20.09</small><span class="vsg-sport-stats-tooltip" aria-hidden="true"><span>Повторения: 10</span><span>Вес: 5 кг</span></span></button><button class="vsg-sport-stats-bar" type="button" style="--height:80%" aria-label="24.09: 14 повторений, 10 кг"><span>14</span><i></i><small>24.09</small><span class="vsg-sport-stats-tooltip" aria-hidden="true"><span>Повторения: 14</span><span>Вес: 10 кг</span></span></button><button class="vsg-sport-stats-bar vsg-sport-stats-bar--last" type="button" style="--height:100%" aria-label="28.09: 18 повторений, 15 кг"><span>18</span><i></i><small>28.09</small><span class="vsg-sport-stats-tooltip" aria-hidden="true"><span>Повторения: 18</span><span>Вес: 15 кг</span></span></button><svg class="vsg-sport-stats-weight-line" viewBox="0 0 156 110" aria-hidden="true"><path d="M26 80 L78 53 L130 27"/><circle cx="26" cy="80" r="5"/><circle cx="78" cy="53" r="5"/><circle cx="130" cy="27" r="5"/></svg></div></div><div class="vsg-sport-stats-legend"><span data-series="repeats"><i></i>Повторения</span><span data-series="weight"><i></i>Вес, кг</span></div>
+        </article>
+        <article class="vsg-card vsg-sport-stats-card"><div class="vsg-sport-stats-card-head"><div><span class="vsg-eyebrow">Факт выполнения</span><h3>Разминка</h3></div><span class="vsg-badge vsg-badge--success">Выполнена</span></div><div class="vsg-sport-stats-metrics"><div><span>Выполнений</span><strong>7</strong></div></div></article>
+        <div class="vsg-empty vsg-sport-stats-empty"><strong>Статистики пока нет</strong><p>Заверши тренировку или добавь результат в лог, чтобы увидеть прогресс.</p></div>
+      </div>
+      <div class="vsg-sport-phone vsg-stack" style="margin-top:16px">
+        <button class="vsg-button vsg-button--primary" id="sport-show-celebration" type="button">Показать завершение</button>
+        <button class="vsg-button" id="sport-show-distance-error" type="button">Показать ошибку дистанции</button>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-profile-title">
+      <h2 id="sport-profile-title">Профиль и резервная копия</h2>
+      <p class="vsg-muted">Управление именем, локальными данными и JSON-копией. Статус копии указан текстом; удаление лога требует подтверждения.</p>
+      <div class="vsg-sport-phone vsg-sport-profile-screen">
+        <header class="vsg-sport-profile-heading"><span class="vsg-eyebrow">Настройки и данные</span><h3>Профиль</h3><p>Управление именем, копией данных и приложением.</p></header>
+        <article class="vsg-card vsg-sport-profile-card vsg-sport-profile-identity"><div class="vsg-sport-profile-person"><span class="vsg-sport-profile-avatar" aria-hidden="true">С</span><div><span class="vsg-eyebrow">Спортсмен</span><h3>Мой профиль</h3></div></div><label class="vsg-field">Логин<input class="vsg-input" value="Спортсмен" maxlength="25"></label><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: имя не сохраняется.">Сохранить логин</button></article>
+        <article class="vsg-card vsg-sport-profile-card"><div class="vsg-sport-profile-card-head"><div><span class="vsg-eyebrow">Данные</span><h3>Резервная копия</h3></div><span class="vsg-badge vsg-badge--warning">Копия устарела</span></div><p>Сохрани программу, календарь и историю в JSON-файл.</p><div class="vsg-sport-profile-backup-meta"><span>Последняя копия</span><strong>1 октября, 18:30</strong></div><div class="vsg-sport-profile-actions"><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: JSON не скачивается.">Скачать копию</button><button class="vsg-button" type="button" data-demo-message="Демо: проверка копии не запускается.">Проверить копию</button><button class="vsg-button" type="button" data-demo-message="Демо: восстановление не запускается.">Восстановить</button></div><button class="vsg-button" id="sport-show-backup-dialog" type="button">Показать предложение копии</button></article>
+        <article class="vsg-card vsg-sport-profile-card"><div class="vsg-sport-profile-card-head"><div><span class="vsg-eyebrow">История</span><h3>Лог тренировок</h3></div></div><p>Удаление всех записей нельзя отменить.</p><button class="vsg-button vsg-button--danger" id="sport-clear-log" type="button">Очистить лог</button></article>
+        <article class="vsg-card vsg-sport-profile-card"><div class="vsg-sport-profile-card-head"><div><span class="vsg-eyebrow">Информация</span><h3>Приложение</h3></div></div><div class="vsg-sport-profile-info"><div><span>Платформа и версия</span><strong>Web · 1.003.1</strong></div><div><span>Разработчик</span><strong>V-STAR-GROUP.DIGITAL</strong></div></div><div class="vsg-sport-profile-actions"><button class="vsg-button" type="button" data-demo-message="Демо: проверка обновлений не запускается.">Проверить обновление</button><button class="vsg-button" type="button" data-demo-message="Демо: выход не выполняется.">Выйти</button></div></article>
+        <article class="vsg-card vsg-sport-profile-card"><span class="vsg-eyebrow">Образец окна выбора</span><h3>Резервная копия</h3><p>Перед выходом сохрани данные или подтверди выход без копии.</p><div class="vsg-sport-profile-choice-list"><button type="button" data-demo-message="Демо: копия не скачивается."><strong>Скачать копию</strong><small>Сначала сохранить JSON</small></button><button type="button" data-demo-message="Демо: выход не выполняется."><strong>Выйти без копии</strong><small>Локальные данные очистятся</small></button></div><button class="vsg-button" type="button" data-demo-message="Демо: окно не открывается.">Остаться</button></article>
+      </div>
+    </section>
+
+    <section class="vsg-sport-section" aria-labelledby="sport-states-title">
+      <h2 id="sport-states-title">Состояния и информация</h2>
+      <p class="vsg-muted">Пустая программа, недоступный GPS и сбой сохранения отличаются по причине и следующему действию. Версия приложения относится к экрану «Информация».</p>
+      <div class="vsg-sport-rules">
+        <div class="vsg-empty"><strong>Тренировок пока нет</strong><p>Добавь первую тренировку в программу.</p><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: тренировка не добавляется.">Создать тренировку</button></div>
+        <div class="vsg-alert vsg-alert--warning"><div><strong>GPS недоступен</strong><p>Маршрут не записывается. Дистанцию и время можно ввести вручную.</p></div></div>
+        <div class="vsg-alert vsg-alert--danger"><div><strong>Не удалось сохранить тренировку</strong><p>Введённые значения остаются на экране. Проверь свободное место и повтори сохранение.</p></div></div>
+        <article class="vsg-card vsg-stack"><h3>Информация</h3><p>Версия приложения: номер, платформа и дата сборки берутся из продукта.</p><p class="vsg-muted">Не показывать обещания функций, которые ещё не подключены.</p></article>
+      </div>
+    </section>
+    <div id="sport-demo-status" class="vsg-sport-demo-status" role="status" hidden><span id="sport-demo-text"></span><button class="vsg-button vsg-button--small" id="sport-demo-close" type="button" aria-label="Закрыть сообщение">×</button></div>
+  </main>
+
+  <dialog class="vsg-dialog vsg-sport-dialog" id="sport-exercise-dialog" aria-labelledby="sport-exercise-dialog-title">
+    <form method="dialog" class="vsg-stack">
+      <h2 id="sport-exercise-dialog-title">Изменить упражнение</h2>
+      <label class="vsg-field">Название<input class="vsg-input" value="Плавание"></label>
+      <label class="vsg-field">Измерение<select class="vsg-input vsg-select"><option>Метры</option><option>Километры</option><option>Повторения</option></select></label>
+      <label class="vsg-field">Категория<select class="vsg-input vsg-select"><option>Кардио</option><option>Силовые</option><option>Базовые</option></select></label>
+      <div class="vsg-sport-actions"><button class="vsg-button" value="cancel">Отмена</button><button class="vsg-button vsg-button--primary" value="save">Сохранить</button></div>
+    </form>
+  </dialog>
+  <dialog class="vsg-dialog vsg-sport-dialog" id="sport-program-dialog" aria-labelledby="sport-program-dialog-title">
+    <form method="dialog" class="vsg-stack">
+      <h2 id="sport-program-dialog-title">Изменить тренировку</h2>
+      <label class="vsg-field">Название<input class="vsg-input" value="Силовая тренировка"></label>
+      <label class="vsg-field">Упражнение<select class="vsg-input vsg-select"><option>Приседания</option><option>Отжимания</option><option>Планка</option></select></label>
+      <div class="vsg-sport-fields"><label class="vsg-field">Цель, повторения<input class="vsg-input" type="number" min="0" value="12"></label><label class="vsg-field">Вес, кг<input class="vsg-input" type="number" min="0" step="0.5" value="40"></label></div>
+      <label class="vsg-field">Подходы<input class="vsg-input" type="number" min="1" step="1" value="3"></label>
+      <div class="vsg-sport-actions"><button class="vsg-button" value="cancel">Отмена</button><button class="vsg-button vsg-button--primary" value="save">Сохранить</button></div>
+    </form>
+  </dialog>
+  <dialog class="vsg vsg-sport-feedback-dialog" id="sport-celebration-dialog" aria-labelledby="sport-celebration-title">
+    <form method="dialog" class="vsg-sport-feedback-content">
+      <span class="vsg-sport-feedback-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 2 2.9 6.2 6.8.9-5 4.8 1.2 6.8-5.9-3.2-5.9 3.2 1.2-6.8-5-4.8 6.8-.9z"/></svg></span>
+      <h2 id="sport-celebration-title">Тренировка завершена!</h2>
+      <p>Отличная работа. Результаты сохранены в лог.</p>
+      <div class="vsg-sport-feedback-records"><div class="vsg-sport-feedback-record"><strong>Новый личный рекорд · бег</strong><span>5,2 км</span><small>Было: 5 км</small></div></div>
+      <p class="vsg-sport-feedback-note">Каждая тренировка двигает тебя вперёд.</p>
+      <div class="vsg-sport-feedback-actions"><button class="vsg-button vsg-button--primary" value="close">К логу</button></div>
+    </form>
+  </dialog>
+  <dialog class="vsg vsg-sport-feedback-dialog" id="sport-distance-error-dialog" aria-labelledby="sport-distance-error-title" aria-describedby="sport-distance-error-message">
+    <form method="dialog" class="vsg-sport-feedback-content">
+      <span class="vsg-sport-feedback-mark" data-tone="warning" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 4h.01"/></svg></span>
+      <h2 id="sport-distance-error-title">Нужны дистанция и время</h2>
+      <p id="sport-distance-error-message">Укажи пройденную дистанцию и время в формате мм:сс.</p>
+      <div class="vsg-sport-feedback-actions"><button class="vsg-button vsg-button--primary" value="close">Вернуться к вводу</button></div>
+    </form>
+  </dialog>
+  <dialog class="vsg vsg-sport-feedback-dialog" id="sport-backup-dialog" aria-labelledby="sport-backup-title" aria-describedby="sport-backup-message">
+    <form method="dialog" class="vsg-sport-feedback-content">
+      <span class="vsg-sport-feedback-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h4M12 11v7m-3-3 3 3 3-3"/></svg></span>
+      <h2 id="sport-backup-title">Обновить резервную копию?</h2>
+      <p id="sport-backup-message">Скачай свежую копию тренировок и истории в формате JSON.</p>
+      <div class="vsg-sport-feedback-actions"><button class="vsg-button" value="cancel" autofocus>Позже</button><button class="vsg-button vsg-button--primary" value="download">Скачать JSON</button></div>
+    </form>
+  </dialog>
+  <dialog class="vsg vsg-sport-feedback-dialog vsg-sport-feedback-dialog--danger" id="sport-delete-log-dialog" role="alertdialog" aria-labelledby="sport-delete-log-title" aria-describedby="sport-delete-log-message">
+    <form method="dialog" class="vsg-sport-feedback-content">
+      <span class="vsg-sport-feedback-mark" data-tone="danger" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 10v7m4-7v7"/></svg></span>
+      <h2 id="sport-delete-log-title">Удалить запись?</h2>
+      <p id="sport-delete-log-message">Запись и её результаты будут удалены из лога. Это действие нельзя отменить.</p>
+      <div class="vsg-sport-feedback-subject"><strong>Утренняя тренировка</strong><small>2 октября · 08:30 · 00:42:18</small></div>
+      <div class="vsg-sport-feedback-actions"><button class="vsg-button" value="cancel" autofocus>Отмена</button><button class="vsg-button vsg-button--danger" value="delete">Удалить запись</button></div>
+    </form>
+  </dialog>
+  <dialog class="vsg vsg-sport-log-share-dialog" id="sport-share-log-dialog" aria-labelledby="sport-share-log-title" aria-describedby="sport-share-log-copy">
+    <div class="vsg-sport-log-share-content">
+      <div class="vsg-sport-log-share-head"><span class="vsg-sport-log-share-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m4 11 16-7-6 16-3-7-7-2Zm7 2 9-9"/></svg></span><div><span class="vsg-eyebrow">Лог тренировок</span><h2 id="sport-share-log-title">Поделиться записью</h2></div></div>
+      <p class="vsg-sport-log-share-copy" id="sport-share-log-copy">Проверь текст перед отправкой. Личные рекорды отмечены звёздочкой.</p>
+      <label class="vsg-field">Текст сообщения<textarea class="vsg-input vsg-sport-log-share-preview" readonly>Утренняя тренировка
+2 октября · 08:30
+Время: 00:42:18
+
+Бег 5,2 км за 28:40 ★
+Приседания 40х12</textarea></label>
+      <div class="vsg-sport-log-share-actions"><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: откроется системное меню отправки.">Поделиться</button><button class="vsg-button" type="button" data-demo-message="Демо: текст будет скопирован.">Скопировать текст</button><button class="vsg-button" type="button" id="sport-share-log-close">Отмена</button></div>
+      <p class="vsg-sport-log-share-status" role="status" aria-live="polite"></p>
+    </div>
+  </dialog>
+  <dialog class="vsg-dialog vsg-sport-dialog" id="sport-clear-log-dialog" aria-labelledby="sport-clear-log-title">
+    <form method="dialog" class="vsg-stack">
+      <h2 id="sport-clear-log-title">Очистить лог тренировок?</h2>
+      <p>Все записи будут удалены. Действие нельзя отменить.</p>
+      <div class="vsg-sport-actions"><button class="vsg-button" value="cancel" autofocus>Отмена</button><button class="vsg-button vsg-button--danger" value="clear">Очистить лог</button></div>
+    </form>
+  </dialog>
+</body>
+</html>

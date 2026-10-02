@@ -1,0 +1,21 @@
+/* OPTIONAL adapter for existing shadcn/Base UI components. Import AFTER their styles.
+   Apply class="vsg vsg-primitives" to the host or portal container. No JS replacement. */
+.vsg.vsg-primitives {
+  --background:var(--vsg-bg); --foreground:var(--vsg-text);
+  --card:var(--vsg-surface); --card-foreground:var(--vsg-text);
+  --popover:var(--vsg-surface-raised); --popover-foreground:var(--vsg-text);
+  --primary:var(--vsg-primary); --primary-foreground:var(--vsg-on-primary);
+  --secondary:var(--vsg-surface-raised); --secondary-foreground:var(--vsg-text);
+  --muted:var(--vsg-bg-secondary); --muted-foreground:var(--vsg-muted);
+  --accent:var(--vsg-selected); --accent-foreground:var(--vsg-text);
+  --destructive:var(--vsg-danger); --border:var(--vsg-line); --input:var(--vsg-control-border);
+  --ring:var(--vsg-focus-color); --radius:var(--vsg-radius);
+  --chart-1:var(--vsg-chart-1); --chart-2:var(--vsg-chart-2); --chart-3:var(--vsg-chart-3);
+  --sidebar:var(--vsg-bg-secondary); --sidebar-foreground:var(--vsg-text);
+  --sidebar-primary:var(--vsg-primary); --sidebar-primary-foreground:var(--vsg-on-primary);
+  --sidebar-accent:var(--vsg-selected); --sidebar-accent-foreground:var(--vsg-text);
+  --sidebar-border:var(--vsg-line); --sidebar-ring:var(--vsg-focus-color);
+}
+.vsg.vsg-primitives :is([data-slot="button"],[data-slot="input"],[data-slot="select-trigger"]) { min-height:var(--vsg-control-height); border-radius:var(--vsg-radius); font-family:var(--vsg-font); }
+.vsg.vsg-primitives [data-slot="button"][data-size="icon"] { min-width:var(--vsg-control-height); }
+.vsg.vsg-primitives [data-slot="textarea"] { font-family:var(--vsg-font); border-radius:var(--vsg-radius); }
