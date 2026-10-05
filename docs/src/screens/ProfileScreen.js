@@ -28,7 +28,7 @@ export function renderProfileScreen() {
       </article>
       <article class="vsg-card vsg-sport-profile-card">
         <div class="vsg-sport-profile-card-head"><div><span class="vsg-eyebrow">Информация</span><h2>Приложение</h2></div></div>
-        <div class="vsg-sport-profile-info"><div><span>Платформа</span><strong>${escapeHtml(getAppPlatform())}</strong></div><div><span>Версия</span><strong>${escapeHtml(APP_VERSION)}</strong></div><div><span>Разработчик</span><strong>V-STAR-GROUP.DIGITAL</strong></div></div>
+        <div class="vsg-sport-profile-info"><div><span>Платформа</span><strong>${escapeHtml(getAppPlatform())}</strong></div><div><span>Версия</span><strong>${escapeHtml(APP_VERSION)}</strong></div><div><span>Разработчик</span><strong>V-STAR-Group Inc.</strong></div></div>
         <div class="vsg-sport-profile-actions"><button class="vsg-button" type="button" data-action="checkUpdate">Проверить обновление</button><button class="vsg-button" type="button" data-action="logout">Выйти</button></div>
       </article>
     </section>`;
