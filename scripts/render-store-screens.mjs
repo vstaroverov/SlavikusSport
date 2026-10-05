@@ -24,6 +24,10 @@ const slides = [
   { file: "06-exercises.png", route: "exercises", label: "УПРАЖНЕНИЯ", first: "Настрой", accent: "под себя", detail: "Свои упражнения, категории и единицы измерения." },
   { file: "07-profile.png", route: "profile", label: "ТВОИ ДАННЫЕ", first: "Сохрани", accent: "свой прогресс", detail: "Резервная копия и восстановление из файла." }
 ];
+const requestedSlide = process.argv[2];
+if (requestedSlide && !slides.some((slide) => slide.file === requestedSlide)) {
+  throw new Error(`Unknown screenshot: ${requestedSlide}`);
+}
 
 try {
   let port;
@@ -89,7 +93,7 @@ try {
           { name: "Подтягивания", measure: "repeats", target: "10", weight: "", sets: 3, done: ["10", "9", "8"], weights: ["", "", ""] }
         ]
       }));
-      localStorage.setItem("slavikus:user", JSON.stringify({ id: "promo", name: "Алексей", gender: "male" }));
+      localStorage.setItem("slavikus:user", JSON.stringify({ id: "promo", name: "Славка", gender: "male" }));
       localStorage.setItem("slavikus:reset-0.016.2", "true");
       localStorage.setItem("slavikus:workouts", JSON.stringify(workouts));
       localStorage.setItem("slavikus:calendar:promo", JSON.stringify({ [iso]: "promo-legs" }));
@@ -106,6 +110,7 @@ try {
   const font = (await readFile(join(root, "design-system-v-star-group", "assets", "fonts", "Manrope-variable.ttf"))).toString("base64");
 
   for (const [index, slide] of slides.entries()) {
+    if (requestedSlide && slide.file !== requestedSlide) continue;
     await call("Page.navigate", { url: `http://localhost:4173/#/${slide.route}` });
     await waitUntil(async () => evaluate(`document.querySelector('.phone-shell')?.innerText.includes(${JSON.stringify(slide.route === "main" ? "День ног" : slide.route === "exercises" ? "Упражнения" : slide.route === "stats" ? "Стата" : slide.route === "profile" ? "Профиль" : slide.route === "workout" ? "День ног" : slide.route === "log" ? "Лог" : "Программа")})`));
     if (slide.route === "workout") {
@@ -128,8 +133,10 @@ try {
     console.log(`${slide.file}: ${png.length} bytes`);
     await call("Emulation.setDeviceMetricsOverride", { width: 390, height: 844, deviceScaleFactor: 2, mobile: true });
   }
-  for (const old of ["01-login.png", "02-main.png", "03-workout.png", "04-program.png", "05-log.png", "06-stats.png", "07-profile.png"]) {
-    if (!slides.some((slide) => slide.file === old)) await rm(join(output, old), { force: true });
+  if (!requestedSlide) {
+    for (const old of ["01-login.png", "02-main.png", "03-workout.png", "04-program.png", "05-log.png", "06-stats.png", "07-profile.png"]) {
+      if (!slides.some((slide) => slide.file === old)) await rm(join(output, old), { force: true });
+    }
   }
 } finally {
   socket?.close();
