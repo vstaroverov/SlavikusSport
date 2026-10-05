@@ -37,8 +37,11 @@ test("manual log editor uses the catalog fields for every exercise type", () => 
         weighted: ["name", "weight", "repeats", "sets"]
       }[exercise.measure];
       assert.deepEqual([...fields].sort(), expected.sort(), exercise.name);
-      if (exercise.name === "Бег") assert.match(html, /Дистанция, м/);
-      if (exercise.name === "Заплыв") assert.match(html, /Дистанция, м/);
+      if (exercise.name === "Бег" || exercise.name === "Заплыв") {
+        assert.match(html, /Дистанция, м/);
+        assert.match(html, /Время, чч:мм:сс/);
+        assert.match(html, /data-duration-input/);
+      }
     }
   } finally {
     globalThis.localStorage = previous;
@@ -102,7 +105,7 @@ test("changing a manual log exercise rebuilds its fields and clears the old resu
     row.querySelector = (selector) => ({
       '[data-field="name"]': nameControl,
       '[data-field="distance"]': { value: "5000" },
-      '[data-field="time"]': { value: "30:00" }
+      '[data-field="time"]': { value: "00:30:00" }
     })[selector] || null;
     updateLogExercise({ dataset: { logId: "manual-1", field: "distance", exerciseIndex: "0" } });
     assert.deepEqual(getLogEntry("manual-1").results[0].done, ["5"]);
@@ -118,7 +121,7 @@ test("changing a manual log exercise rebuilds its fields and clears the old resu
     row.querySelector = (selector) => ({
       '[data-field="name"]': nameControl,
       '[data-field="distance"]': { value: "500" },
-      '[data-field="time"]': { value: "10:30" }
+      '[data-field="time"]': { value: "00:10:30" }
     })[selector] || null;
     updateLogExercise({ dataset: { logId: "manual-1", field: "distance", exerciseIndex: "0" } });
     assert.deepEqual(getLogEntry("manual-1").results[0].done, ["500"]);

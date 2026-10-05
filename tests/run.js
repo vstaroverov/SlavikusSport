@@ -16,3 +16,4 @@ import "./automaticRunTracking.test.js";
 import "./statsDesign.test.js";
 import "./exercisesDesign.test.js";
 import "./profileDesign.test.js";
+import "./durationInput.test.js";

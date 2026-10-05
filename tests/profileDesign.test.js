@@ -14,7 +14,8 @@ test("profile screen keeps all actions and shows backup freshness in design-syst
   const html = renderProfileScreen();
   assert.match(html, /vsg-sport-profile-screen/);
   assert.match(html, /Копии нет/);
-  assert.match(html, /Android · 1\.003\.1/);
+  assert.match(html, /<span>Платформа<\/span><strong>Android<\/strong>/);
+  assert.match(html, /<span>Версия<\/span><strong>2\.001\.1<\/strong>/);
   for (const action of ["saveProfileLogin", "exportBackup", "checkBackup", "importBackup", "clearLog", "checkUpdate", "logout"]) {
     assert.match(html, new RegExp(`data-action="${action}"`));
   }

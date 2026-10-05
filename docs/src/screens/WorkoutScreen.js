@@ -6,6 +6,8 @@ import { getActiveSession, formatSeconds, getElapsedSeconds, getRestRemainingSec
 import { getLogEntries } from "../features/log/logStorage.js";
 import { getLogResults } from "../features/log/logExercises.js";
 import { isRunExercise } from "../features/workout/automaticRunTracking.js";
+import { formatDurationForInput } from "../features/workout/durationInput.js";
+import { formatPlannedTime } from "../features/program/plannedActivity.js";
 
 export function renderWorkoutScreen() {
   const workout = getWorkout(getPlannedWorkoutId(todayIso(), false));
@@ -57,7 +59,7 @@ export function renderWorkoutScreen() {
             <span class="vsg-badge">${isDistance ? "Дистанция" : isCompletion ? "Факт выполнения" : `Подход ${active.currentSet} из ${current.sets}`}</span>
           </div>
           <h2 id="current-exercise-title">${escapeHtml(current.name)}</h2>
-          <p class="vsg-muted">${isDistance ? `${current.target ? `План: ${escapeHtml(current.target)} ${current.measure === "distanceKm" ? "км" : "м"}` : "Запиши дистанцию и время"}${current.time ? ` · ${escapeHtml(current.time)} мин` : ""}` : isCompletion ? "Отметь, когда закончишь разминку." : `План: ${escapeHtml(formatCurrentExercise(current)) || "укажи результат"}`}</p>
+          <p class="vsg-muted">${isDistance ? `${current.target ? `План: ${escapeHtml(current.target)} ${current.measure === "distanceKm" ? "км" : "м"}` : "Запиши дистанцию и время"}${current.time ? ` · ${escapeHtml(formatPlannedTime(current.time))}` : ""}` : isCompletion ? "Отметь, когда закончишь разминку." : `План: ${escapeHtml(formatCurrentExercise(current)) || "укажи результат"}`}</p>
           ${workload ? `<div class="vsg-sport-workload"><span>Крайний ${escapeHtml(workload.latest)}</span><span>Лучший ${escapeHtml(workload.best)}</span></div>` : ""}
           ${isRunExercise(current) && window.Capacitor?.getPlatform?.() === "android" ? `
             <div class="vsg-sport-gps" data-run-tracker>
@@ -71,8 +73,9 @@ export function renderWorkoutScreen() {
               <label class="vsg-field">Дистанция, ${current.measure === "distanceKm" ? "км" : "м"}
                 <input class="vsg-input" type="number" min="0" step="any" inputmode="decimal" placeholder="${escapeAttr(current.target || "0")}" data-distance-value />
               </label>
-              <label class="vsg-field">Время, мм:сс
-                <input class="vsg-input" inputmode="numeric" placeholder="${escapeAttr(current.time || "25:00")}" data-duration-value />
+              <label class="vsg-field vsg-sport-duration-field">Время, чч:мм:сс
+                <input class="vsg-input vsg-sport-duration-input" type="text" inputmode="numeric" maxlength="8" pattern="[0-9]{2}:[0-5][0-9]:[0-5][0-9]" placeholder="${escapeAttr(formatDurationForInput(current.time) || "00:25:00")}" data-duration-input data-duration-value />
+                <small>Введи 6 цифр: часы, минуты, секунды.</small>
               </label>
             </div>
           ` : `

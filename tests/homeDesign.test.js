@@ -46,7 +46,7 @@ test("home shell uses design-system components and keeps route actions", () => {
     }]));
     const planned = renderMainScreen();
     assert.match(planned, /&lt;Бег&gt;/);
-    assert.match(planned, /10 км · 37:12 мин/);
+    assert.match(planned, /10 км · 00:37:12/);
     assert.doesNotMatch(planned, /1 упражнение · 1 подход/);
     assert.match(planned, /data-route="workout">Начать тренировку/);
 
@@ -62,13 +62,13 @@ test("home shell uses design-system components and keeps route actions", () => {
     }
     assert.match(editor, /aria-pressed="true">Готово/);
     assert.match(editor, /Расстояние, км/);
-    assert.match(editor, /Плановое время, мм:сс/);
+    assert.match(editor, /Плановое время, чч:мм:сс/);
     assert.doesNotMatch(editor, /data-field="weight"/);
     assert.doesNotMatch(editor, /data-field="sets"/);
     assert.match(renderExercisesScreen(), /км · время/);
 
     updateExercise("workout-test", 0, "time", "40:05");
-    assert.match(renderMainScreen(), /10 км · 40:05 мин/);
+    assert.match(renderMainScreen(), /10 км · 00:40:05/);
   } finally {
     globalThis.localStorage = previous;
   }

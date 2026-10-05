@@ -16,6 +16,7 @@ import { formatSeconds, getActiveSession, getElapsedSeconds, getRestRemainingSec
 import { applyAppMigration } from "../features/storage/appMigration.js";
 import { getRunTrackerStatus, renderRunTrackerStatus } from "../features/workout/runTracker.js";
 import { discardLogDrafts } from "../features/log/logStorage.js";
+import { formatDurationInputElement, handleDurationInputKeydown } from "../features/workout/durationInput.js";
 
 const screens = {
   main: renderMainScreen,
@@ -76,6 +77,10 @@ function bindGlobalActions(root) {
   if (root.dataset.boundGlobalActions) return;
   root.dataset.boundGlobalActions = "true";
 
+  root.addEventListener("input", (event) => {
+    if (event.target?.matches?.("[data-duration-input]")) formatDurationInputElement(event.target);
+  });
+
   root.addEventListener("click", async (event) => {
     const routeElement = event.target.closest("[data-route]");
     if (routeElement && root.contains(routeElement)) {
@@ -95,12 +100,17 @@ function bindGlobalActions(root) {
   });
 
   root.addEventListener("keydown", (event) => {
+    if (event.target?.matches?.("[data-duration-input]") && handleDurationInputKeydown(event)) return;
     if (event.key === "Enter") runChangeAction(root, event.target);
   });
 }
 
 async function runChangeAction(root, element) {
   if (!element?.dataset?.change || !root.contains(element)) return;
+  if (element.matches?.("[data-duration-input]") && element.value && !element.checkValidity()) {
+    element.reportValidity();
+    return;
+  }
 
   const module = await import(`../actions/${element.dataset.change}.js`);
   module.default(element);

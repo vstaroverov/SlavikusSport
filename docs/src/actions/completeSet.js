@@ -6,6 +6,7 @@ import { showConfirmDialog } from "../components/ConfirmDialog.js";
 import { showSportFeedbackDialog } from "../components/SportFeedbackDialog.js";
 import { getRunTrackerStatus } from "../features/workout/runTracker.js";
 import { currentRun, getRunTotals, startAutomaticRunTracking, stopAutomaticRunTracking } from "../features/workout/automaticRunTracking.js";
+import { parseDurationInput } from "../features/workout/durationInput.js";
 
 export default async function completeSet(button) {
   const session = getActiveSession();
@@ -21,12 +22,12 @@ export default async function completeSet(button) {
     const totals = run ? getRunTotals(result, tracker) : null;
     const gpsReady = totals?.meters > 0 && totals?.seconds > 0;
     const distance = gpsReady ? (totals.meters / 1000).toFixed(2) : card.querySelector("[data-distance-value]")?.value || "";
-    const seconds = gpsReady ? totals.seconds : parseDuration(card.querySelector("[data-duration-value]")?.value || "");
+    const seconds = gpsReady ? totals.seconds : parseDurationInput(card.querySelector("[data-duration-value]")?.value || "");
     value = { distance, seconds };
     if (Number(String(distance).replace(",", ".")) <= 0 || seconds <= 0) {
       await showSportFeedbackDialog({
         title: "Нужны дистанция и время",
-        message: "Укажи пройденную дистанцию и время в формате мм:сс.",
+        message: "Укажи пройденную дистанцию и время: 6 цифр в формате чч:мм:сс.",
         confirmText: "Вернуться к вводу",
         returnFocus: Number(String(distance).replace(",", ".")) <= 0
           ? card.querySelector("[data-distance-value]")
@@ -61,13 +62,4 @@ export default async function completeSet(button) {
   await startAutomaticRunTracking(session);
   saveActiveSession(session);
   dispatchAppChangedKeepingScroll(button);
-}
-
-function parseDuration(value) {
-  const parts = String(value).trim().split(":").map(Number);
-  if (!parts.length || parts.some((part) => !Number.isInteger(part) || part < 0)) return 0;
-  if (parts.length === 1) return parts[0];
-  if (parts.length === 2 && parts[1] < 60) return parts[0] * 60 + parts[1];
-  if (parts.length === 3 && parts[1] < 60 && parts[2] < 60) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-  return 0;
 }

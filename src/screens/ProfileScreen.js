@@ -1,5 +1,6 @@
 import { getCurrentUser } from "../features/profile/profileStorage.js";
 import { getBackupFreshness, getLastBackupLabel } from "../features/storage/backupFiles.js";
+import { APP_VERSION, getAppPlatform } from "../app/version.js";
 
 export function renderProfileScreen() {
   const user = getCurrentUser();
@@ -27,14 +28,12 @@ export function renderProfileScreen() {
       </article>
       <article class="vsg-card vsg-sport-profile-card">
         <div class="vsg-sport-profile-card-head"><div><span class="vsg-eyebrow">Информация</span><h2>Приложение</h2></div></div>
-        <div class="vsg-sport-profile-info"><div><span>Платформа и версия</span><strong>${escapeHtml(getPlatformName())} · ${escapeHtml(getAppVersion())}</strong></div><div><span>Разработчик</span><strong>V-STAR-GROUP.DIGITAL</strong></div></div>
+        <div class="vsg-sport-profile-info"><div><span>Платформа</span><strong>${escapeHtml(getAppPlatform())}</strong></div><div><span>Версия</span><strong>${escapeHtml(APP_VERSION)}</strong></div><div><span>Разработчик</span><strong>V-STAR-GROUP.DIGITAL</strong></div></div>
         <div class="vsg-sport-profile-actions"><button class="vsg-button" type="button" data-action="checkUpdate">Проверить обновление</button><button class="vsg-button" type="button" data-action="logout">Выйти</button></div>
       </article>
     </section>`;
 }
 
-function getPlatformName() { return window.Capacitor?.getPlatform?.() === "android" ? "Android" : "Web"; }
-function getAppVersion() { return "1.003.1 от 30.07."; }
 function getAvatarLetter(value) { return String(value || "S").slice(0, 1).toLocaleUpperCase("ru-RU"); }
 function escapeHtml(value) { return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"); }
 function escapeAttr(value) { return escapeHtml(value).replaceAll('"', "&quot;"); }

@@ -3,6 +3,7 @@ import { renderExerciseList } from "../components/ExerciseList.js";
 import { getExerciseCatalog, isDistanceMeasure } from "../features/exercises/exercisesStorage.js";
 import { getWorkouts } from "../features/program/programStorage.js";
 import { getActiveWorkoutEditorId, isProgramEditMode } from "../features/program/programEditorState.js";
+import { formatDurationForInput } from "../features/workout/durationInput.js";
 
 export function renderProgramScreen() {
   const workouts = getWorkouts();
@@ -103,7 +104,7 @@ function renderExerciseParams(exercise, workoutId, index) {
     const unit = exercise.measure === "distanceKm" ? "км" : "м";
     return `
       <label class="vsg-field"><span>Расстояние, ${unit}</span><input class="vsg-input" type="number" min="0" step="any" inputmode="decimal" value="${escapeAttr(exercise.target || "")}" ${attributes} data-field="target" /></label>
-      <label class="vsg-field"><span>Плановое время, мм:сс</span><input class="vsg-input" inputmode="numeric" pattern="[0-9]+:[0-5][0-9]" placeholder="37:12" value="${escapeAttr(exercise.time || "")}" ${attributes} data-field="time" /></label>
+      <label class="vsg-field vsg-sport-duration-field"><span>Плановое время, чч:мм:сс</span><input class="vsg-input vsg-sport-duration-input" type="text" inputmode="numeric" maxlength="8" pattern="[0-9]{2}:[0-5][0-9]:[0-5][0-9]" placeholder="00:37:12" value="${escapeAttr(formatDurationForInput(exercise.time))}" data-duration-input ${attributes} data-field="time" /><small>Введи 6 цифр: часы, минуты, секунды.</small></label>
     `;
   }
   if (exercise.measure === "seconds") {

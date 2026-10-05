@@ -1,6 +1,7 @@
 import { renderLogExerciseEditor } from "../components/WorkoutLogCard.js";
 import { buildResultFromCells, formatLogText, isRunMeterInput } from "../features/log/logExercises.js";
 import { getExerciseCatalog, getExerciseMeasure } from "../features/exercises/exercisesStorage.js";
+import { parseDurationInput } from "../features/workout/durationInput.js";
 
 export function createLogExerciseDraft(name, fallbackMeasure = "repeats") {
   const catalogExercise = getExerciseCatalog().find((exercise) => exercise.name === name);
@@ -44,8 +45,7 @@ export function collectLogExerciseRows(logId, currentResults = []) {
     if (measure === "distanceKm" || measure === "distanceM") {
       const distance = row.querySelector('[data-field="distance"]')?.value || "";
       const time = row.querySelector('[data-field="time"]')?.value || "";
-      const parts = time.split(":").map(Number);
-      const seconds = parts.length === 2 ? parts[0] * 60 + parts[1] : Number(time) || 0;
+      const seconds = parseDurationInput(time);
       const sets = 1;
       const hasDistance = Number(String(distance).replace(",", ".")) > 0;
       const storedDistance = hasDistance && isRunMeterInput({ name, measure })

@@ -60,7 +60,7 @@ test('Sport catalog exposes the required app patterns and labels',()=>{
   const html=read('design-system-v-star-group.sport.html');
   for(const id of ['sport-rules-title','sport-screens-title','sport-auth-title','sport-calendar-days','sport-program-title','sport-program-dialog','sport-timer','sport-set-progress','sport-profile-title','sport-states-title','sport-exercise-dialog','sport-celebration-dialog','sport-clear-log-dialog'])assert.ok(html.includes(`id="${id}"`),id);
   for(const className of ['vsg-sport-app-header','vsg-sport-today-card','vsg-sport-quick-grid','vsg-sport-bottom-nav'])assert.ok(html.includes(className),className);
-  for(const label of ['Дистанция, км','Время, мм:сс','Повторения','GPS-маршрут','Личный рекорд'])assert.ok(html.includes(label),label);
+  for(const label of ['Дистанция, км','Время, чч:мм:сс','Повторения','GPS-маршрут','Личный рекорд'])assert.ok(html.includes(label),label);
   for(const [,target]of html.matchAll(/(?:aria-labelledby|aria-describedby|aria-controls)="([^"]+)"/g))for(const id of target.split(' '))assert.ok(html.includes(`id="${id}"`),id);
 });
 test('React SSR smoke: field associations, disabled busy button and empty table',(t)=>{

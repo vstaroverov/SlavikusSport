@@ -1,5 +1,6 @@
 import { getExerciseCatalog } from "../features/exercises/exercisesStorage.js";
 import { formatLogText, formatLogTextWithRecords, getLogResults, getResultSummary, isRunMeterInput } from "../features/log/logExercises.js";
+import { formatDurationForInput } from "../features/workout/durationInput.js";
 
 export function renderWorkoutLogCard(entry, entries = [], showRecords = false) {
   const results = getLogResults(entry);
@@ -89,7 +90,7 @@ function renderExerciseEditorRow(logId, result, index) {
         <label class="vsg-choice"><input type="checkbox" ${result.done?.some((value) => Number(value) > 0) ? "checked" : ""} data-change="updateLogExercise" data-log-id="${logId}" data-exercise-index="${index}" data-field="completed" /> Выполнена</label>
       ` : distance ? `
         <label class="vsg-field">Дистанция, ${result.measure === "distanceM" || runMeters ? "м" : "км"}<input class="vsg-input" value="${escapeAttr(distanceValue)}" inputmode="decimal" data-change="updateLogExercise" data-log-id="${logId}" data-exercise-index="${index}" data-field="distance" /></label>
-        <label class="vsg-field">Время, мм:сс<input class="vsg-input" value="${escapeAttr(formatEditorDuration(result.times?.[0]))}" inputmode="numeric" placeholder="мм:сс" data-change="updateLogExercise" data-log-id="${logId}" data-exercise-index="${index}" data-field="time" /></label>
+        <label class="vsg-field vsg-sport-duration-field">Время, чч:мм:сс<input class="vsg-input vsg-sport-duration-input" type="text" value="${escapeAttr(formatDurationForInput(result.times?.[0]))}" inputmode="numeric" maxlength="8" pattern="[0-9]{2}:[0-5][0-9]:[0-5][0-9]" placeholder="00:37:12" data-duration-input data-change="updateLogExercise" data-log-id="${logId}" data-exercise-index="${index}" data-field="time" /><small>Введи 6 цифр: часы, минуты, секунды.</small></label>
       ` : result.measure === "seconds" ? `
         <label class="vsg-field">Секунды<input class="vsg-input" value="${escapeAttr(summary.repeats)}" type="number" min="0" step="1" inputmode="numeric" data-change="updateLogExercise" data-log-id="${logId}" data-exercise-index="${index}" data-field="repeats" /></label>
       ` : `
@@ -101,12 +102,6 @@ function renderExerciseEditorRow(logId, result, index) {
       <button class="vsg-button vsg-button--danger" type="button" data-action="deleteLogExercise" data-log-id="${logId}" data-exercise-index="${index}">Удалить упражнение</button>
     </div>
   `;
-}
-
-function formatEditorDuration(total) {
-  if (!total) return "";
-  const minutes = Math.floor(Number(total) / 60);
-  return `${minutes}:${String(Math.round(Number(total) % 60)).padStart(2, "0")}`;
 }
 
 function renderExerciseOptions(currentName) {

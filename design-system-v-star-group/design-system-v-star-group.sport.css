@@ -248,6 +248,8 @@
 .vsg .vsg-sport-program-heading h1,.vsg .vsg-sport-program-heading h3 { margin:2px 0 0; }
 .vsg .vsg-sport-program-heading p { margin:4px 0 0; font-size:var(--vsg-text-sm); }
 .vsg .vsg-sport-program-heading .vsg-button { width:100%; min-width:0; }
+.vsg .vsg-sport-duration-input { font-variant-numeric:tabular-nums; letter-spacing:.08em; }
+.vsg .vsg-sport-duration-field small { color:var(--vsg-muted); font-size:var(--vsg-text-xs); line-height:1.4; }
 .vsg .vsg-sport-program-toolbar { display:flex; gap:8px; flex-wrap:wrap; }
 .vsg .vsg-sport-program-toolbar .vsg-button[aria-pressed="true"] { border-color:var(--vsg-primary); color:var(--vsg-primary); background:var(--vsg-selected); }
 .vsg .vsg-sport-program-card { min-width:0; max-width:100%; padding:0; overflow:hidden; border:1px solid var(--vsg-line); border-radius:var(--vsg-radius); background:var(--vsg-surface); }
