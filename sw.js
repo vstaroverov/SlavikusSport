@@ -1,4 +1,4 @@
-const CACHE_NAME = "slavikus-sport-v10078";
+const CACHE_NAME = "slavikus-sport-v10079";
 
 const APP_SHELL = [
   "./",
@@ -15,6 +15,7 @@ const APP_SHELL = [
   "./design-system-v-star-group/assets/slavikus-sport-logo.svg",
   "./design-system-v-star-group/assets/slavikus-sport-crown.svg",
   "./design-system-v-star-group/assets/slavikus-sport-invite-qr.svg",
+  "./design-system-v-star-group/assets/slavikus-sport-invite-web-qr.svg",
   "./src/assets/auth-background.png",
   "./src/assets/hair.jpg",
   "./src/assets/pwa-icon-192.png",

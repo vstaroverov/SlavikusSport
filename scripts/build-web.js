@@ -45,5 +45,9 @@ cpSync(
   join(projectRoot, "design-system-v-star-group", "assets", "slavikus-sport-invite-qr.svg"),
   join(designOutput, "assets", "slavikus-sport-invite-qr.svg")
 );
+cpSync(
+  join(projectRoot, "design-system-v-star-group", "assets", "slavikus-sport-invite-web-qr.svg"),
+  join(designOutput, "assets", "slavikus-sport-invite-web-qr.svg")
+);
 
 console.log(`Web app built in ${outputDir}`);

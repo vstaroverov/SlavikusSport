@@ -122,11 +122,14 @@
       </div>
       <div class="vsg vsg-sport-invite-dialog" style="display:block;position:static;margin:20px 0 0">
         <h2>Пригласить друга</h2>
-        <p class="vsg-muted">Покажи QR-код другу для установки приложения.</p>
-        <img class="vsg-sport-invite-qr" src="assets/slavikus-sport-invite-qr.svg" alt="QR-код ссылки на Slavikus Sport в RuStore">
-        <a class="vsg-sport-invite-link" href="https://www.rustore.ru/catalog/app/ru.slavikus.sport">https://www.rustore.ru/catalog/app/ru.slavikus.sport</a>
+        <p class="vsg-muted">Выбери устройство друга и покажи QR-код.</p>
+        <div class="vsg-sport-invite-platforms" role="group" aria-label="Устройство друга"><button class="vsg-button" type="button" aria-pressed="false" data-demo-message="Демо: будет показан QR-код RuStore.">Android</button><button class="vsg-button" type="button" aria-pressed="true">iPhone</button></div>
+        <img class="vsg-sport-invite-qr" src="assets/slavikus-sport-invite-web-qr.svg" alt="QR-код ссылки на веб-приложение Slavikus Sport">
+        <a class="vsg-sport-invite-link" href="https://vstaroverov.github.io/SlavikusSport/">https://vstaroverov.github.io/SlavikusSport/</a>
+        <p class="vsg-muted">На iPhone открой ссылку в Safari и выбери «Поделиться» → «На экран Домой».</p>
         <div class="vsg-sport-invite-actions"><button class="vsg-button vsg-button--primary" type="button" data-demo-message="Демо: откроется системная отправка ссылки.">Поделиться ссылкой</button><button class="vsg-button" type="button" data-demo-message="Демо: ссылка будет скопирована.">Скопировать ссылку</button></div>
       </div>
+      <p class="vsg-muted">В Android-приложении окно использует QR-код <code>slavikus-sport-invite-qr.svg</code> и ссылку <a href="https://www.rustore.ru/catalog/app/ru.slavikus.sport">RuStore</a>.</p>
       <div class="vsg-sport-phone vsg-card vsg-stack" style="margin-top:20px">
         <h3>Выбор тренировок для отправки</h3>
         <div class="vsg-sport-share-list">

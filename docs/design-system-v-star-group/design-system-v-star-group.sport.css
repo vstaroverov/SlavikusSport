@@ -181,6 +181,9 @@
 .vsg.vsg-sport-invite-dialog::backdrop { background:rgb(0 0 0 / 68%); }
 .vsg.vsg-sport-invite-dialog h2 { margin:0 0 8px; font-size:var(--vsg-text-lg); }
 .vsg.vsg-sport-invite-dialog p { margin:0 0 16px; }
+.vsg.vsg-sport-invite-dialog .vsg-sport-invite-platforms { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:16px; }
+.vsg.vsg-sport-invite-dialog .vsg-sport-invite-platforms .vsg-button { width:100%; }
+.vsg.vsg-sport-invite-dialog .vsg-sport-invite-platforms [aria-pressed="true"] { border-color:var(--vsg-primary); color:var(--vsg-primary); }
 .vsg.vsg-sport-invite-dialog .vsg-sport-invite-qr { display:block; width:min(100%,280px); height:auto; margin:0 auto 16px; border-radius:var(--vsg-radius-sm); }
 .vsg.vsg-sport-invite-dialog .vsg-sport-invite-link { display:block; margin-bottom:16px; color:var(--vsg-info); font-size:var(--vsg-text-xs); overflow-wrap:anywhere; }
 .vsg.vsg-sport-invite-dialog .vsg-sport-invite-actions { display:grid; gap:8px; }
