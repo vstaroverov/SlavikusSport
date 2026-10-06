@@ -15,9 +15,12 @@ test("profile screen keeps all actions and shows backup freshness in design-syst
   assert.match(html, /vsg-sport-profile-screen/);
   assert.match(html, /Копии нет/);
   assert.match(html, /<span>Платформа<\/span><strong>Android<\/strong>/);
+  assert.doesNotMatch(html, /href="https:\/\/vstaroverov\.github\.io\/SlavikusSport\/"/);
   assert.match(html, /<span>Версия<\/span><strong>2\.001\.1<\/strong>/);
   for (const action of ["saveProfileLogin", "exportBackup", "checkBackup", "importBackup", "clearLog", "checkUpdate", "logout"]) {
     assert.match(html, new RegExp(`data-action="${action}"`));
   }
   assert.match(html, /vsg-button--danger[^>]*data-action="clearLog"/);
+  globalThis.window.Capacitor.getPlatform = () => "web";
+  assert.match(renderProfileScreen(), /<span>Платформа<\/span><strong><a href="https:\/\/vstaroverov\.github\.io\/SlavikusSport\/"[^>]*>Веб-приложение ↗<\/a><\/strong>/);
 });

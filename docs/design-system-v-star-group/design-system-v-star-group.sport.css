@@ -51,6 +51,8 @@
 .vsg .vsg-sport-profile-backup-meta { padding:12px; }
 .vsg .vsg-sport-profile-backup-meta span,.vsg .vsg-sport-profile-info span { color:var(--vsg-muted); font-size:var(--vsg-text-xs); }
 .vsg .vsg-sport-profile-backup-meta strong,.vsg .vsg-sport-profile-info strong { color:var(--vsg-text); font-size:var(--vsg-text-sm); overflow-wrap:anywhere; }
+.vsg .vsg-sport-profile-info a { color:var(--vsg-info); text-underline-offset:3px; }
+.vsg .vsg-sport-profile-info a:focus-visible { outline:2px solid var(--vsg-primary); outline-offset:3px; border-radius:2px; }
 .vsg .vsg-sport-profile-info > div { display:grid; gap:3px; padding:9px 0; }
 .vsg .vsg-sport-profile-info > div + div { border-top:1px solid var(--vsg-line); }
 .vsg .vsg-sport-profile-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
