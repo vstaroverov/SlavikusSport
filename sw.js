@@ -1,4 +1,4 @@
-const CACHE_NAME = "slavikus-sport-v10079";
+const CACHE_NAME = "slavikus-sport-v10080";
 
 const APP_SHELL = [
   "./",
