@@ -426,6 +426,7 @@
 .vsg.vsg-sport-feedback-dialog .vsg-sport-feedback-mark { display:grid; place-items:center; width:56px; height:56px; border:1px solid var(--vsg-control-border); border-radius:50%; background:var(--vsg-selected); color:var(--vsg-primary); }
 .vsg.vsg-sport-feedback-dialog .vsg-sport-feedback-mark[data-tone="warning"] { color:var(--vsg-warning); border-color:var(--vsg-warning); background:rgb(255 202 91 / 10%); }
 .vsg.vsg-sport-feedback-dialog .vsg-sport-feedback-mark[data-tone="danger"] { color:var(--vsg-danger); border-color:var(--vsg-danger); background:rgb(255 85 93 / 10%); }
+.vsg.vsg-sport-feedback-dialog .vsg-sport-feedback-mark[data-tone="success"] { color:var(--vsg-success); border-color:var(--vsg-success); background:rgb(126 231 135 / 12%); }
 .vsg.vsg-sport-feedback-dialog .vsg-sport-feedback-mark svg { width:30px; height:30px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 .vsg.vsg-sport-feedback-dialog h2 { margin:0; font-size:var(--vsg-text-xl); line-height:1.2; }
 .vsg.vsg-sport-feedback-dialog p { margin:0; color:var(--vsg-muted); line-height:1.5; }

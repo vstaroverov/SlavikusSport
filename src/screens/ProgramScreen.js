@@ -23,7 +23,7 @@ export function renderProgramScreen() {
       </div>
       ${editMode ? `<div class="vsg-sport-program-hint"><strong>Режим редактирования</strong><span>Выбери тренировку, чтобы изменить состав и порядок упражнений.</span></div>` : ""}
       ${workouts.length ? workouts.map((workout, index) => `
-        <details class="vsg-sport-program-card" ${isWorkoutOpen(workout.id, editMode, activeWorkoutId) ? "open" : ""}>
+        <details class="vsg-sport-program-card" data-program-workout-id="${escapeAttr(workout.id)}" ${isWorkoutOpen(workout.id, editMode, activeWorkoutId) ? "open" : ""}>
           <summary>
             <span class="vsg-sport-program-index">Т${index + 1}</span>
             <span class="vsg-sport-program-summary"><strong>${escapeHtml(stripWorkoutPrefix(workout.title))}</strong><small>${workout.exercises.length} ${plural(workout.exercises.length, "упражнение", "упражнения", "упражнений")}</small></span>

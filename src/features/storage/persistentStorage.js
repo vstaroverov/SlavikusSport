@@ -62,6 +62,10 @@ export async function exportBackup() {
   };
 }
 
+export async function waitForPendingWrites() {
+  await Promise.all([...pendingWrites]);
+}
+
 export async function importBackup(backup) {
   if (!backup?.data || typeof backup.data !== "object" || Array.isArray(backup.data)) {
     throw new Error("Некорректный файл резервной копии");

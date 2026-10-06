@@ -4,6 +4,7 @@ import "./legacyBackupCompatibility.test.js";
 import "./workoutUpdates.test.js";
 import "./homeDesign.test.js";
 import "./calendarChoiceDialog.test.js";
+import "./programSaveFeedback.test.js";
 import "./workoutSharing.test.js";
 import "./platformShare.test.js";
 import "./workoutScreenDesign.test.js";
