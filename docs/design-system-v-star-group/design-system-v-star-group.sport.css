@@ -168,13 +168,13 @@
 .vsg .vsg-sport-share-list { display:grid; gap:8px; max-height:min(45vh,340px); overflow:auto; margin:12px 0; }
 .vsg .vsg-sport-share-list label { display:flex; align-items:center; gap:10px; min-height:44px; padding:8px 10px; border:1px solid var(--vsg-line); border-radius:var(--vsg-radius-sm); cursor:pointer; }
 .vsg .vsg-sport-share-list input { flex:none; accent-color:var(--vsg-primary); width:18px; height:18px; }
-.vsg.vsg-sport-share-dialog { width:min(420px,calc(100vw - 32px)); max-height:calc(100dvh - 32px); padding:20px; border:1px solid var(--vsg-line); border-radius:var(--vsg-radius); background:var(--vsg-surface); color:var(--vsg-text); box-shadow:0 20px 50px rgb(0 0 0 / 45%); }
+.vsg.vsg-sport-share-dialog { margin:auto; width:min(420px,calc(100vw - 32px)); max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 32px); overflow:auto; padding:20px; border:1px solid var(--vsg-line); border-radius:var(--vsg-radius); background:var(--vsg-surface); color:var(--vsg-text); box-shadow:0 20px 50px rgb(0 0 0 / 45%); }
 .vsg.vsg-sport-share-dialog::backdrop { background:rgb(0 0 0 / 68%); }
 .vsg.vsg-sport-share-dialog h2 { margin:0 0 8px; font-size:var(--vsg-text-lg); }
 .vsg.vsg-sport-share-dialog p { margin:0; }
 .vsg .vsg-sport-share-actions { display:grid; gap:8px; margin-top:16px; }
 .vsg .vsg-sport-share-actions .vsg-button { width:100%; }
-.vsg.vsg-sport-download-dialog { width:min(400px,calc(100vw - 32px)); max-height:calc(100dvh - 32px); padding:24px; border:1px solid var(--vsg-line); border-radius:var(--vsg-radius); background:var(--vsg-surface); color:var(--vsg-text); box-shadow:var(--vsg-shadow); }
+.vsg.vsg-sport-download-dialog { margin:auto; width:min(400px,calc(100vw - 32px)); max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 32px); overflow:auto; padding:24px; border:1px solid var(--vsg-line); border-radius:var(--vsg-radius); background:var(--vsg-surface); color:var(--vsg-text); box-shadow:var(--vsg-shadow); }
 .vsg.vsg-sport-download-dialog::backdrop { background:rgb(0 0 0 / 68%); }
 .vsg.vsg-sport-download-dialog .vsg-sport-download-mark { display:grid; place-items:center; width:48px; height:48px; margin-bottom:16px; border-radius:50%; background:rgb(126 231 135 / 12%); color:var(--vsg-success); }
 .vsg.vsg-sport-download-dialog .vsg-sport-download-mark svg { width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:2.5; stroke-linecap:round; stroke-linejoin:round; }
@@ -182,7 +182,7 @@
 .vsg.vsg-sport-download-dialog p { margin:0 0 16px; color:var(--vsg-muted); }
 .vsg.vsg-sport-download-dialog .vsg-sport-download-file { display:block; margin:0 0 16px; padding:12px; border:1px solid var(--vsg-line); border-radius:var(--vsg-radius-sm); background:var(--vsg-surface-raised); color:var(--vsg-text); font-size:var(--vsg-text-sm); overflow-wrap:anywhere; }
 .vsg.vsg-sport-download-dialog .vsg-button { width:100%; }
-.vsg.vsg-sport-invite-dialog { width:min(380px,calc(100vw - 32px)); max-height:calc(100dvh - 32px); padding:24px; border:1px solid var(--vsg-line); border-radius:var(--vsg-radius); background:var(--vsg-surface); color:var(--vsg-text); text-align:center; box-shadow:0 20px 50px rgb(0 0 0 / 45%); }
+.vsg.vsg-sport-invite-dialog { margin:auto; width:min(380px,calc(100vw - 32px)); max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 32px); overflow:auto; padding:24px; border:1px solid var(--vsg-line); border-radius:var(--vsg-radius); background:var(--vsg-surface); color:var(--vsg-text); text-align:center; box-shadow:0 20px 50px rgb(0 0 0 / 45%); }
 .vsg.vsg-sport-invite-dialog::backdrop { background:rgb(0 0 0 / 68%); }
 .vsg.vsg-sport-invite-dialog h2 { margin:0 0 8px; font-size:var(--vsg-text-lg); }
 .vsg.vsg-sport-invite-dialog p { margin:0 0 16px; }
