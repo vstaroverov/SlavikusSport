@@ -1,0 +1,5 @@
+/* VK uses the same components as the web app. Keep its viewport inside the host. */
+.vk-mini-app .phone-shell,
+.vk-mini-app .auth-shell {
+  height: 100dvh;
+}

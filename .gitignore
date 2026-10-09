@@ -1,6 +1,8 @@
 node_modules/
 test/
 www/
+vk-dist/
+vk-hosting-config.json
 android/.gradle/
 android/local.properties
 android/release-signing.properties

@@ -6,16 +6,17 @@ const projectRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 const outputDirName = process.argv[2] || "www";
 const outputDir = join(projectRoot, outputDirName);
 
-if (!["www", "docs"].includes(outputDirName)) {
-  throw new Error("Build output must be www or docs");
+if (!["www", "docs", "vk-dist"].includes(outputDirName)) {
+  throw new Error("Build output must be www, docs or vk-dist");
 }
 
 rmSync(outputDir, { recursive: true, force: true });
 mkdirSync(outputDir, { recursive: true });
 
-for (const entry of ["index.html", "manifest.webmanifest", "sw.js", "src"]) {
+for (const entry of (outputDirName === "vk-dist" ? ["src"] : ["index.html", "manifest.webmanifest", "sw.js", "src"])) {
   cpSync(join(projectRoot, entry), join(outputDir, entry), { recursive: true });
 }
+if (outputDirName === "vk-dist") cpSync(join(projectRoot, "vk", "index.html"), join(outputDir, "index.html"));
 
 const designFiles = [
   "design-system-v-star-group.tokens.css",
