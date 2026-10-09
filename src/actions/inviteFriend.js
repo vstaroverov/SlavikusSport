@@ -2,9 +2,16 @@ import { getNativePlugin } from "../features/share/platformPlugins.js";
 
 const ANDROID_APP_URL = "https://www.rustore.ru/catalog/app/ru.slavikus.sport";
 const WEB_APP_URL = "https://vstaroverov.github.io/SlavikusSport/";
+const VK_APP_URL = "https://vk.com/app54813678";
 let currentDialog = null;
 
 export function getInviteTarget(platform) {
+  if (platform === "vk") return {
+    url: VK_APP_URL,
+    qr: "slavikus-sport-invite-vk-qr.svg",
+    alt: "QR-код ссылки на Slavikus Sport во ВКонтакте",
+    hint: "Открой ссылку во ВКонтакте, чтобы запустить мини-приложение."
+  };
   return platform === "android"
     ? {
         url: ANDROID_APP_URL,
@@ -22,7 +29,9 @@ export function getInviteTarget(platform) {
 
 export default function inviteFriend(trigger) {
   currentDialog?.close();
-  let platform = globalThis.window?.Capacitor?.getPlatform?.() === "android" ? "android" : "web";
+  let platform = document.body.classList.contains("vk-mini-app")
+    ? "vk"
+    : globalThis.window?.Capacitor?.getPlatform?.() === "android" ? "android" : "web";
   let target = getInviteTarget(platform);
   const dialog = document.createElement("dialog");
   currentDialog = dialog;
@@ -30,10 +39,11 @@ export default function inviteFriend(trigger) {
   dialog.setAttribute("aria-labelledby", "sport-invite-title");
   dialog.innerHTML = `
     <h2 id="sport-invite-title">Пригласить друга</h2>
-    <p class="vsg-muted">Выбери устройство друга и покажи QR-код.</p>
-    <div class="vsg-sport-invite-platforms" role="group" aria-label="Устройство друга">
+    <p class="vsg-muted">Выбери, где друг откроет приложение, и покажи QR-код.</p>
+    <div class="vsg-sport-invite-platforms" role="group" aria-label="Куда пригласить друга">
       <button class="vsg-button" type="button" data-invite-platform="android" aria-pressed="${platform === "android"}">Android</button>
       <button class="vsg-button" type="button" data-invite-platform="web" aria-pressed="${platform === "web"}">iPhone</button>
+      <button class="vsg-button" type="button" data-invite-platform="vk" aria-pressed="${platform === "vk"}">VK</button>
     </div>
     <img class="vsg-sport-invite-qr" src="./design-system-v-star-group/assets/${target.qr}" alt="${target.alt}" width="280" height="280">
     <a class="vsg-sport-invite-link" href="${target.url}" target="_blank" rel="noopener noreferrer">${target.url}</a>
@@ -74,6 +84,11 @@ export default function inviteFriend(trigger) {
     const status = dialog.querySelector("[role=status]");
     status.textContent = "";
     try {
+      const vkBridge = window.vkBridge;
+      if (vkBridge?.isEmbedded?.()) {
+        await vkBridge.send("VKWebAppShare", { link: target.url });
+        return;
+      }
       const nativeShare = getNativePlugin("Share");
       if (nativeShare?.share) {
         await nativeShare.share({ title: "Slavikus Sport", text: "Тренируйся со мной в Slavikus Sport", url: target.url, dialogTitle: "Отправить ссылку" });

@@ -36,3 +36,12 @@ test("invite links and local QR codes match Android and iPhone web installs", ()
   assert.match(svg, /<svg\b/);
   assert.ok(svg.includes(`<desc>${web.url}</desc>`));
 });
+
+test("VK invitation uses the configured Mini App address and its own QR code", () => {
+  const { app_id: appId } = JSON.parse(readFileSync(new URL("../vk-hosting-config.json", import.meta.url), "utf8"));
+  const vk = getInviteTarget("vk");
+  assert.equal(vk.url, `https://vk.com/app${appId}`);
+  const svg = readFileSync(new URL(`../design-system-v-star-group/assets/${vk.qr}`, import.meta.url), "utf8");
+  assert.match(svg, /^<svg\b/);
+  assert.ok(svg.includes(`<desc>${vk.url}</desc>`));
+});
